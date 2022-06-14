@@ -1,0 +1,16 @@
+<h1 matDialogTitle>
+
+    {{title}}</h1>
+<div matDialogContent [innerHTML]="message"></div>
+<br/>
+<div >
+
+    <button matDialogClose mat-button class="btn btn-danger btn-sm mr-2" *ngIf="!disableCloseButton"
+        (click)="dialogRef.close(false) ">
+       <i class="fa fa-close"></i> Cancel
+    </button>
+    <button matDialogClose mat-button class="btn btn-success btn-sm"
+        (click)="dialogRef.close(true)">
+        <i class="fa fa-check"></i> {{confirmButtonText}}
+    </button>
+</div>

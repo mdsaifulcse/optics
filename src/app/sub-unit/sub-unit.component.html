@@ -1,0 +1,107 @@
+<block-ui>
+  <div class="row">
+    <!-- <div class="col-lg-3 col-md-5 col-sm-12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <h5 [innerHtml]="formTitle"></h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="entryForm">
+            <div class="mb-3">
+              <label class="col-form-label col-form-label-sm required">Name </label>
+              <input type="text" formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+                type="text" class="form-control form-control-sm" />
+
+              <div *ngIf="submitted && f.name.errors" class="error-text">
+                <span *ngIf="f.name.errors.required" class="text-danger"> Name is
+                  required</span>
+                <span *ngIf="f.name.errors.minlength" class="text-danger">Name
+                  must be atleast 1 character</span>
+                <span *ngIf="f.name.errors.maxlength" class="text-danger">Name
+                  must be not than 250 characters</span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="custom-control custom-checkbox">
+                <input formControlName="active" id="active" type="checkbox" class="custom-control-input">
+                <label for="active" class="custom-control-label">Active</label>
+              </div>
+            </div>
+
+            <button class="btn btn-secondary  btn-sm" (click)="onFormSubmit()"><i class="feather icon-save"></i>
+              {{btnSaveText}}</button>
+
+            <button class="btn btn-sm btn-outline-secondary ms-2" (click)="clearForm()"> <i
+                class="feather icon-refresh-cw"></i> Clear</button>
+          </form>
+        </div>
+      </div>
+
+    </div> -->
+    <div class=" col-12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <h5>Sub Unit List </h5>
+        </div>
+        <div class="card-block ">
+
+          <div class="row ">
+            <div class="col-12">
+              <form [formGroup]="filterForm" class="row" autocomplete="off">
+                <div class="col-lg-8 col-md-10 col-12">
+                  <div class="mb-3 row">
+                    <div class="col-12">
+                      <input type="text" formControlName="name" class="form-control form-control-sm"
+                        placeholder="Search By name" />
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="col-lg-12 ">
+
+              <ngx-datatable class="material table-bordered" [rows]="rows" [loadingIndicator]="loadingIndicator"
+                [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                (page)="setPage($event)">
+
+                <ngx-datatable-column [maxWidth]="50" name="SL#" [draggable]="false" [sortable]="false">
+                  <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    <span> {{ (page.pageNumber * page.size) + rowIndex + 1 }} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+
+                <ngx-datatable-column prop="Name" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value }}"> {{ value }} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column [maxWidth]="90" prop="Active" [draggable]="false" [sortable]="false"
+                  headerClass="text-center" cellClass="text-center">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{value === true? 'Yes':'No'}}">
+                      {{value === true? 'Yes':'No'}} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <!-- <ngx-datatable-column [maxWidth]="170" name="Action" prop="Id" [draggable]="false" [sortable]="false"
+                  cellClass="text-center" headerClass="text-center">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <button class="btn btn-outline-danger btn-mini m-r-5" (click)="deleteItem(row.Id)"><i
+                        class="feather icon-trash-2"></i>
+                      Delete</button>
+                    <button class="btn btn-outline-secondary btn-mini" (click)="getItem(row.Id)"><i
+                        class="feather icon-edit"></i>
+                      Edit</button>
+                  </ng-template>
+                </ngx-datatable-column> -->
+              </ngx-datatable>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

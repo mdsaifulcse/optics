@@ -1,0 +1,236 @@
+<block-ui>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <h5>District List </h5>
+          <button class="btn btn-primary btn-mini mr-1" (click)="openModal(templateCreateEdit)">  <i class="fa fa-plus"></i> District</button>
+          <!-- <button class="btn btn-secondary  btn-sm float-end" [routerLink]="[ '/user-entry' ]"><i
+              class="feather icon-plus "></i> Create Customer</button> -->
+        </div>
+        <div class="card-block ">
+          <div class="row ">
+
+            <div class="col-lg-12">
+              <div class="table-responsive">
+                <table class="table table-hover table-border table-striped">
+                  <thead>
+                    <tr>
+                      <td>Sl</td>
+                      <td>District Bangali</td>
+                      <td>District English</td>
+                      <td>Division</td>
+                      <td>Status</td>
+                      <td>Action</td>
+                    </tr>
+                  </thead>
+                    
+                  <tbody>
+                    <tr *ngFor="let district of districts; let i=index" id="{{i}}">
+                      <!-- <td><img class="media-object img-circle card-list-img image-size" src="assets/images/avatar-5.png" alt="Generic placeholder image"></td> -->
+                      <td>{{ i+1  }}</td>
+                      <td>{{ district.district_bn  }}</td>
+                      <td>{{ district.district_en  }}</td>
+                      <td>
+                        {{ district.rel_division.division_bn }}
+                      </td>
+                    
+                      <td>
+                        {{ district.status }}
+                      </td>
+                      <td>
+                        <button class="btn btn-warning btn-mini mr-1" (click)="openUpdateModal(templateCreateEdit,district)" title="Update District Info">  <i class="fa fa-edit"></i> Edit</button> | 
+                        <button class="btn btn-danger btn-mini mr-1" (click)="submitDeleteForm(district)" title="Delete District Info">  <i class="fa fa-times"></i> Delete</button>
+                      </td>
+                      
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer ">
+
+        </div>
+        <!-- end of card-footer -->
+      </div>
+    </div>
+  </div>
+
+
+ 
+
+  <ng-template #templateCreateEdit>
+    <div class="modal-header ">
+      <h4 class="modal-title float-start " [innerHtml]="modalTitle"></h4>
+      <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHideProfile()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <div class="row" >
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-block">
+              
+              <form [formGroup]="createEditForm" autocomplete="off">
+
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-12">
+                    <div class="row">
+
+                      <div class="col-md-4">
+                        <div class="space mb-3">
+                          <label class="required">Division : </label>
+                          <ng-select formControlName="division_id" [clearable]="false" [clearOnBackspace]="false" [items]="divisions" [multiple]=false bindLabel="division_bn" bindValue="id" placeholder="Select division">
+                          </ng-select>
+                         
+                          <div *ngIf="submitted && f.division_id.errors" class="error-text">
+                            <span *ngIf="f.division_id.errors.required" class="text-danger"> Division is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                    <div class="col-md-4">
+                      <div class="space mb-3">
+                        <label class="required">District Bengali : </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f.district_bn.errors }" formControlName="district_bn" type="text"
+                          class="form-control form-control-sm"  placeholder="Enter district in english">
+                        <div *ngIf="submitted && f.district_bn.errors" class="error-text">
+                          <span *ngIf="f.district_bn.errors.required" class="text-danger"> District Bengali is required</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="space mb-3">
+                        <label class="required">District English: </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f.district_en.errors }" formControlName="district_en" type="text" 
+                         class="form-control form-control-sm"  placeholder="Enter district in bengali">
+                        <div *ngIf="submitted && f.district_en.errors" class="error-text">
+                          <span *ngIf="f.district_en.errors.required" class="text-danger"> District English is required</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="space mb-3">
+                        <label class="required">Sequence : </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f.sequence.errors }" formControlName="sequence" type="text"
+                          class="form-control form-control-sm"  placeholder="Enter sequence number">
+                        <div *ngIf="submitted && f.sequence.errors" class="error-text">
+                          <span *ngIf="f.sequence.errors.required" class="text-danger"> sequence is required</span>
+                          <span *ngIf="f.sequence.errors.sequence" class="text-danger"> Invalid sequence format</span>
+                        </div>
+                      </div>
+                    </div>
+               
+      
+                    <div class="col-md-3">
+                      <div class="space mb-3">
+                        <label class="required">Status : </label>
+                        <ng-select formControlName="status" [clearable]="false" [clearOnBackspace]="false" [items]="status" [multiple]=false bindLabel="name" bindValue="status" placeholder="Select status">
+                        </ng-select>
+                       
+                        <div *ngIf="submitted && f.status.errors" class="error-text">
+                          <span *ngIf="f.status.errors.required" class="text-danger"> Status is required</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+        
+                  </div>
+        
+        
+                  <div class="col-12">
+                    <button type="button" (click)="onFormSubmit()" class="btn btn-secondary btn-testz">
+                      <i class="fa fa-check"></i> {{btnSaveText}}
+                    </button>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-outline-danger me-2" (click)="modalHideProfile()"> <i class="feather icon-x"></i>
+          Close</button>
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title float-start " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHide()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <div class="row" *ngIf="selectedCustomer">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-block">
+
+              <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label fw-bold">Customer Name</label>
+                <div class="col-sm-8">
+                  <p class="mt-3 fs-6">{{selectedCustomer.first_name +' '+selectedCustomer.last_name}}</p>
+                </div>
+              </div>
+
+              <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label fw-bold">Mobile Number</label>
+                <div class="col-sm-8">
+                  <p class="mt-3 fs-6">{{selectedCustomer.mobile_number }}</p>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label fw-bold">Status</label>
+                <div class="col-sm-8">
+                  <!-- <ng-select (change)="onStatusChange($event)" [(ngModel)]="selectedStatus" [clearable]="false"
+                    [clearOnBackspace]="false" [items]="statusTypes" class="form-control form-control-sm"
+                    bindLabel="name" bindValue="id" placeholder="Select status">
+                  </ng-select> -->
+                </div>
+              </div>
+
+              <div class="mb-3 row" *ngIf="!isInitalBalanceGiven">
+                <label class="col-sm-4 col-form-label fw-bold">Initial Balance</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control form-control-sm" numeric numericType="number"
+                    [(ngModel)]="amount" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-outline-danger me-2" (click)="modalHide()"> <i class="feather icon-x"></i> Close</button>
+
+        <button class="btn btn-outline-success" (click)="onFormSubmit()"><i class="feather icon-check-circle"></i>
+          Update</button>
+
+
+      </div>
+
+    </div>
+  </ng-template>
+</block-ui>

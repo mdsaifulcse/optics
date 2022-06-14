@@ -1,0 +1,537 @@
+<block-ui>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <h5>Multiple Answer Questions List </h5>
+          <button class="btn btn-primary btn-mini mr-1" (click)="openModal(templateQuestion)" title="Add Multi Ans Question">
+            <i class="fa fa-plus"></i> Multiple Answer Question</button>
+          <!-- <button class="btn btn-secondary  btn-sm float-end" [routerLink]="[ '/user-entry' ]"><i
+              class="feather icon-plus "></i> Create Customer</button> -->
+        </div>
+        <div class="card-block ">
+          <div class="row ">
+
+            <div class="col-lg-12">
+              <div class="table-responsive">
+                <table class="table table-hover table-border table-striped">
+                  <thead>
+                    <tr>
+                      <td>Sl</td>
+                      <td>Is Provide Exam Sheet?</td>
+                      <td>Topic</td>
+                      <td>Subjct</td>
+                      <td>Class</td>
+                      <td>Status</td>
+                      <td>Action</td>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr *ngFor="let multiAnsQuestion of multiAnsQuestions; let i=index" id="{{i}}">
+                      <!-- <td><img class="media-object img-circle card-list-img image-size" src="assets/images/avatar-5.png" alt="Generic placeholder image"></td> -->
+                      <td>{{ i+1 }}</td>
+                      <td>
+                        <ng-container *ngIf="multiAnsQuestion.is_provide_exam_sheet === 1;else other"><span class="text-success">Yes</span></ng-container>
+                        <ng-template #other>
+                            <ng-container *ngIf="multiAnsQuestion.is_provide_exam_sheet === 0;else teacher2"><span class="text-danger">No</span></ng-container>
+                        </ng-template>
+                        <ng-template #teacher2>Other 2</ng-template>
+                      </td>
+                      <td>
+                        {{ multiAnsQuestion.topic?multiAnsQuestion.topic.name_bn:'N/A' }}
+                      </td>
+                      <td>
+                        {{ multiAnsQuestion.subject?multiAnsQuestion.subject.name_bn:'N/A' }}
+                      </td>
+                      <td> {{ multiAnsQuestion.rel_class?multiAnsQuestion.rel_class.name_bn:'N/A' }}</td>
+                      <td>
+                        <ng-container *ngIf="multiAnsQuestion.status === 'Active';else inactive"><span class="text-success">Active</span></ng-container>
+                        <ng-template #inactive>
+                            <ng-container *ngIf="multiAnsQuestion.status === 'Inactive'"><span class="text-warning">Inactive</span></ng-container>
+                        </ng-template>
+                      </td>
+                      <td>
+                        <button class="btn btn-warning btn-mini mr-1"
+                          (click)="openUpdateModal(templateQuestion,multiAnsQuestion)" title="Update Topic Info"> <i
+                            class="fa fa-edit"></i> Edit</button> |
+                            <button class="btn btn-warning btn-mini mr-1"
+                          (click)="openQuestionShowModal(templateQuestionShow,multiAnsQuestion)" title="Show Details"> <i
+                            class="fa fa-eyes"></i> Show</button> |
+                        <button class="btn btn-danger btn-mini mr-1" (click)="submitDeleteForm(multiAnsQuestion)"
+                          title="Delete Topic Info"> <i class="fa fa-times"></i> Delete</button>
+                      </td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer ">
+
+        </div>
+        <!-- end of card-footer -->
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <ng-template #templateQuestion>
+    <div class="modal-header ">
+      <h4 class="modal-title float-start " [innerHtml]="modalTitle"></h4>
+      <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHideProfile()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-block">
+
+              <form [formGroup]="createEditForm" autocomplete="off">
+
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-12">
+                    <div class="row">
+
+                      <div class="col-md-3">
+                        <div class="space mb-3">
+                          <label class="required">Class : </label>
+                          <ng-select formControlName="class_id" [clearable]="false" (change)="onClassChange($event)"
+                            [clearOnBackspace]="false" [items]="classes" [multiple]=false bindLabel="name_bn"
+                            bindValue="id" placeholder="Select Class">
+                          </ng-select>
+
+                          <div *ngIf="submitted && f.class_id.errors" class="error-text">
+                            <span *ngIf="f.class_id.errors.required" class="text-danger"> Class is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-3">
+                        <div class="space mb-3">
+                          <label class="required">Subject : </label>
+                          <ng-select formControlName="subject_id" [clearable]="false" (change)="onSubjectChange($event)"
+                            [clearOnBackspace]="false" [items]="subjects" [multiple]=false bindLabel="name_bn"
+                            bindValue="id" placeholder="Select Subjct">
+                          </ng-select>
+
+                          <div *ngIf="submitted && f.subject_id.errors" class="error-text">
+                            <span *ngIf="f.subject_id.errors.required" class="text-danger"> Subject is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-3">
+                        <div class="space mb-3">
+                          <label class="required">Topic : </label>
+                          <ng-select formControlName="topic_id" [clearable]="false" [clearOnBackspace]="false"
+                            [items]="topics" [multiple]=false bindLabel="name_bn" bindValue="id"
+                            placeholder="Select Topic">
+                          </ng-select>
+
+                          <div *ngIf="submitted && f.topic_id.errors" class="error-text">
+                            <span *ngIf="f.topic_id.errors.required" class="text-danger"> Topic is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-3">
+                        <div class="space mb-3">
+                          <label class="required">Is Provide Exam heet ?: </label>
+                          <ng-select formControlName="is_provide_exam_sheet" (change)="onIsProvideSheetChange($event)"
+                            [clearable]="false" [clearOnBackspace]="false" [items]="provideExamSheet" [multiple]=false
+                            bindLabel="name" bindValue="status" placeholder="Select One">
+                          </ng-select>
+
+                          <div *ngIf="submitted && f.is_provide_exam_sheet.errors" class="error-text">
+                            <span *ngIf="f.is_provide_exam_sheet.errors.required" class="text-danger"> This field is
+                              required</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div><!-- end row -->
+
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="space mb-3">
+                          <label class="required">Answer Options: </label>
+                          <ng-select formControlName="answer_options"[clearable]="false" [clearOnBackspace]="false" [items]="provideExamSheet" 
+                          [multiple]=true [addTag]="true" placeholder="Type answer option and hit enter">
+                          </ng-select>
+
+                          <div *ngIf="submitted && f.answer_options.errors" class="error-text">
+                            <span *ngIf="f.answer_options.errors.required" class="text-danger"> This field is
+                              required</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div><!--end row-->
+
+                    <div class="row" *ngIf="isProvideExamSheet!=1">
+                      <!-- Question -->
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="">Question in Bengali : </label>
+                          <input formControlName="question_bn" type="text" class="form-control form-control-sm"
+                            placeholder="Enter question in bengali">
+                          <div *ngIf="submitted && f.question_bn.errors" class="error-text">
+                            <span *ngIf="f.question_bn.errors.required" class="text-danger"> Question Bengali is
+                              required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="">Question in English: </label>
+                          <input formControlName="question_en" type="text" class="form-control form-control-sm"
+                            placeholder="Enter question in english">
+                          <div *ngIf="submitted && f.question_en.errors" class="error-text">
+                            <span *ngIf="f.question_en.errors.required" class="text-danger"> Question English is
+                              required</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div><!-- end row -->
+
+                    <div class="row">
+                      <!-- Question -->
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="">Details Bengali : </label>
+
+                          <textarea formControlName="details_bn" class="form-control form-control-sm"
+                            placeholder="Enter details in bengali" rows="3"></textarea>
+                          <div *ngIf="submitted && f.details_bn.errors" class="error-text">
+                            <span *ngIf="f.details_bn.errors.required" class="text-danger"> Details Bengali is
+                              required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="">Details English: </label>
+                          <textarea formControlName="details_en" class="form-control form-control-sm"
+                            placeholder="Enter details in english" rows="3"></textarea>
+
+                          <div *ngIf="submitted && f.details_en.errors" class="error-text">
+                            <span *ngIf="f.details_en.errors.required" class="text-danger"> Details English is
+                              required</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div><!-- end row -->
+
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="space mb-3">
+                          <label class="required">Sequence : </label>
+                          <input [ngClass]="{ 'is-invalid': submitted && f.sequence.errors }" formControlName="sequence"
+                            type="text" class="form-control form-control-sm" placeholder="Enter sequence number">
+                          
+                            <div *ngIf="submitted && f.sequence.errors" class="error-text">
+                            <span *ngIf="f.sequence.errors.required" class="text-danger"> sequence is required</span>
+                            <span *ngIf="f.sequence.errors.sequence" class="text-danger"> Invalid sequence format</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="space mb-3">
+                          <label class="required">Status : </label>
+                          <ng-select formControlName="status" [clearable]="false" [clearOnBackspace]="false"
+                            [items]="status" [multiple]=false bindLabel="name" bindValue="status"
+                            placeholder="Select status">
+                          </ng-select>
+
+                          <div *ngIf="submitted && f.status.errors" class="error-text">
+                            <span *ngIf="f.status.errors.required" class="text-danger"> Status is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="space mb-3">
+                          <div class="card bg-light pic-upload pb-2">
+                            <div class="card-header text-center">
+                              <h5 class="card-title">Picture (230x230)</h5>
+                            </div>
+                            <div class="card-body bg-white" (click)="pictureInput.click()">
+                              <img *ngIf="!imageUrl" src="https://via.placeholder.com/100x100?text=Upload Photo">
+                              <img style="width:100px; height: 100px;" *ngIf="imageUrl" [src]="imageUrl">
+                              <input class="btn-img-upload" #pictureInput accept='image/png,image/jpeg'
+                                (change)="readURL($event, pictureInput)" type="file">
+                            </div>
+                            <button *ngIf="imageUrl" type="button" (click)="RemovePhoto()"
+                              class="btn btn-outline-secondary btn-sm">
+                              <i class="fa fa-cancel"></i> Remove Photo
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div><!-- end row -->
+
+                  </div>
+
+
+                  <div class="col-12">
+                    <button type="button" (click)="onFormSubmit()" class="btn btn-secondary btn-testz">
+                      <i class="fa fa-check"></i> {{btnSaveText}}
+                    </button>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-outline-danger me-2" (click)="modalHideProfile()"> <i class="feather icon-x"></i>
+          Close</button>
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #templateQuestionShow>
+    <div class="modal-header ">
+      <h4 class="modal-title float-start " [innerHtml]="modalTitle"></h4>
+      <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHideProfile()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-block">
+
+              <form [formGroup]="questionShowForm" autocomplete="off">
+
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-12">
+                    <div class="row">
+
+                      <div class="col-md-3">
+                        <div class="space mb-3">
+                          <label class="required">Class : </label>
+                          <ng-select formControlName="class_id" [clearable]="false" (change)="onClassChange($event)"
+                            [clearOnBackspace]="false" [items]="classes" [multiple]=false bindLabel="name_bn"
+                            bindValue="id" placeholder="Select Class">
+                          </ng-select>
+
+                          <div *ngIf="submitted && f.class_id.errors" class="error-text">
+                            <span *ngIf="f.class_id.errors.required" class="text-danger"> Class is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-3">
+                        <div class="space mb-3">
+                          <label class="required">Subject : </label>
+                          <ng-select formControlName="subject_id" [clearable]="false" (change)="onSubjectChange($event)"
+                            [clearOnBackspace]="false" [items]="subjects" [multiple]=false bindLabel="name_bn"
+                            bindValue="id" placeholder="Select Subjct">
+                          </ng-select>
+
+                          <div *ngIf="submitted && f.subject_id.errors" class="error-text">
+                            <span *ngIf="f.subject_id.errors.required" class="text-danger"> Subject is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-3">
+                        <div class="space mb-3">
+                          <label class="required">Topic : </label>
+                          <ng-select formControlName="topic_id" [clearable]="false" [clearOnBackspace]="false"
+                            [items]="topics" [multiple]=false bindLabel="name_bn" bindValue="id"
+                            placeholder="Select Topic">
+                          </ng-select>
+
+                          <div *ngIf="submitted && f.topic_id.errors" class="error-text">
+                            <span *ngIf="f.topic_id.errors.required" class="text-danger"> Topic is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-3">
+                        <div class="space mb-3">
+                          <label class="required">Is Provide Exam heet ?: </label>
+                          <ng-select formControlName="is_provide_exam_sheet" (change)="onIsProvideSheetChange($event)"
+                            [clearable]="false" [clearOnBackspace]="false" [items]="provideExamSheet" [multiple]=false
+                            bindLabel="name" bindValue="status" placeholder="Select One">
+                          </ng-select>
+
+                          <div *ngIf="submitted && f.is_provide_exam_sheet.errors" class="error-text">
+                            <span *ngIf="f.is_provide_exam_sheet.errors.required" class="text-danger"> This field is
+                              required</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div><!-- end row -->
+
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="space mb-3">
+                          <label class="required">Answer Options: </label>
+                          <ng-select formControlName="answer_options"[clearable]="false" [clearOnBackspace]="false" [items]="provideExamSheet" 
+                          [multiple]=true [addTag]="true" placeholder="Type answer option and hit enter">
+                          </ng-select>
+
+                          <div *ngIf="submitted && f.answer_options.errors" class="error-text">
+                            <span *ngIf="f.answer_options.errors.required" class="text-danger"> This field is
+                              required</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div><!--end row-->
+
+                    <div class="row" *ngIf="isProvideExamSheet!=1">
+                      <!-- Question -->
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="">Question in Bengali : </label>
+                          <input formControlName="question_bn" type="text" class="form-control form-control-sm"
+                            placeholder="Enter question in bengali">
+                          <div *ngIf="submitted && f.question_bn.errors" class="error-text">
+                            <span *ngIf="f.question_bn.errors.required" class="text-danger"> Question Bengali is
+                              required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="">Question in English: </label>
+                          <input formControlName="question_en" type="text" class="form-control form-control-sm"
+                            placeholder="Enter question in english">
+                          <div *ngIf="submitted && f.question_en.errors" class="error-text">
+                            <span *ngIf="f.question_en.errors.required" class="text-danger"> Question English is
+                              required</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div><!-- end row -->
+
+                    <div class="row">
+                      <!-- Question -->
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="">Details Bengali : </label>
+
+                          <textarea formControlName="details_bn" class="form-control form-control-sm"
+                            placeholder="Enter details in bengali" rows="3"></textarea>
+                          <div *ngIf="submitted && f.details_bn.errors" class="error-text">
+                            <span *ngIf="f.details_bn.errors.required" class="text-danger"> Details Bengali is
+                              required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="">Details English: </label>
+                          <textarea formControlName="details_en" class="form-control form-control-sm"
+                            placeholder="Enter details in english" rows="3"></textarea>
+
+                          <div *ngIf="submitted && f.details_en.errors" class="error-text">
+                            <span *ngIf="f.details_en.errors.required" class="text-danger"> Details English is
+                              required</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div><!-- end row -->
+
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="space mb-3">
+                          <label class="required">Sequence : </label>
+                          <input [ngClass]="{ 'is-invalid': submitted && f.sequence.errors }" formControlName="sequence"
+                            type="text" class="form-control form-control-sm" placeholder="Enter sequence number">
+                          
+                            <div *ngIf="submitted && f.sequence.errors" class="error-text">
+                            <span *ngIf="f.sequence.errors.required" class="text-danger"> sequence is required</span>
+                            <span *ngIf="f.sequence.errors.sequence" class="text-danger"> Invalid sequence format</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="space mb-3">
+                          <label class="required">Status : </label>
+                          <ng-select formControlName="status" [clearable]="false" [clearOnBackspace]="false"
+                            [items]="status" [multiple]=false bindLabel="name" bindValue="status"
+                            placeholder="Select status">
+                          </ng-select>
+
+                          <div *ngIf="submitted && f.status.errors" class="error-text">
+                            <span *ngIf="f.status.errors.required" class="text-danger"> Status is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="space mb-3">
+                          <div class="card bg-light pic-upload pb-2">
+                            <div class="card-header text-center">
+                              <h5 class="card-title">Picture (230x230)</h5>
+                            </div>
+                            <div class="card-body bg-white" (click)="pictureInput.click()">
+                              <img *ngIf="!imageUrl" src="https://via.placeholder.com/100x100?text=Upload Photo">
+                              <img style="width:100px; height: 100px;" *ngIf="imageUrl" [src]="imageUrl">
+                              <input class="btn-img-upload" #pictureInput accept='image/png,image/jpeg'
+                                (change)="readURL($event, pictureInput)" type="file">
+                            </div>
+                            <button *ngIf="imageUrl" type="button" (click)="RemovePhoto()"
+                              class="btn btn-outline-secondary btn-sm">
+                              <i class="fa fa-cancel"></i> Remove Photo
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div><!-- end row -->
+
+                  </div>
+
+
+                  <div class="col-12">
+                    <!-- <button type="button" (click)="onFormSubmit()" class="btn btn-secondary btn-testz">
+                      <i class="fa fa-check"></i> {{btnSaveText}}
+                    </button> -->
+                  </div>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-outline-danger me-2" (click)="modalHideProfile()"> <i class="feather icon-x"></i>
+          Close</button>
+      </div>
+
+    </div>
+  </ng-template>
+
+</block-ui>

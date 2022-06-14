@@ -1,0 +1,56 @@
+::ng-deep .tooltip-inner {
+  background-color: #fff;
+  max-width: 450px;
+  color: rgb(0, 0, 0);
+  border: 1px solid;
+  border-color: darkgray;
+
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+::ng-deep .tooltip {
+  opacity: 1 !important;
+}
+
+.table-card .row-table:first-child {
+  border-bottom: 1px solid #ddd;
+}
+.table-card .row-table {
+  display: flex;
+  align-items: center;
+  table-layout: fixed;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+.table-card .row-table>[class*=col-] {
+  display: table-cell;
+  float: none;
+  table-layout: fixed;
+  vertical-align: middle;
+}
+.table-card .row-table .br {
+  border-right: 1px solid #0072c4;
+}
+.card-block-big {
+  padding: 2em;
+}
+
+.table-card .row-table h5 {
+  display: block;
+  margin-bottom: .3em;
+  margin-right: 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.table-card .row-table span {
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.table-card .row-table i {
+  color: #042b71;
+}

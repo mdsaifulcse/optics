@@ -1,0 +1,169 @@
+<block-ui>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <!-- <button class="btn btn-secondary  btn-sm float-end" [routerLink]="[ '/user-entry' ]"><i
+              class="feather icon-plus "></i> Create User</button> -->
+
+          <div class="d-sm-flex align-items-center justify-content-between pb-3 text-center text-sm-start">
+            <h5>Post List </h5>
+            <div class="d-flex align-items-center flex-grow-2">
+                <label class="form-label pe-1 me-2 mb-0 fw-bold">Sort by</label>
+                <ng-select style="width: 205px;" (change)="onStatusChange($event)" [(ngModel)]="selectedStatus" [clearable]="false" [clearOnBackspace]="false"
+                  [items]="postStatus" bindLabel="name" placeholder="Select status">
+                </ng-select>
+            </div>
+          </div>
+
+        </div>
+        <div class="card-block ">
+          <div class="row ">
+            <div class="col-lg-12 ">
+              <ngx-datatable class="material table-bordered"
+              [rows]="rows"
+              [loadingIndicator]="loadingIndicator"
+              [externalPaging]="true"
+              [columnMode]="ColumnMode.force"
+              [headerHeight]="40"
+              [footerHeight]="50"
+              rowHeight="auto"
+              [count]="page.totalElements"
+              [offset]="page.pageNumber"
+              [limit]="page.size"
+              (page)="setPage($event)"
+            >
+
+                <ngx-datatable-column [minWidth]="70" [maxWidth]="100" name="Sl" [draggable]="false" [sortable]="false">
+                  <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    <span> {{ rowIndex + 1 }} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Item Name" prop="item_name" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{value }}"> {{ value }}
+                    </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Postee Name" [draggable]="false" [sortable]="false">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span title="{{ row.first_name + ' ' + row.last_name }}"> {{ row.first_name + ' ' + row.last_name }}
+                    </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <!-- <ngx-datatable-column name="Company Name" prop="company_name" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value }}"> {{ value }} </span>
+                  </ng-template>
+                </ngx-datatable-column> -->
+
+
+                <!-- <ngx-datatable-column name="Transaction Count" prop="transaction_count" [draggable]="false"
+                  [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value }}"> {{ value }} </span>
+                  </ng-template>
+                </ngx-datatable-column> -->
+
+
+                <ngx-datatable-column [minWidth]="70" [maxWidth]="200"  name="Status" prop="status" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span *ngIf="value == 'Pending'" class="badge bg-warning" title="{{ value }}"> {{ value }} </span>
+                    <span *ngIf="value == 'Published'" class="badge bg-success" title="{{ value }}"> {{ value }} </span>
+                    <span *ngIf="value == 'Suspended'" class="badge bg-danger" title="{{ value }}"> {{ value }} </span>
+                    <span *ngIf="value == 'Outdated'" class="badge bg-danger" title="{{ value }}"> {{ value }} </span>
+                    <span *ngIf="value == 'Draft'" class="badge bg-info" title="{{ value }}"> {{ value }} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column [minWidth]="70" [maxWidth]="200"  name="Create Date" prop="created_at" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value | date:'MMM d, y h:mm a '}}"> {{ value |  date:'MMM d, y h:mm a '}} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+
+                <ngx-datatable-column [minWidth]="70" [maxWidth]="100" name="Action" prop="Id" [draggable]="false"
+                  [sortable]="false">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <button class="btn btn-outline-secondary btn-mini" [routerLink]="['/post-edit',row.id]"  >
+                      <i class="feather icon-edit"></i> Edit
+                    </button>
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer ">
+
+        </div>
+        <!-- end of card-footer -->
+      </div>
+    </div>
+  </div>
+
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title float-start " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHide()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <div class="row" *ngIf="selectedUser">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-block">
+
+
+              <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label fw-bold">User Name</label>
+                <div class="col-sm-8">
+                  <p class="mt-2">{{selectedUser.first_name +' '+selectedUser.last_name}}</p>
+                </div>
+              </div>
+
+              <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label fw-bold">Mobile Number</label>
+                <div class="col-sm-8">
+                  <p class="mt-2">{{selectedUser.mobile_number }}</p>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label fw-bold">Status</label>
+                <div class="col-sm-8">
+                  <ng-select [(ngModel)]="selectedStatus" [clearable]="false" [clearOnBackspace]="false"
+                    [items]="postStatus" bindLabel="name" bindValue="id" placeholder="Select status">
+                  </ng-select>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-outline-danger me-2" (click)="modalHide()"> <i class="feather icon-x"></i> Close</button>
+
+        <button class="btn btn-outline-success" (click)="onFormSubmit()"><i class="feather icon-check-circle"></i>
+          Update</button>
+
+
+      </div>
+
+    </div>
+  </ng-template>
+
+</block-ui>

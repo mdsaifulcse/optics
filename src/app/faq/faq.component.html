@@ -1,0 +1,118 @@
+<block-ui>
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card card-border-primary">
+            <div class="card-block ">
+              <div class="row ">
+                <div class="col-md-8 mb-2 col-xs-12">
+                  <button class="btn btn-secondary " (click)="openModal(template)"><i class="feather icon-plus "></i>
+                   Create FAQ </button>
+                </div>
+                <div class="col-lg-12 ">
+                  <ngx-datatable class="material table-bordered" [rows]="rows" [loadingIndicator]="loadingIndicator"
+                    [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
+                    [limit]="10">
+
+
+                    <ngx-datatable-column [maxWidth]="250" name="Question" prop="Question" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Answer" prop="Answer" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [maxWidth]="130" name="Action" prop="Id" [draggable]="false"
+                      [sortable]="false" cellShift="text-center" headerShift="text-center">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <button class="btn btn-outline-secondary btn-mini" (click)="getItem(row.Id, template)"><i
+                            class="feather icon-edit"></i>
+                          Edit</button>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="40" name="Move" prop="Id" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                        <button class="btn btn-secondary btn-mini pl-1 p-r-1 m-r-5"
+                          [disabled]="(page.pageNumber * page.size) + rowIndex === 0" (click)="moveUp(row.Id)">
+                          <i class="feather icon-arrow-up mr-0"></i>
+                        </button>
+                        <button class="btn btn-danger btn-mini pl-1 p-r-1"
+                          [disabled]="(page.pageNumber * page.size) + rowIndex === page.totalElements-1"
+                          (click)="moveDown(row.Id)">
+                          <i class="feather icon-arrow-down mr-0"></i>
+                        </button>
+                      </ng-template>
+                    </ngx-datatable-column>
+                  </ngx-datatable>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button " class="close btn float-end " aria-label="Close " (click)="modalHide()">
+        <i class="feather icon-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <form [formGroup]="entryForm" autocomplete="off">
+
+        <div class="mb-3 row">
+          <label class="col-lg-2 col-md-3 col-12 col-form-label col-form-label-sm required">Question </label>
+          <div class="col-lg-10 col-md-9 col-12">
+            <textarea type="text"  rows="3" formControlName="question" class="form-control form-control-sm"></textarea>
+            <div *ngIf="submitted && f.question.errors" class="error-text">
+              <span *ngIf="f.question.errors.required" class="text-danger"> Question is
+                required</span>
+              <span *ngIf="f.question.errors.maxlength" class="text-danger">Question
+                must be not than 250 characters</span>
+            </div>
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label class="col-lg-2 col-md-3 col-12 col-form-label col-form-label-sm required">Answer </label>
+          <div class="col-lg-10 col-md-9 col-12">
+            <textarea type="text" rows="3" formControlName="answer" class="form-control form-control-sm"></textarea>
+            <div *ngIf="submitted && f.answer.errors" class="error-text">
+              <span *ngIf="f.answer.errors.required" class="text-danger"> Answer is
+                required</span>
+              <span *ngIf="f.answer.errors.maxlength" class="text-danger">Answer
+                must be not than 250 characters</span>
+            </div>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <div class="p-r-4">
+
+        <button class="btn btn-outline-danger m-r-20" (click)="modalHide()"> <i class="feather icon-x"></i>
+          Close</button>
+
+        <button class="btn btn-secondary" (click)="onFormSubmit()"><i class="feather icon-check-circle"></i>
+          {{btnSaveText}}</button>
+
+      </div>
+
+    </div>
+  </ng-template>
+</block-ui>

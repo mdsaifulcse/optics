@@ -1,0 +1,268 @@
+<block-ui>
+  <div class="row">
+    <div class="col-lg-7 col-12">
+      <div class="row">
+        <div class="col-12">
+          <div class="card table-card">
+            <div class="row-table">
+              <div class="col-sm-4 card-block-big br">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <i class="fas fa-users fa-3x"></i>
+                  </div>
+                  <div class="col-sm-8 text-center">
+                    <h5>{{ totalUsers }}</h5>
+                    <span>Users</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 card-block-big br">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <i class="fas fa-thumbtack fa-3x"></i>
+                  </div>
+                  <div class="col-sm-8 text-center">
+                    <h5>{{totalPosts}}</h5>
+                    <span>Posts</span>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="col-sm-4 card-block-big">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <i class="fas fa-video fa-3x"></i>
+                  </div>
+                  <div class="col-sm-8 text-center">
+                    <h5>{{totalVideos}}</h5>
+                    <span>Videos</span>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+
+            <!-- <div class="row-table">
+              <div class="col-sm-4 card-block-big br">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <i class="fas fa-file-alt fa-3x"></i>
+                  </div>
+                  <div class="col-sm-8 text-center">
+                    <h5>{{ totalDocs }}</h5>
+                    <span>Documents</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 card-block-big br">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <i class="fas fa-clock fa-3x"></i>
+                  </div>
+                  <div class="col-sm-8 text-center">
+                    <h5>{{totalTest}}</h5>
+                    <span>Mock Tests</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 card-block-big">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <i class="fas fa-certificate fa-3x"></i>
+                  </div>
+                  <div class="col-sm-8 text-center">
+                    <h5>{{totalExam}}</h5>
+                    <span>Certificates</span>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+      <!-- <div class="row">
+      <div class="col-md-12">
+
+        <div class="card">
+          <div class="table-responsive-md " *ngIf="traineeProgressList.list.length > 0">
+            <div class="card-header pb-2 pt-2">
+              <h5 class="card-title mb-0">Current Progress (Trainee)</h5>
+            </div>
+            <table class="table table-hover table-sm mb-0">
+              <thead>
+                <tr>
+                  <th>
+                    Trainee Name
+                  </th>
+                  <th class="text-center">Course Enrolled</th>
+                  <th class="text-center">Course Completed</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of traineeProgressList.list">
+                  <td>
+
+                    <div class="d-inline-block align-middle">
+                      <img *ngIf="item.ImagePath" [src]="baseUrl+item.ImagePath" alt="user image"
+                        [routerLink]="['/employee-entry']" [queryParams]="{ id: item.EmployeeId ,cycle: false}"
+                        class="img-radius wid-30 me-2 ">
+                      <img *ngIf="!item.ImagePath" src="assets/images/user/user-avatar-blank.png" alt="user image"
+                        [routerLink]="['/employee-entry']" [queryParams]="{ id: item.EmployeeId ,cycle: false}"
+                        class="img-radius wid-30  me-2">
+
+                      <div class="d-inline-block">
+
+                        <p class="mb-0 text-wrap"><a [routerLink]="['/trainee-entry']"
+                          [queryParams]="{ id: item.Id }" queryParamsHandling="merge">{{item.Name}}</a> </p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="text-center">{{item.Enrolled}}</td>
+                  <td class="text-center">{{item.Completed}}</td>
+
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+          <h4 *ngIf="traineeProgressList.list.length === 0" class="mb-0 p-4">No progress found.</h4>
+
+        </div>
+
+      </div>
+
+    </div> -->
+
+      <!-- <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header pt-2 pb-2">
+              <h5 class="card-title mb-0">Belated Trainee List</h5>
+            </div>
+            <div
+              class="table-responsive-md"
+              *ngIf="belatedTraineeList.list.length > 0"
+            >
+              <table class="table table-sm table-hover mb-0">
+                <thead>
+                  <tr>
+                    <th>Trainee Name</th>
+                    <th>Course Name</th>
+                    <th>Missed Exam</th>
+                    <th>Last Date Of Enrollment</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of belatedTraineeList.list">
+                    <td>
+                      <div class="d-inline-block align-left">
+                        <img
+                          *ngIf="item.ImagePath"
+                          [src]="baseUrl + item.ImagePath"
+                          alt="user image"
+                          [routerLink]="['/employee-entry']"
+                          [queryParams]="{ id: item.EmployeeId, cycle: false }"
+                          class="img-radius wid-30 align-top me-2"
+                          [ngbTooltip]="infoTooltipTemplate"
+                          placement="right"
+                        />
+                        <img
+                          *ngIf="!item.ImagePath"
+                          src="assets/images/user/user-avatar-blank.png"
+                          alt="user image"
+                          [routerLink]="['/employee-entry']"
+                          [queryParams]="{ id: item.EmployeeId, cycle: false }"
+                          class="img-radius wid-30 align-top me-2"
+                          [ngbTooltip]="infoTooltipTemplate"
+                          placement="right"
+                        />
+                        <ng-template #infoTooltipTemplate>
+                          <div class="row">
+                            <div class="col-sm-6 col-md-3 text-center">
+                              <img
+                                *ngIf="item.ImagePath"
+                                [src]="baseUrl + item.ImagePath"
+                                alt=""
+                                style="width: 70px"
+                              />
+                              <img
+                                *ngIf="!item.ImagePath"
+                                src="assets/images/user/user-avatar-blank.png"
+                                alt=""
+                                style="width: 50px"
+                              />
+                            </div>
+                            <div class="col-sm-6 col-md-9 text-left pl-0">
+                              <span>
+                                <span
+                                  ><b>{{ item.full_name }}</b> <br />
+                                  <i class="feather icon-mail"></i>
+                                  <a [routerLinkActive]="['active']">{{
+                                    item.email
+                                  }}</a>
+                                  <br />
+                                  <i class="feather icon-phone"></i
+                                  >{{ item.mobile_number }}
+                                </span>
+                              </span>
+
+
+                            </div>
+                          </div>
+                        </ng-template>
+
+                        <div class="d-inline-block">
+                          <p class="m-b-0 text-wrap">{{ item.Name }}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-wrap">{{ item.CourseTitle }}</td>
+                    <td class="text-wrap">{{ item.ExamName }}</td>
+                    <td class="text-wrap">
+                      {{ item.EndDate | amDateFormat: "DD-MMM-YYYY hh:mm a" }}
+                    </td>
+
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h4 *ngIf="belatedTraineeList.list.length === 0" class="mb-0 p-4">
+              No record found.
+            </h4>
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <!-- <div class="col-lg-5 col-12">
+      <div class="col-md-12">
+        <div class="card" *ngIf="certificateList.list.length === 0">
+          <div class="card-header">
+            <h4 class="card-title mb-0">No certificates were obtained.</h4>
+          </div>
+        </div>
+        <highcharts-chart
+          [Highcharts]="Highcharts"
+          *ngIf="certificateList.list.length > 0"
+          [options]="certificateChartOptions"
+          style="width: 100%; height: 360px; display: block"
+        ></highcharts-chart>
+      </div>
+      <br />
+      <div class="col-md-12">
+        <div class="card" *ngIf="!courseChartOptions">
+          <div class="card-header">
+            <h4 class="card-title mb-0">No course with enrollments found.</h4>
+          </div>
+        </div>
+        <highcharts-chart
+          [Highcharts]="Highcharts"
+          *ngIf="courseChartOptions"
+          [options]="courseChartOptions"
+          style="width: 100%; height: 360px; display: block"
+        ></highcharts-chart>
+      </div>
+      <br />
+
+    </div> -->
+  </div>
+</block-ui>

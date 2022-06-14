@@ -1,0 +1,447 @@
+<block-ui>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <!-- <button class="btn btn-secondary  btn-sm float-end" [routerLink]="[ '/user-entry' ]"><i
+              class="feather icon-plus "></i> Create User</button> -->
+
+          <div class="d-sm-flex align-items-center justify-content-between pb-3 text-center text-sm-start">
+            <h5>Post Update </h5>
+
+            <a (click)="goBack()" type="button" class="btn btn-info mr-3">
+              <i class="fa fa-arrow-left"></i> Go Back
+            </a>
+
+          </div>
+
+        </div>
+        <div class="card-block ">
+          <form [formGroup]="entryForm">
+            <div class="row">
+              <div class="col-md-6">
+
+                <div class="mb-2 row">
+                  <label class="col-md-4 col-form-label">Item Name <sup class="text-danger ms-1">*</sup></label>
+                  <div class="col-md-8">
+                    <textarea rows="1" formControlName="item_name" class="form-control" type="text"
+                      id="post-title"></textarea>
+
+                    <div *ngIf="submitted && f['item_name'].errors" class="error-text text-start fs-ms my-2 ">
+                      <span *ngIf="f['item_name'].errors['required']" class="text-danger"> Item name
+                        is
+                        required</span>
+                      <span *ngIf="f['item_name'].errors['maxLength']" class="text-danger"> Item name
+                        must be with in 550 charecter</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-2 row">
+                  <label class="col-md-4 col-form-label">Category <sup class="text-danger ms-1">*</sup></label>
+                  <div class="col-md-8">
+                    <ng-select id="post-category" formControlName="category" [clearable]="false"
+                      [clearOnBackspace]="false" [items]="categoryList" bindLabel="name" bindValue="id"
+                      placeholder="Select Category">
+                    </ng-select>
+                    <div *ngIf="submitted && f['category'].errors" class="error-text text-start fs-ms my-2 ">
+                      <span *ngIf="f['category'].errors['required']" class="text-danger"> Category is
+                        required</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-2 row">
+                  <label class="col-md-4 col-form-label">Genre <sup class="text-danger ms-1">*</sup></label>
+                  <div class="col-md-8">
+                    <ng-select id="post-genre" formControlName="genre" [clearable]="false" [clearOnBackspace]="false"
+                      [items]="genreList" bindLabel="name" bindValue="id" placeholder="Select Genre">
+                    </ng-select>
+                    <div *ngIf="submitted && f['genre'].errors" class="error-text text-start fs-ms my-2 ">
+                      <span *ngIf="f['genre'].errors['required']" class="text-danger"> Genre is
+                        required</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-2 row">
+                  <label class="col-md-4 col-form-label">Unit <sup class="text-danger ms-1">*</sup></label>
+                  <div class="col-md-8">
+                    <ng-select id="post-unit" formControlName="unit" [clearable]="false" [clearOnBackspace]="false"
+                      [items]="unitList" bindValue="id" bindLabel="name" placeholder="Select Unit">
+                    </ng-select>
+
+                    <div *ngIf="submitted && f['unit'].errors" class="error-text text-start fs-ms my-2 ">
+                      <span *ngIf="f['unit'].errors['required']" class="text-danger"> Unit is
+                        required</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-2 row">
+                  <label class="col-md-4 col-form-label">Qty <sup class="text-danger ms-1">*</sup></label>
+                  <div class="col-sm-7 col-md-5 col-9">
+                    <input formControlName="qty" numeric numericType="number" class="form-control" type="text"
+                      id="post-price" placeholder="Enter qty" />
+
+                    <div *ngIf="submitted && f['qty'].errors" class="error-text text-start fs-ms my-2 ">
+                      <span *ngIf="f['qty'].errors['required']" class="text-danger"> Qty is
+                        required</span>
+                    </div>
+                  </div>
+                  <div class="col-sm-5 col-md-3 col-3 p-0" *ngIf="selectedUnit">
+                    <h3 class="fs-normal nav-heading pt-2 fw-semibold">/ {{selectedUnit.name}}</h3>
+                  </div>
+                </div>
+
+                <div class="mb-2 row">
+                  <label class="col-md-4 col-form-label">Unit Price <sup class="text-danger ms-1">*</sup></label>
+                  <div class="col-sm-7 col-md-5 col-9">
+                    <input formControlName="unit_price" numeric numericType="decimal" class="form-control" type="text"
+                      id="post-price" placeholder="Enter unit price" />
+
+                    <div *ngIf="submitted && f['unit_price'].errors" class="error-text text-start fs-ms my-2 ">
+                      <span *ngIf="f['unit_price'].errors['required']" class="text-danger"> Unit price is
+                        required</span>
+                    </div>
+                  </div>
+                  <div class="col-sm-5 col-md-2 col-3 p-0" *ngIf="selectedUnit">
+                    <h3 class="fs-normal nav-heading pt-2 fw-semibold">/ {{selectedUnit.name}}</h3>
+                  </div>
+                </div>
+
+                <div class="mb-2 row">
+                  <label class="col-md-4 col-form-label">Minimum Order Qty<sup class="text-danger ms-1">*</sup></label>
+                  <div class="col-sm-7 col-md-5 col-9">
+                    <input formControlName="moq" numeric numericType="number" class="form-control" type="text"
+                      id="post-moq" placeholder="Enter min order qty" />
+
+                    <div *ngIf="submitted && f['moq'].errors" class="error-text text-start fs-ms my-2 ">
+                      <span *ngIf="f['moq'].errors['required']" class="text-danger"> Minimum order qty is
+                        required</span>
+                    </div>
+                  </div>
+                  <div class="col-sm-5 col-md-3 col-3 p-0" *ngIf="selectedUnit">
+                    <h3 class="fs-normal nav-heading pt-2 fw-semibold">/ {{selectedUnit.name}}</h3>
+                  </div>
+                </div>
+
+                <div class="mb-2 row">
+                  <label class="col-md-4 col-form-label">Color Variation <sup class="text-danger ms-1">*</sup></label>
+                  <div class="col-md-3 mb-2">
+                    <input class="form-control" formControlName="color_min" numeric numericType="number"
+                      placeholder="Min" />
+                  </div>
+                  <div class="col-md-3 ps-0">
+                    <input class="form-control" formControlName="color_max" numeric numericType="number"
+                      placeholder="Max" />
+                  </div>
+                  <div class="col-md-2 ps-0">
+                    <a tooltip="আপনার কাছে ৪ /৫ টি কালার থাকলে, আপনি মিনিমাম-কালার এর ঘরে ৪ এবং ম্যাক্সিমাম-কালার এর ঘরে ৫ লিখুন"
+                      class="btn-social bs-outline bs-facebook me-2 mb-2 mt-1" href="javascript:;"><i
+                        class="ai-help-circle"></i></a>
+                  </div>
+
+                </div>
+
+                <div class="mb-2 row mt-2">
+                  <label class="col-md-4 col-form-label">Select Size <sup class="text-danger ms-1">*</sup></label>
+                  <div class="col-md-8">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <ng-select id="post-unit" formControlName="size_type" (change)="onSizeChange($event)"
+                          [clearable]="false" [clearOnBackspace]="false" [items]="sizeList" bindLabel="name"
+                          placeholder="Select size">
+                        </ng-select>
+
+                        <div *ngIf="submitted && f['size_type'].errors" class="error-text text-start fs-ms my-2 ">
+                          <span *ngIf="f['size_type'].errors['required']" class="text-danger"> Size is
+                            required</span>
+                        </div>
+
+                      </div>
+                      <div class="col-md-12  mt-4">
+
+                        <div *ngIf="selectedSize == 'standard_size'">
+                          <div *ngFor="let item of standardSizeList; let i=index"
+                            class="form-check form-option form-option-size form-check-inline mb-2">
+                            <input (click)="sizeClick($event.target.checked)" [(ngModel)]="item.selected"
+                              class="form-check-input" type="checkbox" id="standard_size_{{item.id}}"
+                              [ngModelOptions]="{standalone: true}">
+                            <label class="form-option-label" for="standard_size_{{item.id}}">{{item.name}}</label>
+                          </div>
+                        </div>
+
+                        <div *ngIf="selectedSize == 'other_size'">
+                          <div *ngFor="let item of otherSizeList; let i=index"
+                            class="form-check form-option form-option-size form-check-inline mb-2">
+                            <input (click)="sizeClick($event.target.checked)" [(ngModel)]="item.selected"
+                              class="form-check-input" type="checkbox" id="other_size_{{item.id}}"
+                              [ngModelOptions]="{standalone: true}">
+                            <label class="form-option-label" for="other_size_{{item.id}}">{{item.name}}</label>
+                          </div>
+                        </div>
+
+                        <div *ngIf="selectedSize == 'size_in_year'">
+                          <div *ngFor="let item of sizeInYearList; let i=index"
+                            class="form-check form-option form-option-size form-check-inline mb-2">
+                            <input (click)="sizeClick($event.target.checked)" [(ngModel)]="item.selected"
+                              class="form-check-input" type="checkbox" id="size_in_year_{{item.id}}"
+                              [ngModelOptions]="{standalone: true}">
+                            <label class="form-option-label" for="size_in_year_{{item.id}}">{{item.name}}</label>
+                          </div>
+                        </div>
+
+                        <div *ngIf="selectedSize == 'size_in_month'">
+                          <div *ngFor="let item of sizeInMonthList; let i=index"
+                            class="form-check form-option form-option-size form-check-inline mb-2">
+                            <input (click)="sizeClick($event.target.checked)" [(ngModel)]="item.selected"
+                              class="form-check-input" type="checkbox" id="size_in_month_{{item.id}}"
+                              [ngModelOptions]="{standalone: true}">
+                            <label class="form-option-label" for="size_in_month_{{item.id}}">{{item.name}}</label>
+                          </div>
+                        </div>
+
+
+                        <div class="row" *ngIf="selectedSize == 'size_in_inches'">
+                          <div class="col-md-6 mb-3">
+                            <label class="form-label px-0" for="post-category">Min size in
+                              inches </label>
+                            <input class="form-control" numeric numericType="number" formControlName="size_inches_min"
+                              placeholder="Ex. 24" />
+
+                            <div *ngIf="submitted && f['size_inches_min'].errors"
+                              class="error-text text-start fs-ms my-2 ">
+                              <span *ngIf="f['size_inches_min'].errors['required']" class="text-danger"> Min size is
+                                required</span>
+                            </div>
+
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label class="form-label px-0" for="post-category">Max size in
+                              inches </label>
+                            <input class="form-control" numeric numericType="number" formControlName="size_inches_max"
+                              placeholder="Ex. 64" />
+
+                            <div *ngIf="submitted && f['size_inches_max'].errors"
+                              class="error-text text-start fs-ms my-2 ">
+                              <span *ngIf="f['size_inches_max'].errors['required']" class="text-danger"> Max size is
+                                required</span>
+                            </div>
+
+                          </div>
+                        </div>
+                        <div class="row" *ngIf="selectedSize == 'size_in_cm'">
+                          <div class="col-md-6 mb-3">
+                            <label class="form-label px-0" for="post-category">Min size in
+                              cm </label>
+                            <input class="form-control" numeric numericType="number" formControlName="size_cm_min"
+                              placeholder="Ex. 105" />
+
+                            <div *ngIf="submitted && f['size_cm_min'].errors" class="error-text text-start fs-ms my-2 ">
+                              <span *ngIf="f['size_cm_min'].errors['required']" class="text-danger"> Min size is
+                                required</span>
+                            </div>
+
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label class="form-label px-0" for="post-category">Max size in
+                              cm </label>
+                            <input class="form-control" numeric numericType="number" formControlName="size_cm_max"
+                              placeholder="Ex. 500" />
+
+                            <div *ngIf="submitted && f['size_cm_max'].errors" class="error-text text-start fs-ms my-2 ">
+                              <span *ngIf="f['size_cm_max'].errors['required']" class="text-danger"> Max size is
+                                required</span>
+                            </div>
+
+                          </div>
+                        </div>
+
+                        <div class="row" *ngIf="submitted && size_error_msg" class="error-text text-start fs-ms my-2 ">
+                          <span *ngIf="size_error_msg" class="text-danger col-md-12"> {{size_error_msg}}</span>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="mb-2 row mt-2">
+
+                  <label class="col-md-4 form-label">Description</label>
+                  <div class="col-md-8">
+                    <textarea rows="4"
+                      placeholder="If you could not find any appropriate attributes of the product above, specify here.&#10;For example: &#10;I have mixed sizes,&#10;I have red 3XL size, etc."
+                      formControlName="description" class="form-control" type="text"></textarea>
+                  </div>
+
+                </div>
+
+                <div class="row mt-5">
+                  <label class="col-md-4 form-label pt-3">How Long The Post Will Appear</label>
+                  <div class=" col-md-8">
+                    <ng-select class="mt-2" [disabled]="true" [clearable]="false" [clearOnBackspace]="false"
+                      formControlName="day_cost" [items]="dayWithCostList" bindLabel="name" placeholder="Select">
+                    </ng-select>
+
+                    <div *ngIf="submitted && f['day_cost'].errors" class="error-text text-start fs-ms my-2 ">
+                      <span *ngIf="f['day_cost'].errors['required']" class="text-danger"> Required</span>
+                    </div>
+
+                  </div>
+
+                  <label *ngIf="cost != 0" class="col-md-4  mt-5 h5 fw-bolder">Advertisement Cost</label>
+                  <div *ngIf="cost != 0" class=" col-md-6  mt-4">
+                    <h1 class=" text-success pt-3 mb-1">{{cost}} ৳</h1>
+                  </div>
+                </div>
+
+              </div>
+              <div class="col-md-6">
+                <!-- <h2 class="h5 text-primary pt-1">Images</h2>
+                <hr class="mt-2 mb-2"> -->
+                <!-- <div class="alert d-flex alert-info fs-md mb-2" role="alert"><i
+                    class="ai-alert-circle fs-xl me-3"></i>
+                  <div>আপনি সর্বোচ্চ দশটি ইমেজ আপলোড করতে পারবেন। একটি ফিচার ইমেজ এবং নয়টি অন্যান্য ইমেজ।
+                  </div>
+                </div> -->
+
+                <div class="col-md-12 mb-3">
+                  <div class="row">
+                    <label class="col-md-4 form-label " for="post-size">Feature Image <sup
+                        class="text-danger ms-1">*</sup>
+                      <a tooltip="আপনি সর্বোচ্চ দশটি ইমেজ আপলোড করতে পারবেন। একটি ফিচার ইমেজ এবং নয়টি অন্যান্য ইমেজ।"
+                        class="btn-social bs-outline bs-facebook me-2 mb-2 mt-1" href="javascript:;"><i
+                          class="ai-help-circle"></i></a>
+                    </label>
+
+                    <div class="col-md-8">
+                      <input accept="image/png, image/jpeg" (change)="onFeatureImageFileChange($event)"
+                        formControlName="feature_image" type="file" class="form-control">
+                      <div class="pt-1 mb-0 fs-ms text-muted">Upload JPG or PNG image. 1000 x 645
+                        maximum size.</div>
+                    </div>
+                    <div class="col-md-12" *ngIf="featureImage && uploadedFeatureImage == null">
+                      <img [src]="featureImage.baseFile" style="width: 120px; height: 100px; margin: 3px;">
+                    </div>
+                    <div class="col-md-12" *ngIf="uploadedFeatureImage != null && !featureImage">
+                      <img src="{{baseUrl}}/{{uploadedFeatureImage.image_url}}"
+                        style="width: 120px; height: 100px; margin: 3px;">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mb-3 pt-3">
+                  <div class="row">
+                    <label class="col-md-4 form-label " for="post-size">Additional Images <sup
+                        class="text-danger ms-1">*</sup> <a
+                        tooltip="আপনি সর্বোচ্চ দশটি ইমেজ আপলোড করতে পারবেন। একটি ফিচার ইমেজ এবং নয়টি অন্যান্য ইমেজ।"
+                        class="btn-social bs-outline bs-facebook me-2 mb-2 mt-1" href="javascript:;"><i
+                          class="ai-help-circle"></i></a>
+                    </label>
+
+                    <div class="col-md-8">
+                      <input multiple="" accept="image/png, image/jpeg" (change)="onAdditionalImageFileChange($event)"
+                        formControlName="additional_images" type="file" class="form-control">
+                      <div class="pt-1 mb-0 fs-ms text-muted">Maximum four images can be uploaded.
+                        Upload JPG or PNG image. 1000 x 645 maximum size.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12" *ngIf="additionalImages.length > 0 && uploadedAdditionalImages.length == 0">
+                  <div class="row">
+                    <div class="col-md-4" *ngFor='let img of additionalImages'>
+                      <img [src]="img.baseFile" style="width: 120px; height: 100px; margin: 3px;">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12" *ngIf="additionalImages.length == 0 && uploadedAdditionalImages.length > 0">
+                  <div class="row">
+                    <div class="col-md-4" *ngFor='let img of uploadedAdditionalImages'>
+                      <img src="{{baseUrl}}/{{img.image_url}}" style="width: 120px; height: 100px; margin: 3px;">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- <div class="mb-2 row mt-5">
+                <label class="col-md-4 col-form-label">Post Status <sup class="text-danger ms-1">*</sup></label>
+                <div class="col-md-8">
+                  <ng-select  formControlName="status" [clearable]="false"
+                    [clearOnBackspace]="false" [items]="postStatus" bindValue="id" bindLabel="name" bindValue="id" placeholder="Select Status">
+                  </ng-select>
+
+                </div>
+              </div> -->
+                <hr>
+                <div class="mb-2 row mt-5">
+
+                  <div class="col-md-6 border-end">
+
+                    <div *ngIf="paramObj.status == 'Pending'">
+                      <div class="form-group form-check form-check-inline">
+                        <input type="radio" id="published" value="Published" formControlName="status"
+                          class="form-check-input" />
+                        <label for="published" class="form-check-label text-success fw-bold"> Approve</label>
+                      </div>
+
+                      <div class="form-group form-check form-check-inline">
+                        <input type="radio" id="suspended" value="Suspended" formControlName="status"
+                          class="form-check-input" />
+                        <label for="suspended" class="form-check-label text-danger fw-bold "> Suspend </label>
+                      </div>
+                    </div>
+
+                    <div *ngIf="paramObj.status == 'Published'">
+
+                      <div class="form-group form-check form-check-inline">
+                        <input type="checkbox" id="outdated" formControlName="status" class="form-check-input" />
+                        <label for="outdated" class="form-check-label text-danger fw-bold ">Outdate</label>
+                      </div>
+
+                    </div>
+
+                    <div *ngIf="submitted && f['status'].errors" class="error-text text-start fs-ms my-2 ">
+                      <span *ngIf="f['status'].errors['required']" class="text-danger"> Status is required</span>
+                    </div>
+
+                  </div>
+
+
+
+                <div class="col-md-6">
+                  <div class="form-group form-check form-check-inline">
+                    <input type="checkbox" id="is_featured" formControlName="is_featured" class="form-check-input" />
+                    <label for="is_featured" class="form-check-label">Featured</label>
+                  </div>
+
+                  <div class="form-group form-check form-check-inline">
+                    <input type="checkbox" id="is_urgent" formControlName="is_urgent" class="form-check-input" />
+                    <label for="is_urgent" class="form-check-label">Urgent</label>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="mb-2 row mt-5">
+                <div class="col-md-6 d-grid offset-md-3">
+                  <button type="button" class="btn btn-lg btn-primary float-center"
+                    (click)="onPostUpdateSubmit()">Update</button>
+                </div>
+
+              </div>
+
+
+            </div>
+        </div>
+        </form>
+      </div>
+      <!-- end of card-footer -->
+    </div>
+  </div>
+  </div>
+
+</block-ui>

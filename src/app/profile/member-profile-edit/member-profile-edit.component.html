@@ -1,0 +1,104 @@
+<block-ui>
+
+  <div class="card card-border-default">
+    <div class="card-header">
+      <h5>Personal Details</h5>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="editProfileForm" autocomplete="off">
+
+        <div class="row">
+          <div class="col-lg-9 col-md-8 col-12">
+            <div class="row">
+            <div class="col-md-6">
+              <div class="space mb-3">
+                <label class="required">Name English: </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f.name_bn.errors }" formControlName="name_bn" type="text"   class="form-control form-control-sm"  placeholder="Enter your first name">
+                <div *ngIf="submitted && f.name_bn.errors" class="error-text">
+                  <span *ngIf="f.name_bn.errors.required" class="text-danger"> Name English name is required</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="space mb-3">
+                <label class="required">Name Bangali : </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f.name_en.errors }" formControlName="name_en" type="text"
+                  class="form-control form-control-sm"  placeholder="Enter your first name">
+                <div *ngIf="submitted && f.name_en.errors" class="error-text">
+                  <span *ngIf="f.name_en.errors.required" class="text-danger"> Name Bangali name is required</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="space mb-3">
+                <label class="required">Email : </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f.email.errors }" formControlName="email" type="text"
+                  class="form-control form-control-sm"  placeholder="Enter your first name">
+                <div *ngIf="submitted && f.email.errors" class="error-text">
+                  <span *ngIf="f.email.errors.required" class="text-danger"> Email is required</span>
+                  <span *ngIf="f.email.errors.email" class="text-danger"> Invalid email format</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="space mb-3">
+                <label class="required">Mobile Number : </label>
+                <input [ngClass]="{ 'is-invalid': submitted && f.mobile_number.errors }" formControlName="mobile_number"  type="text"  class="form-control form-control-sm"  placeholder="Enter your mobile number">
+                <div *ngIf="submitted && f.mobile_number.errors" class="error-text">
+                  <span *ngIf="f.mobile_number.errors.required" class="text-danger"> Mobile is required</span>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+
+          </div>
+
+          <div class="col-lg-3 col-md-4 col-12">
+            <div class="card bg-light pic-upload pb-2">
+              <div class="card-header text-center">
+                <h5 class="card-title">Picture (230x230)</h5>
+              </div>
+              <div class="card-body bg-white" (click)="pictureInput.click()">
+                <img  *ngIf="!imageUrl" src="https://via.placeholder.com/100x100?text=Upload Photo">
+                <img style="width:100px; height: 100px;" *ngIf="imageUrl" [src]="imageUrl">
+                <input class="btn-img-upload" #pictureInput accept='image/png,image/jpeg'
+                  (change)="readURL($event, pictureInput)"
+                  type="file">
+              </div>
+
+
+
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6">
+                <button *ngIf="imageUrl" type="button" (click)="RemovePhoto()" class="btn btn-outline-secondary btn-sm">
+                  <i class="fa fa-cancel"></i> Remove Photo
+                </button>
+              </div>
+              <div class="col-sm-6" >
+
+              </div>
+            </div>
+
+
+
+
+          </div>
+
+
+          <div class="col-12">
+            <button type="button" (click)="onFormSubmit()" class="btn btn-secondary btn-testz">
+              <i class="fa fa-check"></i> Update Profile
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+
+</block-ui>

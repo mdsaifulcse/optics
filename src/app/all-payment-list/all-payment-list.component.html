@@ -1,0 +1,105 @@
+<block-ui>
+  <div class="row">
+    <div class="col-smd12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <!-- <button class="btn btn-secondary  btn-sm float-end" [routerLink]="[ '/user-entry' ]"><i
+              class="feather icon-plus "></i> Create User</button> -->
+
+          <div class="d-sm-flex align-items-center justify-content-between pb-3 text-center text-sm-start">
+            <h5>All Payment List </h5>
+          </div>
+
+        </div>
+        <div class="card-block ">
+          <div class="row ">
+
+            <div class="col-lg-12">
+              <form [formGroup]="filterForm">
+                <div class="row">
+                  <div class="mb-3 col-md-4">
+                    <label class="form-label">Search by date</label>
+                      <input type="text" readonly class="form-control form-control-sm" formControlName="date"
+                      placement="left" [bsConfig]="bsConfig" [maxDate]="maxDate" bsDaterangepicker
+                      placeholder="Select a date range">
+                    </div>
+
+                  <div class="mb-3 col-md-4">
+                    <label class="form-label">Select type</label>
+                    <ng-select formControlName="type" [clearable]="true" [clearOnBackspace]="false"
+                      [items]="typeList" bindLabel="name" class="form-control form-control-sm"
+                      placeholder="Select type">
+                    </ng-select>
+                  </div>
+                  <div class="mb-3 col-md-4 mt-4 pt-1">
+                    <button type="button" (click)="filterPayment()" class="btn btn-info btn-sm  me-2"><i
+                        class="feather icon-filter"></i> Filter </button>
+                    <button type="button" (click)="resetFilter()" class="btn btn-outline-danger btn-sm"><i
+                        class="feather icon-refresh-ccw"></i> Reset </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+
+            <div class="col-lg-12 ">
+              <ngx-datatable class="material table-bordered" [rows]="rows" [loadingIndicator]="loadingIndicator"
+                [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                (page)="setPage($event)">
+
+                <ngx-datatable-column [minWidth]="70" [maxWidth]="100" name="Sl" [draggable]="false" [sortable]="false">
+                  <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    <span> {{ rowIndex + 1 }} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column [width]="150" name="Customer Name"  [draggable]="false" [sortable]="false">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span title="{{row.first_name}} {{row.last_name}}"> {{row.first_name}} {{row.last_name}}
+                    </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column [width]="80" name="Amount" prop="paid_amount" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value }}"> {{value }}
+                    </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column  [width]="200" name="Payment Type" [draggable]="false" [sortable]="false">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span *ngIf="row.item_type == 'Membership'"> {{row.membership_name }} Membership Purchase</span>
+                    <span *ngIf="row.item_type == 'Load'" > {{row.item_type }} Balance</span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column [width]="150" name="Payment Mothod" prop="payment_mothod" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value }}"> {{value }}
+                    </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column [width]="70" [maxWidth]="150" name="Payment Date" prop="created_at"
+                  [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value | date:'MMM d, y'}}"> {{ value |  date:'MMM d, y'}} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+              </ngx-datatable>
+
+            </div>
+
+          </div>
+        </div>
+        <!-- end of card-footer -->
+      </div>
+    </div>
+  </div>
+
+
+
+</block-ui>

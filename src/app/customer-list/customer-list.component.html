@@ -1,0 +1,337 @@
+<block-ui>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <h5>Customer List </h5>
+          <!-- <button class="btn btn-secondary  btn-sm float-end" [routerLink]="[ '/user-entry' ]"><i
+              class="feather icon-plus "></i> Create Customer</button> -->
+        </div>
+        <div class="card-block ">
+          <div class="row ">
+
+            <div class="col-lg-12">
+              <form [formGroup]="filterForm">
+                <div class="row">
+                  <div class="mb-3 col-md-5">
+                    <label class="form-label">Search by name, mobile number or company name</label>
+                    <input type="text" formControlName="search_text" class="form-control form-control-sm"
+                      placeholder="Type.." />
+                  </div>
+                  <div class="mb-3 col-md-4">
+                    <label class="form-label">Select status</label>
+                    <ng-select formControlName="status" [clearable]="true" [clearOnBackspace]="false"
+                      [items]="statusTypes" bindLabel="name" bindValue="id" class="form-control form-control-sm"
+                      placeholder="Select status">
+                    </ng-select>
+                  </div>
+                  <div class="mb-3 col-md-3 mt-4 pt-1">
+                    <button type="button" (click)="filterCustomer()" class="btn btn-info btn-sm  me-2"><i
+                        class="feather icon-filter"></i> Filter </button>
+                    <button type="button" (click)="resetFilter()" class="btn btn-outline-danger btn-sm"><i
+                        class="feather icon-refresh-ccw"></i> Reset </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+
+            <div class="col-lg-12">
+
+              <ngx-datatable class="material table-bordered" [rows]="rows" [loadingIndicator]="loadingIndicator"
+                [externalPaging]="true" [columnMode]="ColumnMode.force" [scrollbarH]="true" [headerHeight]="40"
+                [footerHeight]="50" rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber"
+                [limit]="page.size" (page)="setPage($event)">
+
+                <ngx-datatable-column headerClass="text-center" [cellClass]="'text-center'" [width]="80" name="Sl"
+                  [draggable]="false" [sortable]="false">
+                  <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    <span> {{ rowIndex + 1 }} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column [width]="360" name="Customer Name" [draggable]="false" [sortable]="false">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span title="{{ row.first_name + ' ' + row.last_name }}"> {{ row.first_name + ' ' + row.last_name }}
+                    </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <!-- <ngx-datatable-column name="Company Name" prop="company_name" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value }}"> {{ value }} </span>
+                  </ng-template>
+                </ngx-datatable-column> -->
+
+                <ngx-datatable-column headerClass="text-center" [cellClass]="'text-center'" [width]="210"
+                  name="Mobile Number" prop="mobile_number" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value }}"> {{ value }} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <!-- <ngx-datatable-column name="Transaction Count" prop="transaction_count" [draggable]="false"
+                  [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value }}"> {{ value }} </span>
+                  </ng-template>
+                </ngx-datatable-column> -->
+
+                <ngx-datatable-column headerClass="text-center" [cellClass]="'text-center'" [width]="220" name="Status"
+                  prop="status" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span *ngIf="value == 'Pending'" class="badge bg-warning" title="{{ value }}"> {{ value }} </span>
+                    <span *ngIf="value == 'Verified'" class="badge bg-success" title="{{ value }}"> {{ value }} </span>
+                    <span *ngIf="value == 'Suspended'" class="badge bg-danger" title="{{ value }}"> {{ value }} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+
+                <ngx-datatable-column headerClass="text-center" [cellClass]="'text-center'" [width]="360" name="Action"
+                  prop="id" [draggable]="false" [sortable]="false">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <button class="btn btn-outline-info btn-mini me-2" (click)="openModalProfile(templateProfile,row)">
+                      <i class="feather icon-eye"></i> View Profile
+                    </button>
+
+                    <button class="btn btn-outline-info btn-mini" (click)="openModal(template,row)">
+                      <i class="feather icon-edit"></i> Change Status
+                    </button>
+
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer ">
+
+        </div>
+        <!-- end of card-footer -->
+      </div>
+    </div>
+  </div>
+
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title float-start " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHide()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <div class="row" *ngIf="selectedCustomer">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-block">
+
+              <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label fw-bold">Customer Name</label>
+                <div class="col-sm-8">
+                  <p class="mt-3 fs-6">{{selectedCustomer.first_name +' '+selectedCustomer.last_name}}</p>
+                </div>
+              </div>
+
+              <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label fw-bold">Mobile Number</label>
+                <div class="col-sm-8">
+                  <p class="mt-3 fs-6">{{selectedCustomer.mobile_number }}</p>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label fw-bold">Status</label>
+                <div class="col-sm-8">
+                  <ng-select (change)="onStatusChange($event)" [(ngModel)]="selectedStatus" [clearable]="false"
+                    [clearOnBackspace]="false" [items]="statusTypes" class="form-control form-control-sm"
+                    bindLabel="name" bindValue="id" placeholder="Select status">
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="mb-3 row" *ngIf="!isInitalBalanceGiven">
+                <label class="col-sm-4 col-form-label fw-bold">Initial Balance</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control form-control-sm" numeric numericType="number"
+                    [(ngModel)]="amount" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-outline-danger me-2" (click)="modalHide()"> <i class="feather icon-x"></i> Close</button>
+
+        <button class="btn btn-outline-success" (click)="onFormSubmit()"><i class="feather icon-check-circle"></i>
+          Update</button>
+
+
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #templateProfile>
+    <div class="modal-header ">
+      <h4 class="modal-title float-start "> Profile Details</h4>
+      <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHideProfile()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <div class="row" *ngIf="selectedCustomer">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-block">
+
+              <div class=" p-4 mb-4 d-flex align-items-center">
+                <div class="flex-shrink-0">
+                  <img *ngIf="!selectedCustomer.profile_image" src="assets/images/noimage.jpg" at="avatar" width="110"
+                  class="rounded-circle mx-auto mb-3 ">
+                  <img *ngIf="selectedCustomer.profile_image" src="{{baseUrl}}/{{selectedCustomer.profile_image}}" at="avatar" width="110"
+                  class="rounded-circle mx-auto mb-3 ">
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <p class="fs-4 fw-bold">{{selectedCustomer.first_name}} {{selectedCustomer.last_name}}</p>
+                </div>
+              </div>
+
+
+
+
+              <div class="col-sm-12">
+                <h4 class="fs-5">Personal Information</h4>
+              </div>
+              <!-- <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class=" col-form-label fw-bold fs-6">First Name</label>
+                    <p class="fs-6">{{selectedCustomer.first_name}}</p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class=" col-form-label fw-bold fs-6">Last Name</label>
+                    <p class="fs-6">{{selectedCustomer.last_name}}</p>
+                  </div>
+                </div>
+              </div> -->
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="col-form-label fw-bold fs-6">Mobile Number</label>
+                    <p class="fs-6">{{selectedCustomer.mobile_number}}</p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="col-form-label fw-bold fs-6">Email</label>
+                    <p class="fs-6">{{selectedCustomer.email ?? "N/A"}}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="col-form-label fw-bold fs-6">NID Number</label>
+                    <p class="fs-6">{{selectedCustomer.NID_number ?? "N/A"}}</p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="col-form-label fw-bold fs-6">NID File</label>
+                    <p *ngIf="!selectedCustomer.NID_image" class="fs-6">N/A</p>
+                    <br *ngIf="selectedCustomer.NID_image">
+                    <img *ngIf="selectedCustomer.NID_image" [src]="findImage(1).thumb" (click)="open(1)"
+                      class="img-fluid img-thumbnail" style="height :100px;" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="col-form-label fw-bold fs-6">Passport Number</label>
+                    <p class="fs-6">{{selectedCustomer.passport_number ?? "N/A"}}</p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="col-form-label fw-bold fs-6">Passport File</label>
+                    <p *ngIf="!selectedCustomer.passport_image" class="fs-6">N/A</p>
+                    <br *ngIf="selectedCustomer.passport_image">
+                    <img *ngIf="selectedCustomer.passport_image" [src]="findImage(2).thumb" (click)="open(2)"
+                      class="img-fluid img-thumbnail" style="height :100px;" />
+                  </div>
+                </div>
+              </div>
+
+
+
+              <hr>
+              <div class="col-sm-12 ">
+                <h4 class="fs-5">Business Information</h4>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="col-form-label fw-bold fs-6">TIN Number</label>
+                    <p class="fs-6">{{selectedCustomer.TIN_number ?? "N/A"}}</p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="col-form-label fw-bold fs-6">TIN File</label>
+                    <p *ngIf="!selectedCustomer.TIN_image" class="fs-6">N/A</p>
+                    <br *ngIf="selectedCustomer.TIN_image">
+                    <img *ngIf="selectedCustomer.TIN_image" [src]="findImage(3).thumb" (click)="open(3)"
+                      class="img-fluid img-thumbnail" style="height :100px;" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="col-form-label fw-bold fs-6">BIN Number</label>
+                    <p class="fs-6">{{selectedCustomer.BIN_number ?? "N/A"}}</p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="col-form-label fw-bold fs-6">BIN File</label>
+                    <p *ngIf="!selectedCustomer.BIN_image" class="fs-6">N/A</p>
+                    <br *ngIf="selectedCustomer.BIN_image">
+                    <img *ngIf="selectedCustomer.BIN_image" [src]="findImage(4).thumb" (click)="open(4)"
+                      class="img-fluid img-thumbnail" style="height :100px;" />
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-outline-danger me-2" (click)="modalHideProfile()"> <i class="feather icon-x"></i>
+          Close</button>
+      </div>
+
+    </div>
+  </ng-template>
+
+</block-ui>

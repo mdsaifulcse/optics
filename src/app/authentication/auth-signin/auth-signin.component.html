@@ -1,0 +1,42 @@
+<block-ui>
+  <div class="auth-wrapper" style="background: linear-gradient(to bottom, #3e5871 -8%, #ffffff 91%);">
+    <div class="auth-content text-center">
+      <!-- <img src="assets/images/auth/auth-logo.png" alt="" class="img-fluid mb-4"> -->
+      <h1 class="font-weight-bold text-white">ADMIN PANEL | Optics App</h1>
+      <div class="card borderless">
+        <div class="row align-items-center text-center">
+          <div class="col-md-12">
+            <div class="card-body">
+              <h4 class="mb-4 fs-3 f-w-800">Log In</h4>
+              <form [formGroup]="LoginForm" autocomplete="off" class="needs-validation" novalidate>
+                <div class="input-group mb-2">
+                  <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                  <input formControlName="email" class="form-control rounded" type="text"
+                    placeholder="Email Address" autocomplete="Email Address" required>
+                </div>
+                <div *ngIf="submitted && f['email'].errors" class="error-text text-start my-2 ">
+                  <span *ngIf="f['email'].errors['required']" class="text-danger"> Email address is
+                    required</span>
+                </div>
+
+                <div class="input-group mb-2">
+                  <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                  <input formControlName="password" class="form-control" type="password" placeholder="password"
+                    autocomplete="current-password" required>
+
+                </div>
+                <div *ngIf="submitted && f['password'].errors" class="error-text text-start my-2">
+                  <span *ngIf="f['password'].errors['required']" class="text-danger">
+                    password is
+                    required</span>
+                </div>
+                <button class="btn btn-primary d-block w-100" (click)="onLoginSubmit()">Login</button>
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>

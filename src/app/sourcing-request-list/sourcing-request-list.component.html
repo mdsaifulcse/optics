@@ -1,0 +1,207 @@
+<block-ui>
+  <div class="row">
+    <div class="col-smd12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <!-- <button class="btn btn-secondary  btn-sm float-end" [routerLink]="[ '/user-entry' ]"><i
+              class="feather icon-plus "></i> Create User</button> -->
+
+          <div class="d-sm-flex align-items-center justify-content-between pb-3 text-center text-sm-start">
+            <h5>Sourcing Request List </h5>
+          </div>
+
+        </div>
+        <div class="card-block ">
+          <div class="row ">
+
+            <div class="col-lg-12">
+              <form [formGroup]="filterForm">
+                <div class="row">
+                  <div class="mb-3 col-md-6">
+                    <label class="form-label">Search by item name, mobile number, first name or last name</label>
+                    <div class="input-group">
+                      <input type="text" formControlName="search_text" class="form-control form-control-sm"
+                        placeholder="Type.." />
+                      <i class="fa fa-search position-absolute top-50 end-0 translate-middle-y me-3"></i>
+                    </div>
+                  </div>
+
+                  <!-- <div class="mb-3 col-md-4">
+                    <label class="form-label">Select status</label>
+                    <ng-select formControlName="status" [clearable]="true" [clearOnBackspace]="false"
+                      [items]="statusTypes" bindLabel="name" bindValue="id" class="form-control form-control-sm"
+                      placeholder="Select status">
+                    </ng-select>
+                  </div> -->
+                  <!-- <div class="mb-3 col-md-4 mt-4 pt-1">
+                    <button type="button" (click)="filterCustomer()" class="btn btn-info btn-sm  me-2"><i
+                        class="feather icon-filter"></i> Filter </button>
+                    <button type="button" (click)="resetFilter()" class="btn btn-outline-danger btn-sm"><i
+                        class="feather icon-refresh-ccw"></i> Reset </button>
+                  </div> -->
+                </div>
+              </form>
+            </div>
+
+
+            <div class="col-lg-12 ">
+              <ngx-datatable class="material table-bordered" [rows]="rows" [loadingIndicator]="loadingIndicator"
+                [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                (page)="setPage($event)">
+
+                <ngx-datatable-column [minWidth]="70" [maxWidth]="100" name="Sl" [draggable]="false" [sortable]="false">
+                  <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    <span> {{ rowIndex + 1 }} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Item Name" prop="item_name" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{value }}"> {{ value }}
+                    </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Name" prop="name" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value }}"> {{value }}
+                    </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Email" prop="email" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value }}"> {{value }}
+                    </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Mobile Nubmer" prop="phone" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{value}}"> {{ value }}</span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column [minWidth]="70" [maxWidth]="180" name="Request Date" prop="created_at"
+                  [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value | date:'MMM d, y'}}"> {{ value |  date:'MMM d, y'}} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+
+                <ngx-datatable-column [minWidth]="70" [maxWidth]="120" name="Action" prop="Id" [draggable]="false"
+                  [sortable]="false">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <button class="btn btn-outline-secondary btn-mini" (click)="openModal(template,row)">
+                      <i class="feather icon-eye"></i> See Details
+                    </button>
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+
+            </div>
+
+          </div>
+        </div>
+        <!-- end of card-footer -->
+      </div>
+    </div>
+  </div>
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title float-start " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHide()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <div class="row" *ngIf="selectedRequest">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-block">
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table table-borderless">
+                      <tr class="table-line-height">
+                        <td width="180" class="fw-bold">Name</td>
+                        <td>:</td>
+                        <td>{{selectedRequest.name}}</td>
+                      </tr>
+                      <tr class="table-line-height">
+                        <td  class="fw-bold">Email</td>
+                        <td>:</td>
+                        <td>{{selectedRequest.email}}</td>
+                      </tr>
+                      <tr class="table-line-height">
+                        <td  class="fw-bold">Phone</td>
+                        <td>:</td>
+                        <td>{{selectedRequest.phone }}</td>
+                      </tr>
+
+                      <tr class="table-line-height">
+                        <td  class="fw-bold">Request Item</td>
+                        <td>:</td>
+                        <td>{{selectedRequest.item_name}}</td>
+                      </tr>
+                      <tr class="table-line-height">
+                        <td  class="fw-bold">Category</td>
+                        <td>:</td>
+                        <td>{{selectedRequest.category}}</td>
+                      </tr>
+                      <tr class="table-line-height">
+                        <td  class="fw-bold">Genre</td>
+                        <td>:</td>
+                        <td>{{selectedRequest.genre }}</td>
+                      </tr>
+                      <tr class="table-line-height">
+                        <td  class="fw-bold">Unit</td>
+                        <td>:</td>
+                        <td>{{selectedRequest.unit }}</td>
+                      </tr>
+                      <tr class="table-line-height">
+                        <td  class="fw-bold">Target Price</td>
+                        <td>:</td>
+                        <td>{{selectedRequest.unit_price }}</td>
+                      </tr>
+                      <tr class="table-line-height">
+                        <td  class="fw-bold">Minimum Order Qty</td>
+                        <td>:</td>
+                        <td>{{selectedRequest.qty }}</td>
+                      </tr>
+                      <tr class="table-line-height">
+                        <td  class="fw-bold">Description</td>
+                        <td>:</td>
+                        <td class="text-wrap">{{selectedRequest.description }}</td>
+                      </tr>
+
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-outline-danger me-2" (click)="modalHide()"> <i class="feather icon-x"></i> Close</button>
+
+
+      </div>
+
+    </div>
+  </ng-template>
+
+
+</block-ui>

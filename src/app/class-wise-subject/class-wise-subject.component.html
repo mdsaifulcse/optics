@@ -1,0 +1,135 @@
+<block-ui>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <h5>Class Wise Subjects List </h5>
+          <button class="btn btn-primary btn-sm mr-1" (click)="openModal(templateClass)" title="Click here to Class wise Subject Assign"> <i class="fa fa-plus"></i> Class wise Subject Assign</button>
+          <!-- <button class="btn btn-secondary  btn-sm float-end" [routerLink]="[ '/user-entry' ]"><i
+              class="feather icon-plus "></i> Create Customer</button> -->
+        </div>
+        <div class="card-block ">
+          <div class="row ">
+
+            <div class="col-lg-12">
+              <div class="table-responsive">
+                <table class="table table-hover table-border table-striped">
+                  <thead>
+                    <tr>
+                      <td>Sl</td>
+                      <td>Class Name</td>
+                      <td>Subjects</td>
+                      <td>Action</td>
+                    </tr>
+                  </thead>
+                    
+                  <tbody>
+                    <tr *ngFor="let data of classWisesubjects; let i=index">
+                      <!-- <td><img class="media-object img-circle card-list-img image-size" src="assets/images/avatar-5.png" alt="Generic placeholder image"></td> -->
+                      <td>{{ i+1  }}</td>
+                      <td>{{ data.classSubject.name_bn  }} ({{ data.classSubject.name_en}})</td>
+                      <td >
+                        <span *ngFor="let subject of data.classSubject.subjects; let j=index">
+                          <span class="btn btn-primary btn-mini ">{{subject.name_bn}} </span> {{ j == (data.classSubject.subjects.length - 1) ? '':',' }}
+                        </span>
+                      </td>
+                     
+                      <td>
+                        <button class="btn btn-warning btn-mini mr-1" (click)="openModalProfile(templateClass,data.classSubject)" title="Update Profile">  <i class="fa fa-edit"></i> Edit</button> | 
+                        <button class="btn btn-danger btn-mini mr-1" (click)="submitDeleteForm(data)" title="Delete Class Info">  <i class="fa fa-times"></i> Delete</button>
+                      </td>
+                      
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer ">
+
+        </div>
+        <!-- end of card-footer -->
+      </div>
+    </div>
+  </div>
+
+
+
+  <ng-template #templateClass>
+    <div class="modal-header ">
+      <h4 class="modal-title float-start " [innerHtml]="modalTitle"></h4>
+      <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHideProfile()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <div class="row" >
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-block">
+              
+              <form [formGroup]="createEditForm" autocomplete="off">
+                <div class="row">
+                  <div class="col-lg-12 col-md-8 col-12">
+                    <div class="row">
+                      
+                      <div class="col-md-3">
+                        <div class="space mb-3">
+                          <label class="required">Class : </label>
+                          <ng-select formControlName="class_id" [clearable]="false" [clearOnBackspace]="false" [items]="classes" [multiple]=false 
+                          bindLabel="name_bn" bindValue="id" placeholder="Select Class">
+                          </ng-select>
+                         
+                          <div *ngIf="submitted && f.class_id.errors" class="error-text">
+                            <span *ngIf="f.class_id.errors.required" class="text-danger"> Class is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <div class="col-md-9">
+                        <div class="space mb-3">
+                          <label class="required">Choose the subjects: </label>
+                          <ng-select formControlName="subject_id" [clearable]="false" [clearOnBackspace]="false" [items]="subjects" [multiple]=true 
+                          bindLabel="name_bn" bindValue="id" placeholder="Select Subject">
+                          </ng-select>
+
+                          <div *ngIf="submitted && f.subject_id.errors" class="error-text">
+                            <span *ngIf="f.subject_id.errors.required" class="text-danger"> Minimum one subject is required</span>
+                          </div>
+                     
+                        </div>
+                      </div>
+
+                   </div>
+        
+                  </div>
+
+                  <div class="col-12">
+                    <button type="button" (click)="onFormSubmit()" class="btn btn-secondary btn-testz">
+                      <i class="fa fa-check"></i> {{btnSaveText}}
+                    </button>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-outline-danger me-2" (click)="modalHideProfile()"> <i class="feather icon-x"></i>
+          Close</button>
+      </div>
+
+    </div>
+  </ng-template>
+
+</block-ui>

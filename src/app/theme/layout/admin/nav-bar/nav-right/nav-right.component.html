@@ -1,0 +1,90 @@
+<ul class="navbar-nav ml-auto">
+  <!-- <li>
+    <a href="https://github.com/phoenixcoded/flat-able-free-angular-admin-template" target="_blank" class="">
+      <i class="icon feather icon-github pulse-button"></i>
+    </a>
+  </li> -->
+  <li>
+    <div class="dropdown" ngbDropdown placement="auto">
+      <a ngbDropdownToggle href="javascript:">
+        <i class="icon feather icon-bell"></i>
+        <span *ngIf="unseenTotal > 0" class="badge badge-pill badge-danger">{{unseenTotal}}</span>
+      </a>
+      <div ngbDropdownMenu class="dropdown-menu-right notification">
+        <div class="noti-head">
+          <h6 class="d-inline-block m-b-0">Notifications</h6>
+          <!-- <div class="float-right">
+            <a href="javascript:" class="m-r-10">mark as read</a>
+            <a href="javascript:">clear all</a>
+          </div> -->
+        </div>
+        <ul class="noti-body">
+          <!-- <li class="n-title">
+            <p class="m-b-0">NEW</p>
+          </li> -->
+          <li class="notification" *ngFor="let item of notifications" [ngClass]="{'bg-white': item.Seen}"
+            (click)="onClickNotification(item)">
+            <div class="media">
+              <!-- <img class="img-radius" src="assets/images/user/avatar-1.jpg" alt="Generic placeholder image"> -->
+              <div class="media-body">
+                <p><strong>{{item.Title}}</strong><span class="n-time text-muted"><i
+                      class="icon feather icon-clock m-r-10"></i>{{item.CreatedOn | amFromUtc | amLocal | amDateFormat:
+                    'YYYY-MM-DD h:mm:ss a' | amTimeAgo}}</span></p>
+                <p>{{item.Details}}</p>
+              </div>
+            </div>
+          </li>
+          <!-- <li class="n-title">
+            <p class="m-b-0">EARLIER</p>
+          </li>
+          <li class="notification">
+            <div class="media">
+              <img class="img-radius" src="assets/images/user/avatar-2.jpg" alt="Generic placeholder image">
+              <div class="media-body">
+                <p><strong>Joseph William</strong><span class="n-time text-muted"><i
+                      class="icon feather icon-clock m-r-10"></i>30 min</span></p>
+                <p>Prchace New Theme and make payment</p>
+              </div>
+            </div>
+          </li>
+          <li class="notification">
+            <div class="media">
+              <img class="img-radius" src="assets/images/user/avatar-3.jpg" alt="Generic placeholder image">
+              <div class="media-body">
+                <p><strong>Sara Soudein</strong><span class="n-time text-muted"><i
+                      class="icon feather icon-clock m-r-10"></i>30 min</span></p>
+                <p>currently login</p>
+              </div>
+            </div>
+          </li> -->
+        </ul>
+        <div class="noti-footer" *ngIf="page.totalPages > page.pageNumber+1">
+          <a href="javascript:" (click)="showMore()">show more</a>
+        </div>
+      </div>
+    </div>
+  </li>
+  <li>
+    <div class="drp-user dropdown" ngbDropdown placement="auto">
+      <a href="javascript:" ngbDropdownToggle>
+        {{currentUser.full_name}} <i class="feather icon-user"></i>
+      </a>
+      <div class=" dropdown-menu-right profile-notification" ngbDropdownMenu>
+        <!-- <div class="pro-head">
+          <img src="assets/images/user/user-avatar-blank.png" class="img-radius" alt="User-Profile-Image">
+          <span>{{currentUser.FullName}}</span>
+          <a href="javascript:" class="dud-logout" title="Logout">
+            <i class="feather icon-log-out"></i>
+          </a>
+        </div> -->
+        <ul class="pro-body">
+          <li><a [routerLink]="['/profile']" class="dropdown-item"><i class="feather icon-user"></i> Profile</a></li>
+          <li><a [routerLink]="['/change-password']" class="dropdown-item"><i class="feather icon-lock"></i> Change
+              Password</a></li>
+          <li><a href="javascript:" class="dropdown-item" (click)="logout()"><i class="feather icon-log-out"></i>
+              Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </li>
+</ul>

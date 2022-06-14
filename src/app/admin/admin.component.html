@@ -1,0 +1,358 @@
+<block-ui>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <h5>Admins List </h5>
+          <button class="btn btn-primary btn-mini mr-1" (click)="openModal(templateAdmin)">  <i class="fa fa-plus"></i> Admin</button>
+          <!-- <button class="btn btn-secondary  btn-sm float-end" [routerLink]="[ '/user-entry' ]"><i
+              class="feather icon-plus "></i> Create Customer</button> -->
+        </div>
+        <div class="card-block ">
+          <div class="row ">
+
+            <div class="col-lg-12">
+              <div class="table-responsive">
+                <table class="table table-hover table-border table-striped">
+                  <thead>
+                    <tr>
+                      <td>Sl</td>
+                      <td>Name Bangali</td>
+                      <td>Name English</td>
+                      <td>Email</td>
+                      <td>Mobile</td>
+                      <td>Role</td>
+                      <td>Status</td>
+                      <td>Action</td>
+                    </tr>
+                  </thead>
+                    
+                  <tbody>
+                    <tr *ngFor="let admin of admins; let i=index">
+                      <!-- <td><img class="media-object img-circle card-list-img image-size" src="assets/images/avatar-5.png" alt="Generic placeholder image"></td> -->
+                      <td>{{ i+1  }}</td>
+                      <td>{{ admin.name_bn  }}</td>
+                      <td>{{ admin.name_en  }}</td>
+                      <td>{{ admin.email }}</td>
+                      <td>{{ admin.mobile_number }}</td>
+                      <td>
+                        <ng-container *ngIf="admin.user_role === 1;else coach">Admin</ng-container>
+                        <ng-template #coach>
+                            <ng-container *ngIf="admin.user_role === 2;else teacher">Coach</ng-container>
+                        </ng-template>
+                        <ng-template #teacher>Teacher</ng-template>
+                      </td>
+                      <td>
+                        <ng-container *ngIf="admin.status === 1;else second"><span class="text-success">Active</span> </ng-container>
+                        <ng-template #second><span class="text-danger">Inactive</span></ng-template>
+                      </td>
+                      <td>
+                        <button class="btn btn-warning btn-mini mr-1" (click)="openModalProfile(templateAdmin,admin)" title="Update Profile">  <i class="fa fa-edit"></i> Edit</button> | 
+                        <button class="btn btn-warning btn-mini mr-1" (click)="openModalPasswordChange(templatePasswordChange,admin)" title="Password Change">  <i class="fa fa-key"></i> Passwrod</button>
+                      </td>
+                      
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer ">
+
+        </div>
+        <!-- end of card-footer -->
+      </div>
+    </div>
+  </div>
+
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title float-start " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHide()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <div class="row" *ngIf="selectedCustomer">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-block">
+
+              <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label fw-bold">Customer Name</label>
+                <div class="col-sm-8">
+                  <p class="mt-3 fs-6">{{selectedCustomer.first_name +' '+selectedCustomer.last_name}}</p>
+                </div>
+              </div>
+
+              <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label fw-bold">Mobile Number</label>
+                <div class="col-sm-8">
+                  <p class="mt-3 fs-6">{{selectedCustomer.mobile_number }}</p>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label fw-bold">Status</label>
+                <div class="col-sm-8">
+                  <!-- <ng-select (change)="onStatusChange($event)" [(ngModel)]="selectedStatus" [clearable]="false"
+                    [clearOnBackspace]="false" [items]="statusTypes" class="form-control form-control-sm"
+                    bindLabel="name" bindValue="id" placeholder="Select status">
+                  </ng-select> -->
+                </div>
+              </div>
+
+              <div class="mb-3 row" *ngIf="!isInitalBalanceGiven">
+                <label class="col-sm-4 col-form-label fw-bold">Initial Balance</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control form-control-sm" numeric numericType="number"
+                    [(ngModel)]="amount" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-outline-danger me-2" (click)="modalHide()"> <i class="feather icon-x"></i> Close</button>
+
+        <button class="btn btn-outline-success" (click)="onFormSubmit()"><i class="feather icon-check-circle"></i>
+          Update</button>
+
+
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #templateAdmin>
+    <div class="modal-header ">
+      <h4 class="modal-title float-start " [innerHtml]="modalTitle"></h4>
+      <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHideProfile()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <div class="row" >
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-block">
+              
+              <form [formGroup]="editProfileForm" autocomplete="off">
+                <div class="row">
+                  <div class="col-lg-9 col-md-8 col-12">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="required">Name Bengali : </label>
+                          <input formControlName="name_bn" type="text"
+                            class="form-control form-control-sm"  placeholder="Enter your bengali name">
+                          <div *ngIf="submitted && f.name_bn.errors" class="error-text">
+                            <span *ngIf="f.name_bn.errors.required" class="text-danger"> Name Bengali is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="required">Name English: </label>
+                          <input formControlName="name_en" type="text"
+                          class="form-control form-control-sm"  placeholder="Enter your english name">
+                          <div *ngIf="submitted && f.name_en.errors" class="error-text">
+                            <span *ngIf="f.name_en.errors.required" class="text-danger"> Name English is required</span>
+                          </div>
+                        </div>
+                      </div>
+                  
+                    <div class="col-md-6">
+                      <div class="space mb-3">
+                        <label class="required">Email : </label>
+                        <input formControlName="email" type="text"
+                          class="form-control form-control-sm"  placeholder="Enter your first name">
+                        <div *ngIf="submitted && f.email.errors" class="error-text">
+                          <span *ngIf="f.email.errors.required" class="text-danger"> Email is required</span>
+                          <span *ngIf="f.email.errors.email" class="text-danger"> Invalid email format</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="space mb-3">
+                        <label class="required">Mobile Number : </label>
+                        <input formControlName="mobile_number"  type="text"  class="form-control form-control-sm"  placeholder="Enter your mobile number">
+                        <div *ngIf="submitted && f.mobile_number.errors" class="error-text">
+                          <span *ngIf="f.mobile_number.errors.required" class="text-danger"> Mobile is required</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6" *ngIf="!userId">
+                      <div class="space mb-3">
+                        <label class="required">Password: </label>
+                        <input formControlName="password" type="password" class="form-control form-control-sm"  placeholder="Enter new passwrod">
+                        <div *ngIf="submitted && f.password.errors" class="error-text">
+                          <span *ngIf="f.password.errors.required" class="text-danger"> password is required</span>
+                          <span *ngIf="f.password.errors.password" class="text-danger"> Invalid new_password format</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6" *ngIf="!userId">
+                      <div class="space mb-3">
+                        <label class="required">Confirm Password : </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && f.confirm_password.errors }" formControlName="confirm_password" 
+                         type="password"  class="form-control form-control-sm"  placeholder="Enter confirm passwrod">
+                        <div *ngIf="submitted && f.confirm_password.errors" class="error-text">
+                          <span *ngIf="f.confirm_password.errors.required" class="text-danger"> Confirm Password is required</span>
+                        </div>
+                      </div>
+                    </div>
+    
+                    <div class="col-md-6">
+                      <div class="space mb-3">
+                        <label class="required">Status : </label>
+                        
+                        <ng-select formControlName="status" [clearable]="false" [clearOnBackspace]="false" [items]="status" [multiple]=false bindLabel="name" bindValue="status" placeholder="Select status">
+                        </ng-select>
+                       
+                        <div *ngIf="submitted && f.status.errors" class="error-text">
+                          <span *ngIf="f.status.errors.required" class="text-danger"> Status is required</span>
+                        </div>
+                      </div>
+                    </div>
+        
+                  </div>
+        
+                  </div>
+        
+                  <div class="col-lg-3 col-md-4 col-12">
+                    <div class="card bg-light pic-upload pb-2">
+                      <div class="card-header text-center">
+                        <h5 class="card-title">Picture (230x230)</h5>
+                      </div>
+                      <div class="card-body bg-white" (click)="pictureInput.click()">
+                        <img  *ngIf="!imageUrl" src="https://via.placeholder.com/100x100?text=Upload Photo">
+                        <img style="width:100px; height: 100px;" *ngIf="imageUrl" [src]="imageUrl">
+                        <input class="btn-img-upload" #pictureInput accept='image/png,image/jpeg'
+                          (change)="readURL($event, pictureInput)"
+                          type="file">
+                      </div>
+        
+        
+        
+                    </div>
+        
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <button *ngIf="imageUrl" type="button" (click)="RemovePhoto()" class="btn btn-outline-secondary btn-sm">
+                          <i class="fa fa-cancel"></i> Remove Photo
+                        </button>
+                      </div>
+                    
+                    </div>
+    
+                  </div>
+        
+                  <div class="col-12">
+                    <button type="button" (click)="onFormSubmit()" class="btn btn-secondary btn-testz">
+                      <i class="fa fa-check"></i> {{btnSaveText}}
+                    </button>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-outline-danger me-2" (click)="modalHideProfile()"> <i class="feather icon-x"></i>
+          Close</button>
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #templatePasswordChange>
+    <div class="modal-header ">
+      <h4 class="modal-title float-start " [innerHtml]="modalTitle"></h4>
+      <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHideProfile()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <div class="row" >
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-block">
+              
+              <form [formGroup]="userPasswrodChangeForm" autocomplete="off">
+
+                <div class="row">
+                  <div class="col-lg-9 col-md-8 col-12">
+                    <div class="row">
+                    
+        
+                    <div class="col-md-6">
+                      <div class="space mb-3">
+                        <label class="required">Password: </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && pc.new_password.errors }" formControlName="new_password" type="password"
+                          class="form-control form-control-sm"  placeholder="Enter new passwrod">
+                        <div *ngIf="submitted && pc.new_password.errors" class="error-text">
+                          <span *ngIf="pc.new_password.errors.required" class="text-danger"> password is required</span>
+                          <span *ngIf="pc.new_password.errors.new_password" class="text-danger"> Invalid new_password format</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="space mb-3">
+                        <label class="required">Confirm Password: </label>
+                        <input [ngClass]="{ 'is-invalid': submitted && pc.confirm_password.errors }" formControlName="confirm_password"  type="password" 
+                         class="form-control form-control-sm"  placeholder="Enter confirm passwrod">
+                        <div *ngIf="submitted && pc.confirm_password.errors" class="error-text">
+                          <span *ngIf="pc.confirm_password.errors.required" class="text-danger"> Confirm Password is required</span>
+                        </div>
+                      </div>
+                    </div>
+        
+                  </div>
+        
+                  </div>
+        
+                  <div class="col-12">
+                    <button type="button" (click)="onPasswordChangeFormSubmit()" class="btn btn-secondary btn-testz">
+                      <i class="fa fa-check"></i> {{btnSaveText}}
+                    </button>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-outline-danger me-2" (click)="modalHideProfile()"> <i class="feather icon-x"></i>
+          Close</button>
+      </div>
+
+    </div>
+  </ng-template>
+
+</block-ui>
