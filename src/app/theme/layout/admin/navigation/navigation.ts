@@ -76,6 +76,24 @@ const NavigationItems = [
         permission: 'member_manage'
       },
       {
+        id: "mcq-interactive-questions",
+        title: "Interactive Questions",
+        type: "item",
+        url: "/interactive-questions",
+        classes: "nav-item",
+        icon: "feather icon-user",
+        permission: 'member_manage'
+      },
+      {
+        id: "multi-answer-questions",
+        title: "Multiple Answer",
+        type: "item",
+        url: "/multi-answer-questions",
+        classes: "nav-item",
+        icon: "feather icon-user",
+        permission: 'member_manage'
+      },
+      {
         id: "topic",
         title: "Topic",
         type: "item",

@@ -454,7 +454,7 @@
                         <div class="space mb-3">
                           <div class="card bg-light pic-upload pb-2">
                             <div class="card-header text-center">
-                              <h5 class="card-title">Picture (230x230)</h5>
+                              <h5 class="card-title">Picture</h5>
                             </div>
                             <div class="card-body bg-white" (click)="pictureInput.click()">
                               <img *ngIf="!imageUrl" src="https://via.placeholder.com/100x100?text=Upload Photo">
@@ -870,7 +870,7 @@
                         <div class="space mb-3">
                           <div class="card bg-light pic-upload pb-2">
                             <div class="card-header text-center">
-                              <h5 class="card-title">Picture (230x230)</h5>
+                              <h5 class="card-title">Picture</h5>
                             </div>
                             <div class="card-body bg-white" (click)="pictureInput.click()">
                               <img *ngIf="!imageUrl" src="https://via.placeholder.com/100x100?text=Upload Photo">
@@ -878,10 +878,6 @@
                               <input class="btn-img-upload" #pictureInput accept='image/png,image/jpeg'
                                 (change)="readURL($event, pictureInput)" type="file">
                             </div>
-                            <button *ngIf="imageUrl" type="button" (click)="RemovePhoto()"
-                              class="btn btn-outline-secondary btn-sm">
-                              <i class="fa fa-cancel"></i> Remove Photo
-                            </button>
                           </div>
                         </div>
                       </div>

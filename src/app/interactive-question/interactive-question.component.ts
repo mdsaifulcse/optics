@@ -48,7 +48,7 @@ export class InteractiveQuestionComponent implements OnInit {
   isInitalBalanceGiven: boolean = true;
 
   images: Array<any> = [];
-  collectAsn = [{ value: 'CorrectAns', name: "Correct Answer" }, { value: 'WrongAns', name: "Wrong Answer" }]
+  collectAsn = [{ value: 'CorrectAns', name: "Correct Answer" }, { value: 'WrongAns', name: "Wrong Answer" },{ value: 'Both', name: "Both(Wrong&Correct)" }]
   provideExamSheet = [{ status: 1, name: "Yes" }, { status: 0, name: "No" }]
   status = [{ status: 'Active', name: "Active" }, { status: "Inactive", name: "Inactive" }]
 
@@ -96,6 +96,8 @@ export class InteractiveQuestionComponent implements OnInit {
       number_of_correct_ans_label:  [null],
       number_of_wrong_ans_label:  [null],
       number_of_ques:  [null],
+      has_number_box:  [1],
+      exam_duration:  [null],
       sequence:  [null, [Validators.required]],
       is_provide_exam_sheet: [null,[Validators.required]],
       status: ['Active',[Validators.required]]
@@ -103,7 +105,24 @@ export class InteractiveQuestionComponent implements OnInit {
     });
 
     this.questionShowForm = this.formBuilder.group({
-   
+      id: [null],
+      class_id: [null, [Validators.required]],
+      subject_id: [null, [Validators.required]],
+      topic_id: [null, [Validators.required]],
+      question_bn: [null],
+      question_en: [null],
+      details_bn: [null],
+      details_en: [null],
+      collect_ans:  [null, [Validators.required]],
+      number_of_ques_label:  [null ],
+      number_of_correct_ans_label:  [null],
+      number_of_wrong_ans_label:  [null],
+      number_of_ques:  [null],
+      has_number_box:  [1],
+      exam_duration:  [null],
+      sequence:  [null, [Validators.required]],
+      is_provide_exam_sheet: [null,[Validators.required]],
+      status: ['Active',[Validators.required]]
     });
 
     this.isProvideExamSheet=0
@@ -157,9 +176,22 @@ export class InteractiveQuestionComponent implements OnInit {
 
   onIsProvideSheetChange(item) {
     this.isProvideExamSheet=item.status
+    if(item.status==1){
+      this.createEditForm.controls['question_bn'].setValue('');
+      this.createEditForm.controls['question_en'].setValue('');
+    }
   }
+
   onCollectAsnTypeChange(item) {
     this.collectAsnType=item.value
+    this.createEditForm.controls['number_of_ques_label'].setValue('');
+    this.createEditForm.controls['number_of_wrong_ans_label'].setValue('');
+    this.createEditForm.controls['exam_duration'].setValue('');
+    if(item.value=='Both'){
+      this.createEditForm.controls['has_number_box'].setValue(1);
+    }else{
+      this.createEditForm.controls['has_number_box'].setValue(0);
+    }
   }
 
   onClassChange(item) {
@@ -199,12 +231,22 @@ export class InteractiveQuestionComponent implements OnInit {
 
   openModal(template: TemplateRef<any>) {
     this.createEditForm.reset();
+    this.isProvideExamSheet=0
+    this.collectAsnType='';
     this.imageUrl=null;
     this.modalTitle='Create new Interactive Questions';
     this.btnSaveText='Save';
-    this.answerOptions=[]
+    this.createEditForm.controls['number_of_ques'].setValue(0);
+    this.createEditForm.controls['has_number_box'].setValue(0);
     this.createEditForm.controls['status'].setValue('Active');
     this.createEditForm.controls['sequence'].setValue(this.sequence);
+
+    if(this.createEditForm.value.collect_ans=='Both'){
+      this.createEditForm.controls['has_number_box'].setValue(1);
+    }else{
+      this.createEditForm.controls['has_number_box'].setValue(0);
+    }
+
     this.modalRef = this.modalService.show(template, this.modalLgConfig);
   }
 
@@ -213,6 +255,9 @@ export class InteractiveQuestionComponent implements OnInit {
     this.createEditForm.reset();
     this.modalTitle='Update Interactive Questions Details';
     this.btnSaveText='Update';
+    this.isProvideExamSheet=data.is_provide_exam_sheet;
+    this.collectAsnType=data.collect_ans;
+    
 
     if(data.class_id){
       this.getSubjectByClass(data.class_id)
@@ -230,9 +275,18 @@ export class InteractiveQuestionComponent implements OnInit {
     this.createEditForm.controls['details_bn'].setValue(data.details_bn);
     this.createEditForm.controls['details_en'].setValue(data.details_en);
 
-    this.createEditForm.controls['answer_options'].setValue(JSON.parse(data.answer_options));
+    this.createEditForm.controls['collect_ans'].setValue(data.collect_ans);
+    this.createEditForm.controls['number_of_correct_ans_label'].setValue(data.number_of_correct_ans_label);
+    this.createEditForm.controls['number_of_ques'].setValue(data.number_of_ques);
+    this.createEditForm.controls['number_of_ques_label'].setValue(data.number_of_ques_label);
+    this.createEditForm.controls['number_of_wrong_ans_label'].setValue(data.number_of_wrong_ans_label);
+
+    if(this.createEditForm.value.collect_ans=='Both'){
+      this.createEditForm.controls['has_number_box'].setValue(1);
+    }else{
+      this.createEditForm.controls['has_number_box'].setValue(1);
+    }
     this.createEditForm.controls['sequence'].setValue(data.sequence);
-   
     this.createEditForm.controls['status'].setValue(data.status);
     this.createEditForm.controls['id'].setValue(data.id);
     if (data.question_image1) this.imageUrl = this.baseUrl +'/'+ data.question_image1;
@@ -241,8 +295,11 @@ export class InteractiveQuestionComponent implements OnInit {
 
   openQuestionShowModal(template: TemplateRef<any>, data) {
     this.questionShowForm.reset();
-    this.modalTitle='Update Interactive Questions Details';
-    this.btnSaveText='Update Interactive Questions';
+    this.modalTitle='Interactive Questions Details';
+    this.btnSaveText='';
+    this.isProvideExamSheet=data.is_provide_exam_sheet;
+    this.collectAsnType=data.collect_ans;
+    
 
     if(data.class_id){
       this.getSubjectByClass(data.class_id)
@@ -250,31 +307,54 @@ export class InteractiveQuestionComponent implements OnInit {
     if(data.subject_id){
       this.getTopicBySubject(data.subject_id)
     }
-   
-    this.modalTitle='Show Interactive Questions Details';
-    this.btnSaveText='';
+
     this.questionShowForm.controls['class_id'].setValue(data.class_id);
     this.questionShowForm.controls['class_id'].disable();
+
     this.questionShowForm.controls['subject_id'].setValue(data.subject_id);
     this.questionShowForm.controls['subject_id'].disable();
+
     this.questionShowForm.controls['topic_id'].setValue(data.topic_id);
     this.questionShowForm.controls['topic_id'].disable();
+
     this.questionShowForm.controls['is_provide_exam_sheet'].setValue(data.is_provide_exam_sheet);
-    this.questionShowForm.controls['is_provide_exam_sheet'].disable();
+    this.questionShowForm.controls['is_provide_exam_sheet'].disable()
+    ;
     this.questionShowForm.controls['question_bn'].setValue(data.question_bn);
     this.questionShowForm.controls['question_bn'].disable();
+
     this.questionShowForm.controls['question_en'].setValue(data.question_en);
-    this.questionShowForm.controls['question_en'].disable();
+    this.questionShowForm.controls['question_en'].disable()
+    ;
     this.questionShowForm.controls['details_bn'].setValue(data.details_bn);
-    this.questionShowForm.controls['details_bn'].disable();
+    this.questionShowForm.controls['details_bn'].disable()
+    ;
     this.questionShowForm.controls['details_en'].setValue(data.details_en);
     this.questionShowForm.controls['details_en'].disable();
-    
+
+    this.questionShowForm.controls['collect_ans'].setValue(data.collect_ans);
+    this.questionShowForm.controls['collect_ans'].disable();
+
+    this.questionShowForm.controls['number_of_correct_ans_label'].setValue(data.number_of_correct_ans_label);
+    this.questionShowForm.controls['number_of_correct_ans_label'].disable();
+
+    this.questionShowForm.controls['number_of_ques'].setValue(data.number_of_ques);
+    this.questionShowForm.controls['number_of_ques'].disable();
+
+    this.questionShowForm.controls['number_of_ques_label'].setValue(data.number_of_ques_label);
+    this.questionShowForm.controls['number_of_ques_label'].disable();
+
+    this.questionShowForm.controls['number_of_wrong_ans_label'].setValue(data.number_of_wrong_ans_label);
+    this.questionShowForm.controls['number_of_wrong_ans_label'].disable();
+
     this.questionShowForm.controls['sequence'].setValue(data.sequence);
-    this.questionShowForm.controls['sequence'].disable();
+    this.questionShowForm.controls['sequence'].disable()
+    ;
     this.questionShowForm.controls['status'].setValue(data.status);
-    this.questionShowForm.controls['status'].disable();
+    this.questionShowForm.controls['status'].disable()
+    ;
     this.questionShowForm.controls['id'].setValue(data.id);
+    this.questionShowForm.controls['id'].disable();
     if (data.question_image1) this.imageUrl = this.baseUrl +'/'+ data.question_image1;
     this.modalRef = this.modalService.show(template, this.modalLgConfig);
   }
@@ -285,33 +365,67 @@ export class InteractiveQuestionComponent implements OnInit {
       return;
     }
 
-    
-    
+
+    // validation  ---------------------
+    if(this.createEditForm.value.collect_ans=='WrongAns'){ // validation for wrong Answer -----
+
+      if(!this.createEditForm.value.number_of_ques_label){ 
+        return this.toastr.error('Question label/Title is Required', 'Error!', { timeOut: 2000 });
+      }
+
+      if(!this.createEditForm.value.number_of_wrong_ans_label){ 
+        return this.toastr.error('Wrong answer label/Title is Required', 'Error!', { timeOut: 2000 });
+      }
+    }
+
+    if(this.createEditForm.value.collect_ans=='CorrectAns'){ // validation for correct Answer -----
+      if(!this.createEditForm.value.number_of_ques){ 
+        return this.toastr.error('Total number of question is Required', 'Error!', { timeOut: 2000 });
+      }
+      if(!this.createEditForm.value.number_of_correct_ans_label){ 
+        return this.toastr.error('Correct Answer label/Title is Required', 'Error!', { timeOut: 2000 });
+      }
+    }
   
+    if(this.createEditForm.value.collect_ans=='Both'){ // validation for Both(Correct&Wrong) Answer -----
+      if(!this.createEditForm.value.number_of_ques){
+        return this.toastr.error('Total number of question is Required', 'Error!', { timeOut: 2000 });
+      }
+      if(!this.createEditForm.value.exam_duration){ 
+        return this.toastr.error('Exam Duration is Required', 'Error!', { timeOut: 2000 });
+      }
+    }
+
+
     if(!this.createEditForm.value.id){ // create new Question ----------------
       let formData = new FormData();
 
-      this.answerOptions=[]
-    this.createEditForm.value.answer_options.forEach(element=>{
-      this.answerOptions.push(element.label)
-    })
-    this.createEditForm.controls['answer_options'].setValue(this.answerOptions);
+      //return console.log(this.createEditForm.value)
 
       formData.append('class_id', this.createEditForm.value.class_id);
       formData.append('subject_id', this.createEditForm.value.subject_id);
       formData.append('topic_id', this.createEditForm.value.topic_id);
       formData.append('is_provide_exam_sheet', this.createEditForm.value.is_provide_exam_sheet);
+
       formData.append('question_bn', this.createEditForm.value.question_bn);
       formData.append('question_en', this.createEditForm.value.question_en);
       formData.append('details_bn', this.createEditForm.value.details_bn);
       formData.append('details_en', this.createEditForm.value.details_en);
-      formData.append('answer_options', JSON.stringify(this.createEditForm.value.answer_options));
+
       formData.append('sequence', this.createEditForm.value.sequence);
       formData.append('status', this.createEditForm.value.status);
 
+      formData.append('has_number_box', this.createEditForm.value.has_number_box);
+      formData.append('exam_duration', this.createEditForm.value.exam_duration);
+      formData.append('collect_ans', this.createEditForm.value.collect_ans);
+      formData.append('number_of_correct_ans_label', this.createEditForm.value.number_of_correct_ans_label);
+      formData.append('number_of_ques', this.createEditForm.value.number_of_ques);
+      formData.append('number_of_ques_label', this.createEditForm.value.number_of_ques_label);
+      formData.append('number_of_wrong_ans_label', this.createEditForm.value.number_of_wrong_ans_label);
+
       if (this.imageFile) formData.append('question_image1', this.imageFile);
 
-      this.blockUI.start('Creating...');
+      this.blockUI.start('Creating...'); //  Ceating -----
       this._service.post('interactive-questions', formData).subscribe(
         res => {
           console.log(res)
@@ -330,19 +444,7 @@ export class InteractiveQuestionComponent implements OnInit {
 
     }else{ // update Question -----------------
       this.blockUI.start('Updating...');
-
-      this.answerOptions=[]
-      this.createEditForm.value.answer_options.forEach((element)=>{
-        //return console.log(index)
-        if(element.label){
-          this.answerOptions.push(element.label)
-        }else{
-          this.answerOptions.push(element)
-        }
-      })
-      this.createEditForm.controls['answer_options'].setValue(this.answerOptions);
-      
-
+    
       const obj = {
         class_id: this.createEditForm.value.class_id,
         subject_id: this.createEditForm.value.subject_id,
@@ -352,13 +454,22 @@ export class InteractiveQuestionComponent implements OnInit {
         question_en: this.createEditForm.value.question_en,
         details_bn: this.createEditForm.value.details_bn,
         details_en: this.createEditForm.value.details_en,
-        answer_options: JSON.stringify(this.createEditForm.value.answer_options),
+
+        collect_ans: this.createEditForm.value.collect_ans,
+        has_number_box: this.createEditForm.value.has_number_box,
+        exam_duration: this.createEditForm.value.exam_duration,
+        number_of_correct_ans_label: this.createEditForm.value.number_of_correct_ans_label,
+        number_of_ques: this.createEditForm.value.number_of_ques,
+        number_of_ques_label: this.createEditForm.value.number_of_ques_label,
+        number_of_wrong_ans_label: this.createEditForm.value.number_of_wrong_ans_label,
     
         id: this.createEditForm.value.id,
         sequence: this.createEditForm.value.sequence,
         status: this.createEditForm.value.status,
       };
-  
+
+      console.log(this.createEditForm.value.number_of_ques_label)
+      // =----------------- updating
       this._service.put('interactive-questions/'+this.createEditForm.value.id, obj).subscribe(
         res => {
           this.blockUI.stop();
@@ -380,7 +491,7 @@ export class InteractiveQuestionComponent implements OnInit {
 
   submitDeleteForm(data) {
 
-    this.confirmService.confirm('Are you sure?', 'Do you want to delete the this Mcq Question?')
+    this.confirmService.confirm('Are you sure?', 'Do you want to delete the this Interactive Question?')
     .subscribe(
         result => {
             if (result) {
@@ -419,7 +530,7 @@ export class InteractiveQuestionComponent implements OnInit {
         this.getList()
       },
       err => {
-        //this.blockUI.stop();
+        this.blockUI.stop();
         this.toastr.error(err.message || err, 'Error!', { timeOut: 2000 });
       }
     );

@@ -187,6 +187,10 @@ export class McqQuestionComponent implements OnInit {
 
   onIsProvideSheetChange(item) {
     this.isProvideExamSheet=item.status
+    if(item.status==1){
+      this.createEditForm.controls['question_bn'].setValue('');
+      this.createEditForm.controls['question_en'].setValue('');
+    }
   }
 
   onClassChange(item) {
@@ -226,6 +230,7 @@ export class McqQuestionComponent implements OnInit {
 
   openModal(template: TemplateRef<any>) {
     this.createEditForm.reset();
+    this.isProvideExamSheet=0;
     this.imageUrl=null;
     this.modalTitle='Create new MCQ Question';
     this.btnSaveText='Save';
@@ -243,6 +248,7 @@ export class McqQuestionComponent implements OnInit {
 
   openUpdateModal(template: TemplateRef<any>, data) {
     this.createEditForm.reset();
+    this.isProvideExamSheet=data.is_provide_exam_sheet;
     this.modalTitle='Update MCQ Question Details';
     this.btnSaveText='Update MCQ Question';
 
