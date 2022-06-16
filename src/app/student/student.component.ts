@@ -14,19 +14,19 @@ import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 
 @Component({
-  selector: "app-teacher",
-  templateUrl: "./teacher.component.html",
-  styleUrls: ["./teacher.component.scss"],
+  selector: "app-student",
+  templateUrl: "./student.component.html",
+  styleUrls: ["./student.component.scss"],
 })
-export class TeacherComponent implements OnInit {
+export class StudentComponent implements OnInit {
   currentUser: any;
   baseUrl = environment.baseUrl;
   filterForm: FormGroup;
-  teacherUploForm: FormGroup;
+  studentUploForm: FormGroup;
   createEditForm: FormGroup;
   userPasswrodChangeForm: FormGroup;
   @BlockUI() blockUI: NgBlockUI;
-  modalTitle = "Create new Teacher";
+  modalTitle = "Create new Student";
   btnSaveText = "Save";
   submitted = false;
   modalConfig: any = { class: "gray modal-md", backdrop: "static" };
@@ -39,12 +39,14 @@ export class TeacherComponent implements OnInit {
   userId=null;
 
   sequence:number;
+  classes=[];
   divisions=[];
   districts=[];
   subDistricts=[];
   schools = [];
-
   teachers = [];
+
+  students = [];
   loadingIndicator = false;
   ColumnMode = ColumnMode;
   public categoryList: Array<any> = [];
@@ -59,7 +61,8 @@ export class TeacherComponent implements OnInit {
   isInitalBalanceGiven: boolean = true;
 
   images: Array<any> = [];
-  status = [{ status: 1, name: "Active" }, { status: 0, name: "Inactive" }]
+  status = [{ status: 'Active', name: "Active" }, { status: "Inactive", name: "Inactive" }]
+  gerners = [{ value: 'Male', name: "Male" }, { value: "Female", name: "Female" }]
 
   constructor(
     private _service: CommonService,
@@ -82,8 +85,8 @@ export class TeacherComponent implements OnInit {
     });
     
 
-    this.teacherUploForm = this.formBuilder.group({
-      teacher_file: [null],
+    this.studentUploForm = this.formBuilder.group({
+      student_file: [null],
     });
 
     this.createEditForm = this.formBuilder.group({
@@ -92,39 +95,29 @@ export class TeacherComponent implements OnInit {
       district_id: [null, [Validators.required]],
       sub_district_id: [null, [Validators.required]],
       school_id: [null, [Validators.required]],
+      teacher_id: [null, [Validators.required]],
+      class_id: [null, [Validators.required]],
       name_bn: [null, [Validators.required]],
       name_en: [null, [Validators.required]],
-      email: [null, [Validators.required, Validators.email]],
-      mobile_number:  [null, [Validators.required]],
-      password:  [null],
-      confirm_password:  [null],
-      status: [1,[Validators.required]]
-      //mobile_number: [{value:null,disable:true}]
+      age: [null, [Validators.required]],
+      gender: [null, [Validators.required]],
+      guardian_mobile: [null],
+      guardian_email:  [null],
+      status: ['Active',[Validators.required]],
+      sequence: [null,[Validators.required]]
     });
 
-
-    this.userPasswrodChangeForm = this.formBuilder.group({
-      user_id:  [null],
-      new_password:  [null, [Validators.required]],
-      confirm_password:  [null, [Validators.required]],
-    }, {
-      validator: MustMatch('new_password', 'confirm_password')
-    }
-    
-    );
-
     this.getList();
-    this.getTeacherMaxSequence();
+    this.getStudentMaxSequence();
     this.getDivisions();
+    this.getClasses();
     
   }
 
   get f() {
     return this.createEditForm.controls;
   }
-  get pc() {
-    return this.userPasswrodChangeForm.controls;
-  }
+
 
 
   setPage(pageInfo) {
@@ -134,7 +127,7 @@ export class TeacherComponent implements OnInit {
   getList() {
     this.loadingIndicator = true;
   
-    this._service.get("teachers").subscribe(
+    this._service.get("students-by-admin").subscribe(
       (res) => {
         console.log(res)
       
@@ -142,7 +135,7 @@ export class TeacherComponent implements OnInit {
           this.toastr.warning(res.messages, "Warning!", { timeOut: 2000 });
           return;
         }
-        this.teachers = res.result;
+        this.students = res.result;
       
       },
       (err) => {
@@ -157,10 +150,20 @@ export class TeacherComponent implements OnInit {
     );
   }
 
-
-  getTeacherMaxSequence() {
+  getClasses() {
     this.loadingIndicator = true;
-    this._service.get("school-max-sequence").subscribe(
+    this._service.get("class-list").subscribe(
+      (res) => {
+        this.classes = res.result;
+      },
+      (err) => {}
+    );
+  }
+
+
+  getStudentMaxSequence() {
+    this.loadingIndicator = true;
+    this._service.get("student-max-sequence-by-admin").subscribe(
       (res) => {
         this.sequence = res.result.sequence;
       },
@@ -179,13 +182,15 @@ export class TeacherComponent implements OnInit {
   }
 
   onDivisionChange(item) {
-    this.getDistrictByDivision(item.id)
-    this.districts=[]
-    this.subDistricts=[]
-    this.schools=[]    
+    this.getDistrictByDivision(item.id);
+    this.districts=[];
+    this.subDistricts=[];
+    this.schools=[];
+    this.teachers=[]; 
     this.createEditForm.controls['district_id'].setValue('');
     this.createEditForm.controls['sub_district_id'].setValue('');
     this.createEditForm.controls['school_id'].setValue('');
+    this.createEditForm.controls['teacher_id'].setValue('');
   }
   getDistrictByDivision(divisionId) {
     this.loadingIndicator = true;
@@ -198,11 +203,13 @@ export class TeacherComponent implements OnInit {
   }
 
   onDistrictChange(item) {
-    this.getSubDistrictByDistrict(item.id)
-    this.subDistricts=[]
-    this.schools=[]
+    this.getSubDistrictByDistrict(item.id);
+    this.subDistricts=[];
+    this.schools=[];
+    this.teachers=[] ; 
     this.createEditForm.controls['sub_district_id'].setValue('');
     this.createEditForm.controls['school_id'].setValue('');
+    this.createEditForm.controls['teacher_id'].setValue('');
   }
 
   getSubDistrictByDistrict(districtId) {
@@ -216,9 +223,11 @@ export class TeacherComponent implements OnInit {
   }
 
   onSubDistrictChange(item) {
-    this.getSchoolBySubDistrict(item.id)
-    this.schools=[]
-    this.createEditForm.controls['school_id'].setValue(null);
+    this.getSchoolBySubDistrict(item.id);
+    this.schools=[];
+    this.teachers=[];
+    this.createEditForm.controls['school_id'].setValue('');
+    this.createEditForm.controls['teacher_id'].setValue('');
   }
 
   getSchoolBySubDistrict(subDistrictId) {
@@ -231,12 +240,27 @@ export class TeacherComponent implements OnInit {
     );
   }
 
+  onSchoolChange(item) {
+    this.getTeachersBySchool(item.id)
+    this.teachers=[]
+    this.createEditForm.controls['teacher_id'].setValue('');
+  }
+
+  getTeachersBySchool(schoolId) {
+    this.loadingIndicator = true;
+    this._service.get("teacherBySchoolId/"+schoolId).subscribe(
+      (res) => {
+        this.teachers= res.result;
+      },
+      (err) => {}
+    );
+  }
 
 
   openExcelUplodModal(template: TemplateRef<any>) {
-    this.teacherUploForm.reset();
+    this.studentUploForm.reset();
     this.imageUrl=null;
-    this.modalTitle='Upload Teacher by Excel';
+    this.modalTitle='Upload Student by Excel';
     this.btnSaveText='Upload';
     this.userId=null;
     this.modalRef = this.modalService.show(template, this.modalLgConfig);
@@ -244,20 +268,23 @@ export class TeacherComponent implements OnInit {
 
   openModal(template: TemplateRef<any>) {
     this.createEditForm.reset();
-    this.sampleExcelFile=this.baseUrl +'/'+ 'excel/teacher_file.xlsx';
+    this.sampleExcelFile=this.baseUrl +'/'+ 'excel/student_file.xlsx';
     this.imageUrl=null;
     this.userId=null;
-    this.modalTitle='Create new Teacher';
+    this.modalTitle='Create new Student';
     this.btnSaveText='Save';
-    this.createEditForm.controls['status'].setValue(1);
+    this.createEditForm.controls['sequence'].setValue(this.sequence);
+    this.createEditForm.controls['status'].setValue('Active');
     this.modalRef = this.modalService.show(template, this.modalLgConfig);
   }
 
 
   openModalProfile(template: TemplateRef<any>, data) {
     this.createEditForm.reset();
-    this.modalTitle='Update Teacher Details';
-    this.btnSaveText='Update Teacher';
+    this.modalTitle='Update Student Details';
+    this.btnSaveText='Update Student';
+
+    console.log(data)
 
     if(data.division_id){
       this.getDistrictByDivision(data.division_id)
@@ -275,11 +302,15 @@ export class TeacherComponent implements OnInit {
     this.createEditForm.controls['district_id'].setValue(data.district_id);
     this.createEditForm.controls['sub_district_id'].setValue(data.sub_district_id);
     this.createEditForm.controls['school_id'].setValue(data.school_id);
+    this.createEditForm.controls['teacher_id'].setValue(data.teacher_id);
+    this.createEditForm.controls['class_id'].setValue(data.class_id);
     this.createEditForm.controls['name_bn'].setValue(data.name_bn);
     this.createEditForm.controls['name_en'].setValue(data.name_en);
-    this.createEditForm.controls['mobile_number'].setValue(data.mobile_number);
-    //this.createEditForm.controls['mobile_number'].disable();
-    this.createEditForm.controls['email'].setValue(data.email);
+    this.createEditForm.controls['guardian_mobile'].setValue(data.guardian_mobile);
+    this.createEditForm.controls['guardian_email'].setValue(data.guardian_email);
+    this.createEditForm.controls['gender'].setValue(data.gender);
+    this.createEditForm.controls['age'].setValue(data.age);
+    this.createEditForm.controls['sequence'].setValue(data.sequence);
     this.createEditForm.controls['status'].setValue(data.status);
     this.createEditForm.controls['id'].setValue(data.id);
     this.userId=data.id;
@@ -290,18 +321,99 @@ export class TeacherComponent implements OnInit {
   }
 
 
-  onExcelUploadFormSubmit() {
+ 
+
+
+  onFormSubmit() {
     this.submitted = true;
-    if (this.teacherUploForm.invalid) {
+    if (this.createEditForm.invalid) {
       return;
     }
 
-   // upload/create new teacher ----------------
+    if(!this.createEditForm.value.id){ // create new student ----------------
       let formData = new FormData();
-      if (this.excelFile) formData.append('teacher_file', this.excelFile)
+      formData.append('division_id', this.createEditForm.value.division_id)
+      formData.append('district_id', this.createEditForm.value.district_id)
+      formData.append('sub_district_id', this.createEditForm.value.sub_district_id)
+      formData.append('school_id', this.createEditForm.value.school_id)
+      formData.append('teacher_id', this.createEditForm.value.teacher_id)
+      formData.append('class_id', this.createEditForm.value.class_id)
+      formData.append('name_bn', this.createEditForm.value.name_bn.trim())
+      formData.append('name_en', this.createEditForm.value.name_en.trim())
+      formData.append('guardian_mobile', this.createEditForm.value.guardian_mobile)
+      formData.append('guardian_email', this.createEditForm.value.guardian_email)
+      formData.append('gender', this.createEditForm.value.gender)
+      formData.append('age', this.createEditForm.value.age)
+      formData.append('sequence', this.createEditForm.value.sequence)
+
+      if (this.imageFile) formData.append('photo', this.imageFile)
       
       this.blockUI.start('Creating...');
-      this._service.post('teacher-upload', formData).subscribe(
+      this._service.post('students-by-admin', formData).subscribe(
+        res => {
+          console.log(res)
+          this.blockUI.stop();
+            this.toastr.success(res.messages, 'Success!', { timeOut: 2000 });
+            this.submitted = false;
+            this.modalHide();
+            this.getList();
+            this.getStudentMaxSequence();
+        },
+        err => {
+          this.blockUI.stop();
+        }
+      );
+
+    }else{ // update student -----------------
+      this.blockUI.start('Updating...');
+      const obj = {
+        id: this.createEditForm.value.id,
+        division_id: this.createEditForm.value.division_id,
+        district_id: this.createEditForm.value.district_id,
+        sub_district_id: this.createEditForm.value.sub_district_id,
+        school_id: this.createEditForm.value.school_id,
+        teacher_id: this.createEditForm.value.teacher_id,
+        class_id: this.createEditForm.value.class_id,
+        name_bn: this.createEditForm.value.name_bn.trim(),
+        name_en: this.createEditForm.value.name_en.trim(),
+        guardian_mobile: this.createEditForm.value.guardian_mobile,
+        guardian_email: this.createEditForm.value.guardian_email,
+        gender: this.createEditForm.value.gender,
+        age: this.createEditForm.value.age,
+      };
+  
+      this._service.put('students-by-admin/'+this.createEditForm.value.id, obj).subscribe(
+        res => {
+          this.blockUI.stop();
+            this.toastr.success(res.messages, 'Success!', { timeOut: 2000 });
+            //this.authService.updateProfile(res.result);
+            this.submitted = false;
+            this.modalHide();
+            this.getList();
+  
+  
+        },
+        err => {
+          this.blockUI.stop();
+          //this.toastr.error(err.message || err, 'Error!', { timeOut: 2000 });
+        }
+      );
+
+    }
+  }
+
+  onExcelUploadFormSubmit() {
+    this.submitted = true;
+    if (this.studentUploForm.invalid) {
+      return;
+    }
+
+   // upload/create new student ----------------
+      let formData = new FormData();
+      if (this.excelFile) formData.append('student_file', this.excelFile)
+      
+      this.blockUI.start('Uploading...');
+      this._service.post('student-upload-by-admin', formData).subscribe(
         res => {
           this.blockUI.stop();
             this.toastr.success(res.messages, 'Success!', { timeOut: 2000 });
@@ -331,95 +443,9 @@ export class TeacherComponent implements OnInit {
     reader.onload = (_event) => {
       this.excelFileUrl = reader.result;
     }
-    // if(this.teacherUploForm.value.id){
+    // if(this.studentUploForm.value.id){
     //   this.onPhotoSubmit();
     // }
-  }
-
-
-  onFormSubmit() {
-    this.submitted = true;
-    if (this.createEditForm.invalid) {
-      return;
-    }
-
-    if(!this.createEditForm.value.id){ // create new teacher ----------------
-      let formData = new FormData();
-
-      if(!this.createEditForm.value.password){
-       return this.toastr.error('Passwrod is required', 'Error!', { timeOut: 2000 });
-      }
-      if(!this.createEditForm.value.confirm_password){
-       return this.toastr.error('Confirm passwrod is required', 'Error!', { timeOut: 2000 });
-      }
-
-      if(this.createEditForm.value.password!==this.createEditForm.value.confirm_password){
-       return this.toastr.error('Confirm passwrod does not match', 'Error!', { timeOut: 2000 });
-      }
-  
-
-      formData.append('division_id', this.createEditForm.value.division_id)
-      formData.append('district_id', this.createEditForm.value.district_id)
-      formData.append('sub_district_id', this.createEditForm.value.sub_district_id)
-      formData.append('school_id', this.createEditForm.value.school_id)
-      formData.append('name_bn', this.createEditForm.value.name_bn.trim())
-      formData.append('name_en', this.createEditForm.value.name_en.trim())
-      formData.append('email', this.createEditForm.value.email.trim())
-      formData.append('mobile_number', this.createEditForm.value.mobile_number.trim())
-      formData.append('password', this.createEditForm.value.password.trim())
-      formData.append('confirm_password', this.createEditForm.value.confirm_password.trim())
-
-      
-      if (this.imageFile) formData.append('photo', this.imageFile)
-      
-      this.blockUI.start('Creating...');
-      this._service.post('teachers', formData).subscribe(
-        res => {
-          console.log(res)
-          this.blockUI.stop();
-            this.toastr.success(res.messages, 'Success!', { timeOut: 2000 });
-            this.submitted = false;
-            this.modalHide();
-            this.getList();
-            this.getTeacherMaxSequence();
-        },
-        err => {
-          this.blockUI.stop();
-        }
-      );
-
-    }else{ // update teacher -----------------
-      this.blockUI.start('Updating...');
-      const obj = {
-        id: this.createEditForm.value.id,
-        division_id: this.createEditForm.value.division_id,
-        district_id: this.createEditForm.value.district_id,
-        sub_district_id: this.createEditForm.value.sub_district_id,
-        school_id: this.createEditForm.value.school_id,
-        name_bn: this.createEditForm.value.name_bn.trim(),
-        name_en: this.createEditForm.value.name_en.trim(),
-        email: this.createEditForm.value.email.trim(),
-        mobile_number: this.createEditForm.value.mobile_number.trim(),
-      };
-  
-      this._service.put('teachers/'+this.createEditForm.value.id, obj).subscribe(
-        res => {
-          this.blockUI.stop();
-            this.toastr.success(res.messages, 'Success!', { timeOut: 2000 });
-            //this.authService.updateProfile(res.result);
-            this.submitted = false;
-            this.modalHide();
-            this.getList();
-  
-  
-        },
-        err => {
-          this.blockUI.stop();
-          //this.toastr.error(err.message || err, 'Error!', { timeOut: 2000 });
-        }
-      );
-
-    }
   }
 
   openModalPasswordChange(template: TemplateRef<any>,data) {
@@ -430,43 +456,14 @@ export class TeacherComponent implements OnInit {
     this.modalRef = this.modalService.show(template, this.modalLgConfig);
   }
 
-  onPasswordChangeFormSubmit() {
-    this.submitted = true;
-    if (this.userPasswrodChangeForm.invalid) {
-      return;
-    }
-    
-    const obj = {
-      user_id: this.userPasswrodChangeForm.value.user_id,
-      new_password: this.userPasswrodChangeForm.value.new_password.trim(),
-      confirm_password: this.userPasswrodChangeForm.value.confirm_password.trim(),
-    };
-
-    console.log(obj)
-    
-    this.blockUI.start('Updating...');
-    this._service.post('update-teacher-password', obj).subscribe(
-      res => {
-        this.blockUI.stop();
-          this.toastr.success(res.messages, 'Success!', { timeOut: 2000 });
-          this.submitted = false;
-          this.modalHide();
-          this.getList();
-      },
-      err => {
-        this.blockUI.stop();
-      }
-    );
-  }
-
   submitDeleteForm(school) {
-    this.confirmService.confirm('Are you sure?', 'Do you want to delete the this School?')
+    this.confirmService.confirm('Are you sure?', 'Do you want to delete the this Student ?')
     .subscribe(
         result => {
             if (result) {
                 // delete school ----------------
               this.blockUI.start('Deleting...');
-              this._service.delete('schools/'+school.id).subscribe(
+              this._service.delete('students-by-admin/'+school.id).subscribe(
                 res => {
                   this.blockUI.stop();
                     this.toastr.success(res.messages, 'Success!', { timeOut: 2000 });
@@ -491,7 +488,7 @@ export class TeacherComponent implements OnInit {
     formData.append('user_id', this.createEditForm.value.id)
     if (this.imageFile) formData.append('photo', this.imageFile)
 
-    this._service.post('teacher-upload-profile-image', formData).subscribe(
+    this._service.post('change-student-image-by-admin', formData).subscribe(
       res => {
         this.blockUI.stop();
         this.toastr.success(res.messages, 'Success!', { timeOut: 3000 });

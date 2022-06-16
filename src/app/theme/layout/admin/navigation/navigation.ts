@@ -61,7 +61,25 @@ const NavigationItems = [
   },
   {
     id: "exam-question",
-    title: "Exam Question",
+    title: "Exam Report",
+    type: "group",
+    icon: "feather icon-layout",
+    permission: 'member_manage',
+    children: [
+      {
+        id: "mcq-questions",
+        title: "Mcq Questions",
+        type: "item",
+        url: "/mcq-questions",
+        classes: "nav-item",
+        icon: "feather icon-user",
+        permission: 'member_manage'
+      },
+    ]
+  },
+  {
+    id: "exam-question",
+    title: "Question",
     type: "group",
     icon: "feather icon-layout",
     permission: 'member_manage',
@@ -131,8 +149,16 @@ const NavigationItems = [
     icon: "feather icon-layout",
     children: [
       {
+        id: "student-list",
+        title: "Student",
+        type: "item",
+        url: "/students",
+        classes: "nav-item",
+        icon: "feather icon-user",
+      },
+      {
         id: "teacher-list",
-        title: "teacher",
+        title: "Teacher",
         type: "item",
         url: "/teachers",
         classes: "nav-item",

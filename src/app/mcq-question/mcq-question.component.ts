@@ -84,6 +84,7 @@ export class McqQuestionComponent implements OnInit {
       class_id: [null, [Validators.required]],
       subject_id: [null, [Validators.required]],
       topic_id: [null, [Validators.required]],
+      answer_hint: [null],
       question_bn: [null],
       question_en: [null],
       details_bn: [null],
@@ -112,6 +113,7 @@ export class McqQuestionComponent implements OnInit {
       class_id: [null, [Validators.required]],
       subject_id: [null, [Validators.required]],
       topic_id: [null, [Validators.required]],
+      answer_hint: [null],
       question_bn: [null],
       question_en: [null],
       details_bn: [null],
@@ -234,8 +236,8 @@ export class McqQuestionComponent implements OnInit {
     this.imageUrl=null;
     this.modalTitle='Create new MCQ Question';
     this.btnSaveText='Save';
-    this.createEditForm.controls['option1_mark'].setValue(0);
-    this.createEditForm.controls['option2_mark'].setValue(0);
+    // this.createEditForm.controls['option1_mark'].setValue(0);
+    // this.createEditForm.controls['option2_mark'].setValue(0);
     this.createEditForm.controls['option3_mark'].setValue(0);
     this.createEditForm.controls['option4_mark'].setValue(0);
     this.createEditForm.controls['option5_mark'].setValue(0);
@@ -263,6 +265,7 @@ export class McqQuestionComponent implements OnInit {
     this.createEditForm.controls['subject_id'].setValue(data.subject_id);
     this.createEditForm.controls['topic_id'].setValue(data.topic_id);
     this.createEditForm.controls['is_provide_exam_sheet'].setValue(data.is_provide_exam_sheet);
+    this.createEditForm.controls['answer_hint'].setValue(data.answer_hint);
     this.createEditForm.controls['question_bn'].setValue(data.question_bn);
     this.createEditForm.controls['question_en'].setValue(data.question_en);
     this.createEditForm.controls['details_bn'].setValue(data.details_bn);
@@ -313,6 +316,8 @@ export class McqQuestionComponent implements OnInit {
     this.questionShowForm.controls['topic_id'].disable();
     this.questionShowForm.controls['is_provide_exam_sheet'].setValue(data.is_provide_exam_sheet);
     this.questionShowForm.controls['is_provide_exam_sheet'].disable();
+    this.questionShowForm.controls['answer_hint'].setValue(data.answer_hint);
+    this.questionShowForm.controls['answer_hint'].disable();
     this.questionShowForm.controls['question_bn'].setValue(data.question_bn);
     this.questionShowForm.controls['question_bn'].disable();
     this.questionShowForm.controls['question_en'].setValue(data.question_en);
@@ -400,6 +405,7 @@ export class McqQuestionComponent implements OnInit {
       formData.append('subject_id', this.createEditForm.value.subject_id)
       formData.append('topic_id', this.createEditForm.value.topic_id)
       formData.append('is_provide_exam_sheet', this.createEditForm.value.is_provide_exam_sheet)
+      formData.append('answer_hint', this.createEditForm.value.answer_hint)
       formData.append('question_bn', this.createEditForm.value.question_bn)
       formData.append('question_en', this.createEditForm.value.question_en)
       formData.append('details_bn', this.createEditForm.value.details_bn)
@@ -452,6 +458,7 @@ export class McqQuestionComponent implements OnInit {
         subject_id: this.createEditForm.value.subject_id,
         topic_id: this.createEditForm.value.topic_id,
         is_provide_exam_sheet: this.createEditForm.value.is_provide_exam_sheet,
+        answer_hint: this.createEditForm.value.answer_hint,
         question_bn: this.createEditForm.value.question_bn,
         question_en: this.createEditForm.value.question_en,
         details_bn: this.createEditForm.value.details_bn,
@@ -477,8 +484,6 @@ export class McqQuestionComponent implements OnInit {
         sequence: this.createEditForm.value.sequence,
         status: this.createEditForm.value.status,
       };
-
-      console.log(obj)
   
       this._service.put('mcq-questions/'+this.createEditForm.value.id, obj).subscribe(
         res => {

@@ -23,6 +23,7 @@
                       <td>Topic</td>
                       <td>Subjct</td>
                       <td>Class</td>
+                      <td>Exam Count</td>
                       <td>Status</td>
                       <td>Action</td>
                     </tr>
@@ -56,6 +57,7 @@
                         {{ interActiveQuestion.subject?interActiveQuestion.subject.name_bn:'N/A' }}
                       </td>
                       <td> {{ interActiveQuestion.rel_class?interActiveQuestion.rel_class.name_bn:'N/A' }}</td>
+                      <td> {{ interActiveQuestion.inter_active_answer_count }}</td>
                       <td>
                         <ng-container *ngIf="interActiveQuestion.status === 'Active';else inactive"><span class="text-success">Active</span></ng-container>
                         <ng-template #inactive>

@@ -22,6 +22,7 @@
                       <td>Topic</td>
                       <td>Subjct</td>
                       <td>Class</td>
+                      <td>Exam Count</td>
                       <td>Status</td>
                       <td>Action</td>
                     </tr>
@@ -45,12 +46,16 @@
                         {{ mcqQuestion.subject?mcqQuestion.subject.name_bn:'N/A' }}
                       </td>
                       <td> {{ mcqQuestion.rel_class?mcqQuestion.rel_class.name_bn:'N/A' }}</td>
+
+                      <td> {{ mcqQuestion.mcq_answer_count}}</td>
+                      
                       <td>
                         <ng-container *ngIf="mcqQuestion.status === 'Active';else inactive"><span class="text-success">Active</span></ng-container>
                         <ng-template #inactive>
                             <ng-container *ngIf="mcqQuestion.status === 'Inactive'"><span class="text-warning">Inactive</span></ng-container>
                         </ng-template>
                       </td>
+
                       <td>
                         <button class="btn btn-warning btn-mini mr-1"
                           (click)="openUpdateModal(templateQuestion,mcqQuestion)" title="Update Topic Info"> <i
@@ -188,7 +193,21 @@
                     </div><!-- end row -->
 
                     <div class="row">
-                      <!-- Question -->
+                      <!--Question hint -->
+                      <div class="col-md-12">
+                        <div class="space mb-3">
+                          <label class="">Question Hint(ইঙ্গিত) : </label>
+                          <input formControlName="answer_hint" type="text" class="form-control form-control-sm"
+                            placeholder="Enter Correct answer hint (ইঙ্গিত)">
+                          <div *ngIf="submitted && f.answer_hint.errors" class="error-text">
+                            <span *ngIf="f.answer_hint.errors.required" class="text-danger"> Answer hint is required</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div><!-- end row -->
+
+                    <div class="row">
+                      <!-- Details -->
                       <div class="col-md-6">
                         <div class="space mb-3">
                           <label class="">Details Bengali : </label>
@@ -240,7 +259,7 @@
 
                       <div class="col-md-3">
                         <div class="space mb-3">
-                          <label>Option 1 Mark: </label>
+                          <label class="required">Option 1 Mark: </label>
                           <input formControlName="option1_mark" type="number" class="form-control form-control-sm"
                             placeholder="Enter option 1 mark" min="0" max="100">
 
@@ -274,7 +293,7 @@
 
                       <div class="col-md-3">
                         <div class="space mb-3">
-                          <label>Option 2 Mark: </label>
+                          <label class="required">Option 2 Mark: </label>
                           <input formControlName="option2_mark" type="number" class="form-control form-control-sm"
                             placeholder="Enter option 2 mark" min="0" max="100">
                           <div *ngIf="submitted && f.option2_mark.errors" class="error-text">
@@ -604,7 +623,21 @@
                     </div><!-- end row -->
 
                     <div class="row">
-                      <!-- Question -->
+                      <!--Question hint -->
+                      <div class="col-md-12">
+                        <div class="space mb-3">
+                          <label class="">Question Hint(ইঙ্গিত) : </label>
+                          <input formControlName="answer_hint" type="text" class="form-control form-control-sm"
+                            placeholder="Enter Correct answer hint (ইঙ্গিত)">
+                          <div *ngIf="submitted && f.answer_hint.errors" class="error-text">
+                            <span *ngIf="f.answer_hint.errors.required" class="text-danger"> Answer hint is required</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div><!-- end row -->
+
+                    <div class="row">
+                      <!-- Details -->
                       <div class="col-md-6">
                         <div class="space mb-3">
                           <label class="required">Details Bengali : </label>
@@ -656,7 +689,7 @@
 
                       <div class="col-md-3">
                         <div class="space mb-3">
-                          <label>Option 1 Mark: </label>
+                          <label class="required">Option 1 Mark: </label>
                           <input formControlName="option1_mark" type="number" class="form-control form-control-sm"
                             placeholder="Enter option 1 mark" min="0" max="100">
 
@@ -690,10 +723,11 @@
 
                       <div class="col-md-3">
                         <div class="space mb-3">
-                          <label>Option 2 Mark: </label>
+                          <label class="required">Option 2 Mark: </label>
                           <input formControlName="option2_mark" type="number" class="form-control form-control-sm"
                             placeholder="Enter option 2 mark" min="0" max="100">
-                          <div *ngIf="submitted && f.option2_mark.errors" class="error-text">
+                          
+                            <div *ngIf="submitted && f.option2_mark.errors" class="error-text">
                             <span *ngIf="f.option2_mark.errors.required" class="text-danger"> Option 2 mark is
                               required</span>
                           </div>

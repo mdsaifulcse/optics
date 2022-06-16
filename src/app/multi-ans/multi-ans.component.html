@@ -22,6 +22,7 @@
                       <td>Topic</td>
                       <td>Subjct</td>
                       <td>Class</td>
+                      <td>Exam Count</td>
                       <td>Status</td>
                       <td>Action</td>
                     </tr>
@@ -45,6 +46,7 @@
                         {{ multiAnsQuestion.subject?multiAnsQuestion.subject.name_bn:'N/A' }}
                       </td>
                       <td> {{ multiAnsQuestion.rel_class?multiAnsQuestion.rel_class.name_bn:'N/A' }}</td>
+                      <td> {{ multiAnsQuestion.multi_result_answer_count }}</td>
                       <td>
                         <ng-container *ngIf="multiAnsQuestion.status === 'Active';else inactive"><span class="text-success">Active</span></ng-container>
                         <ng-template #inactive>

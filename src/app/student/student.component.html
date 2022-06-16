@@ -3,9 +3,9 @@
     <div class="col-sm-12">
       <div class="card card-border-default">
         <div class="card-header">
-          <h5>Teachers List </h5>
-           <button class="btn btn-primary btn-mini mr-1" (click)="openModal(templateTeacher)">  <i class="fa fa-plus"></i> Teacher</button>
-           <button class="btn btn-success btn-mini mr-1" (click)="openExcelUplodModal(templateTeacherExcelUpload)">  <i class="fa fa-upload"></i>Excel Upload</button>
+          <h5>students List </h5>
+           <button class="btn btn-primary btn-sm mr-1" (click)="openModal(templateStudent)">  <i class="fa fa-plus"></i> Student</button>
+           <button class="btn btn-success btn-sm mr-1" (click)="openExcelUplodModal(templateStudentExcelUpload)">  <i class="fa fa-upload"></i>Excel Upload</button>
           <!-- <button class="btn btn-secondary  btn-sm float-end" [routerLink]="[ '/user-entry' ]"><i
               class="feather icon-plus "></i> Create Customer</button> -->
         </div>
@@ -28,24 +28,23 @@
                   </thead>
                     
                   <tbody>
-                    <tr *ngFor="let teacher of teachers; let i=index">
+                    <tr *ngFor="let student of students; let i=index">
                       <!-- <td><img class="media-object img-circle card-list-img image-size" src="assets/images/avatar-5.png" alt="Generic placeholder image"></td> -->
                       <td>{{ i+1  }}</td>
-                      <td>{{ teacher.name_bn  }}</td>
-                      <td>{{ teacher.name_en  }}</td>
-                      <td>{{ teacher.email }}</td>
-                      <td>{{ teacher.mobile_number }}</td>
+                      <td>{{ student.name_bn  }}</td>
+                      <td>{{ student.name_en  }}</td>
+                      <td>{{ student.email }}</td>
+                      <td>{{ student.mobile_number }}</td>
 
                       <td>
-                        <ng-container *ngIf="teacher.status === 1;else Inactive">Active</ng-container>
+                        <ng-container *ngIf="student.status === 1;else Inactive">Active</ng-container>
                         <ng-template #Inactive>
-                            <ng-container *ngIf="teacher.status === 2;else teacher">Inactive</ng-container>
+                            <ng-container *ngIf="student.status === 2;else student">Inactive</ng-container>
                         </ng-template>
-                        <ng-template #teacher>Teacher</ng-template>
+                        <ng-template #student>student</ng-template>
                       </td>
                       <td>
-                        <button class="btn btn-warning btn-mini mr-1" (click)="openModalProfile(templateTeacher,teacher)" title="Update Profile">  <i class="fa fa-edit"></i> Edit</button> | 
-                        <button class="btn btn-warning btn-mini mr-1" (click)="openModalPasswordChange(templatePasswordChange,teacher)" title="Password Change">  <i class="fa fa-key"></i> Passwrod</button>
+                        <button class="btn btn-warning btn-mini mr-1" (click)="openModalProfile(templateStudent,student)" title="Update Profile">  <i class="fa fa-edit"></i> Edit</button> |
                       </td>
                       
                   </tr>
@@ -65,7 +64,7 @@
     </div>
   </div>
 
-  <ng-template #templateTeacherExcelUpload>
+  <ng-template #templateStudentExcelUpload>
     <div class="modal-header ">
       <h4 class="modal-title float-start " [innerHtml]="modalTitle"></h4>
       <a href="{{sampleExcelFile}}" download="download" title="Download sample excel file"> <i class="fa fa-download"></i> Sample Excel  - </a>
@@ -80,7 +79,7 @@
           <div class="card">
             <div class="card-block">
               
-              <form [formGroup]="teacherUploForm" autocomplete="off">
+              <form [formGroup]="studentUploForm" autocomplete="off">
 
                 <div class="row">
                   <div class="col-lg-12 col-md-12 col-12">
@@ -129,7 +128,7 @@
     </div>
   </ng-template>
 
-  <ng-template #templateTeacher>
+  <ng-template #templateStudent>
     <div class="modal-header ">
       <h4 class="modal-title float-start " [innerHtml]="modalTitle"></h4>
       <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHideProfile()">
@@ -190,8 +189,9 @@
 
                       <div class="col-md-6">
                         <div class="space mb-3">
-                          <label class="required">School : </label>
-                          <ng-select formControlName="school_id" [clearable]="false" [clearOnBackspace]="false" [items]="schools" [multiple]=false 
+                          <label class="required">School : </label> 
+                          <ng-select formControlName="school_id" [clearable]="false" (change)="onSchoolChange($event)" [clearOnBackspace]="false" 
+                          [items]="schools" [multiple]=false 
                           bindLabel="name_bn" bindValue="id" placeholder="Select school">
                           </ng-select>
                          
@@ -201,11 +201,37 @@
                         </div>
                       </div>
 
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="required">Teacher : </label>
+                          <ng-select formControlName="teacher_id" [clearable]="false" [clearOnBackspace]="false" [items]="teachers" [multiple]=false 
+                          bindLabel="name_bn" bindValue="id" placeholder="Select Teacher">
+                          </ng-select>
+                         
+                          <div *ngIf="submitted && f.teacher_id.errors" class="error-text">
+                            <span *ngIf="f.teacher_id.errors.required" class="text-danger">Teacher is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="required">Class : </label>
+                          <ng-select formControlName="class_id" [clearable]="false" [clearOnBackspace]="false" [items]="classes" [multiple]=false 
+                          bindLabel="name_bn" bindValue="id" placeholder="Select Class">
+                          </ng-select>
+                         
+                          <div *ngIf="submitted && f.class_id.errors" class="error-text">
+                            <span *ngIf="f.class_id.errors.required" class="text-danger">Class is required</span>
+                          </div>
+                        </div>
+                      </div>
+
                     <div class="col-md-6">
                       <div class="space mb-3">
-                        <label class="required">Teacher Name(Bengali): </label>
+                        <label class="required">Student Name(Bengali): </label>
                         <input formControlName="name_bn" type="text"   
-                        class="form-control form-control-sm"  placeholder="Enter teacher bengali name">
+                        class="form-control form-control-sm"  placeholder="Enter S bengali name">
                       
                         <div *ngIf="submitted && f.name_bn.errors" class="error-text">
                           <span *ngIf="f.name_bn.errors.required" class="text-danger">Bengali name is required</span>
@@ -214,9 +240,9 @@
                     </div>
                     <div class="col-md-6">
                       <div class="space mb-3">
-                        <label class="required">Teacher Name(English): </label>
+                        <label class="required">Student Name(English): </label>
                         <input formControlName="name_en" type="text"
-                          class="form-control form-control-sm"  placeholder="Enter teacher english name">
+                          class="form-control form-control-sm"  placeholder="Enter student english name">
                       
                           <div *ngIf="submitted && f.name_en.errors" class="error-text">
                           <span *ngIf="f.name_en.errors.required" class="text-danger">English name is required</span>
@@ -226,51 +252,53 @@
 
                     <div class="col-md-6">
                       <div class="space mb-3">
-                        <label class="required">Email : </label>
-                        <input formControlName="email" type="text"
-                          class="form-control form-control-sm"  placeholder="Enter eamil address">
+                        <label class="required">Age : </label>
+                        <input formControlName="age" type="number" min="0" max="65"
+                          class="form-control form-control-sm"  placeholder="Enter Student age">
                         
-                          <div *ngIf="submitted && f.email.errors" class="error-text">
-                          <span *ngIf="f.email.errors.required" class="text-danger"> Email is required</span>
-                          <span *ngIf="f.email.errors.email" class="text-danger"> Invalid email format</span>
+                          <div *ngIf="submitted && f.age.errors" class="error-text">
+                          <span *ngIf="f.age.errors.required" class="text-danger"> age is required</span>
+                          <span *ngIf="f.age.errors.age" class="text-danger"> Invalid age format</span>
                         </div>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="space mb-3">
-                        <label class="required">Mobile Number : </label>
-                        <input formControlName="mobile_number"  type="text" 
-                         class="form-control form-control-sm"  placeholder="Enter mobile number">
-                        <div *ngIf="submitted && f.mobile_number.errors" class="error-text">
-                          <span *ngIf="f.mobile_number.errors.required" class="text-danger"> Mobile is required</span>
+                        <label class="required">Gender : </label>
+                        <ng-select formControlName="gender" [clearable]="false" [clearOnBackspace]="false" [items]="gerners" [multiple]=false 
+                        bindLabel="name" bindValue="value" placeholder="Select Student Gender">
+                        </ng-select>
+                        
+                         <div *ngIf="submitted && f.gender.errors" class="error-text">
+                          <span *ngIf="f.gender.errors.required" class="text-danger"> Gender is required</span>
                         </div>
                       </div>
                     </div>
 
 
-                    <div class="col-md-6" *ngIf="!userId">
+                    <div class="col-md-6" >
                       <div class="space mb-3">
-                        <label class="required">Password: </label>
-                        <input [ngClass]="{ 'is-invalid': submitted && f.password.errors }" formControlName="password" type="password"
-                          class="form-control form-control-sm"  placeholder="Enter password">
-                        <div *ngIf="submitted && f.password.errors" class="error-text">
-                          <span *ngIf="f.password.errors.required" class="text-danger"> password is required</span>
-                          <span *ngIf="f.password.errors.password" class="text-danger"> Invalid password format</span>
+                        <label>Guardian Mobile: </label>
+                        <input formControlName="guardian_mobile" type="text"
+                          class="form-control form-control-sm"  placeholder="Enter Guardian Mobile">
+                        <div *ngIf="submitted && f.guardian_mobile.errors" class="error-text">
+                          <span *ngIf="f.guardian_mobile.errors.required" class="text-danger"> Guardian Mobile is required</span>
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-6" *ngIf="!userId">
-                      <div class="space mb-3">
-                        <label class="required">Confirm Password : </label>
-                        <input [ngClass]="{ 'is-invalid': submitted && f.confirm_password.errors }" formControlName="confirm_password"  type="password" 
-                         class="form-control form-control-sm"  placeholder="Enter confirm password">
-                        <div *ngIf="submitted && f.confirm_password.errors" class="error-text">
-                          <span *ngIf="f.confirm_password.errors.required" class="text-danger"> Confirm Password is required</span>
-                        </div>
-                      </div>
-                    </div>
-
                     <div class="col-md-6">
+                      <div class="space mb-3">
+                        <label>Guardian Email : </label>
+                        <input formControlName="guardian_email"  type="text" 
+                         class="form-control form-control-sm"  placeholder="Enter Guardian Email">
+
+                        <div *ngIf="submitted && f.guardian_email.errors" class="error-text">
+                          <span *ngIf="f.guardian_email.errors.required" class="text-danger"> Guardian Email is required</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
                       <div class="space mb-3">
                         <label class="required">Status : </label>
                         
@@ -279,6 +307,18 @@
                        
                         <div *ngIf="submitted && f.status.errors" class="error-text">
                           <span *ngIf="f.status.errors.required" class="text-danger"> Status is required</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <div class="space mb-3">
+                        <label class="required">Sequence : </label>
+                        <input formControlName="sequence"  type="number" 
+                         class="form-control form-control-sm"  placeholder="Enter sequence number">
+                       
+                        <div *ngIf="submitted && f.sequence.errors" class="error-text">
+                          <span *ngIf="f.sequence.errors.required" class="text-danger"> Sequence is required</span>
                         </div>
                       </div>
                     </div>
@@ -335,73 +375,5 @@
     </div>
   </ng-template>
 
-  <ng-template #templatePasswordChange>
-    <div class="modal-header ">
-      <h4 class="modal-title float-start " [innerHtml]="modalTitle"></h4>
-      <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHideProfile()">
-        <i class="feather icon-x"></i>
-      </button>
-    </div>
-    <div class="modal-body ">
-
-      <div class="row" >
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-block">
-              
-              <form [formGroup]="userPasswrodChangeForm" autocomplete="off">
-
-                <div class="row">
-                  <div class="col-lg-9 col-md-8 col-12">
-                    <div class="row">
-        
-                      <div class="col-md-6">
-                      <div class="space mb-3">
-                        <label class="required">Password: </label>
-                        <input [ngClass]="{ 'is-invalid': submitted && pc.new_password.errors }" formControlName="new_password" type="password"
-                          class="form-control form-control-sm"  placeholder="Enter new passwrod">
-                        <div *ngIf="submitted && pc.new_password.errors" class="error-text">
-                          <span *ngIf="pc.new_password.errors.required" class="text-danger"> password is required</span>
-                          <span *ngIf="pc.new_password.errors.new_password" class="text-danger"> Invalid new_password format</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="space mb-3">
-                        <label class="required">Confirm Password : </label>
-                        <input [ngClass]="{ 'is-invalid': submitted && pc.confirm_password.errors }" formControlName="confirm_password" 
-                         type="password"  class="form-control form-control-sm"  placeholder="Enter confirm passwrod">
-                        <div *ngIf="submitted && pc.confirm_password.errors" class="error-text">
-                          <span *ngIf="pc.confirm_password.errors.required" class="text-danger"> Confirm Password is required</span>
-                        </div>
-                      </div>
-                    </div>
-        
-                  </div>
-        
-                  </div>
-        
-                  <div class="col-12">
-                    <button type="button" (click)="onPasswordChangeFormSubmit()" class="btn btn-secondary btn-testz">
-                      <i class="fa fa-check"></i> {{btnSaveText}}
-                    </button>
-                  </div>
-                </div>
-              </form>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-    <div class="modal-footer">
-      <div class="pr-4">
-        <button class="btn btn-outline-danger me-2" (click)="modalHideProfile()"> <i class="feather icon-x"></i>
-          Close</button>
-      </div>
-
-    </div>
-  </ng-template>
 
 </block-ui>
