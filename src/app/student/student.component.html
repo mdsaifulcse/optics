@@ -20,10 +20,11 @@
                       <td>Sl</td>
                       <td>Name Bangali</td>
                       <td>Name English</td>
-                      <td>Email</td>
-                      <td>Mobile</td>
+                      <td>Photo</td>
+                      <td>School</td>
+                      <td>Teacher</td>
                       <td>Status</td>
-                      <td>Action</td>
+                      <td class="text-center">Action</td>
                     </tr>
                   </thead>
                     
@@ -33,18 +34,30 @@
                       <td>{{ i+1  }}</td>
                       <td>{{ student.name_bn  }}</td>
                       <td>{{ student.name_en  }}</td>
-                      <td>{{ student.email }}</td>
-                      <td>{{ student.mobile_number }}</td>
+                      <td>
+                        <ng-container *ngIf="student.photo!==null;else second">
+                          <img src="{{baseUrl +'/'+ student.photo}}" width="50">
+                        </ng-container>
+
+                        <ng-template #second>
+                            <ng-container>N/A</ng-container>
+                        </ng-template>
+                      </td>
+                      <td>{{ student.school?student.school.name_bn:'N/A'}}</td>
+                      <td>{{ student.teacher?student.teacher.name_bn:"N/A" }}</td>
 
                       <td>
-                        <ng-container *ngIf="student.status === 1;else Inactive">Active</ng-container>
+                        <ng-container *ngIf="student.status === 'Active';else Inactive"><span class="text-success">Active</span> </ng-container>
                         <ng-template #Inactive>
-                            <ng-container *ngIf="student.status === 2;else student">Inactive</ng-container>
+                            <ng-container *ngIf="student.status === 'Inactive';else other"><span class="text-danger">Inactive</span> </ng-container>
                         </ng-template>
-                        <ng-template #student>student</ng-template>
+                        <ng-template #other>Other</ng-template>
                       </td>
+
                       <td>
                         <button class="btn btn-warning btn-mini mr-1" (click)="openModalProfile(templateStudent,student)" title="Update Profile">  <i class="fa fa-edit"></i> Edit</button> |
+                        <button class="btn btn-warning btn-mini mr-1" (click)="openModalProfile(templateStudent,student)" title="Update Profile">  <i class="fa fa-edit"></i> Show</button> |
+                        <button class="btn btn-danger btn-mini mr-1" (click)="submitDeleteForm(student)" title="Delete Class Info">  <i class="fa fa-times"></i> Delete</button>
                       </td>
                       
                   </tr>

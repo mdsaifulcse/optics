@@ -1,0 +1,190 @@
+<block-ui>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <h5>MCQ Exam List </h5>
+          <!-- <button class="btn btn-primary btn-mini mr-1" (click)="openModal(templateQuestion)" title="Add Mcq Question">
+            <i class="fa fa-plus"></i> Mcq Question</button> -->
+          <!-- <button class="btn btn-secondary  btn-sm float-end" [routerLink]="[ '/user-entry' ]"><i
+              class="feather icon-plus "></i> Create Customer</button> -->
+        </div>
+        <div class="card-block ">
+          <div class="row ">
+
+            <div class="col-lg-12">
+              <div class="table-responsive">
+                <table class="table table-hover table-border table-striped">
+                  <thead>
+                    <tr>
+                      <td>Sl</td>
+                      <td>Student</td>
+                      <td>Topic</td>
+                      <td>Subjct</td>
+                      <td>Class</td>
+                      <td>Teacher</td>
+                      <td>School</td>
+                      <td>Exam Date</td>
+                      <td>Action</td>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr *ngFor="let exam of exams; let i=index" id="{{i}}">
+                      <!-- <td><img class="media-object img-circle card-list-img image-size" src="assets/images/avatar-5.png" alt="Generic placeholder image"></td> -->
+                      <td>{{ i+1 }}</td>
+                      <td>{{exam.student.name_bn }}</td>
+                      <td>
+                        {{ exam.mcq_question.topic?exam.mcq_question.topic.name_bn:'N/A' }}
+                      </td>
+                      <td>
+                        {{ exam.mcq_question.subject?exam.mcq_question.subject.name_bn:'N/A' }}
+                      </td>
+                      <td> {{ exam.mcq_question.rel_class?exam.mcq_question.rel_class.name_bn:'N/A' }}</td>
+                      <td> {{ exam.teacher?exam.teacher.name_bn:'N/A' }}</td>
+                      <td> {{ exam.school?exam.school.name_bn:'N/A' }}</td>
+
+                      <td>
+                        {{ exam.created_at | date : 'h:s a MMM d, y' }}
+                      </td>
+
+                      <td>
+                        <button class="btn btn-warning btn-mini mr-1"
+                          (click)="openExamDetailsModal(templateExamShow,exam)" title="Show Details"> <i
+                            class="fa fa-eyes"></i> Details</button>
+                        <!-- <button class="btn btn-danger btn-mini mr-1" (click)="submitDeleteForm(exam)"
+                          title="Delete Topic Info"> <i class="fa fa-times"></i> Delete</button> -->
+                      </td>
+
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer ">
+
+        </div>
+        <!-- end of card-footer -->
+      </div>
+    </div>
+  </div>
+
+  <ng-template #templateExamShow>
+    <div class="modal-header ">
+      <h4 class="modal-title float-start " [innerHtml]="modalTitle"></h4>
+      <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHideProfile()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="row">
+            <div class="col-md-6 col-lg-6 col-sm-12">
+              <p><b>Student :</b> {{examDetails[0].student.name_bn}}</p>
+              <p><b>Class :</b> {{examDetails[0].mcq_question.rel_class.name_bn}}</p>
+              <p><b>Teacher :</b> {{examDetails[0].teacher.name_bn}}</p>
+              <p><b>School :</b> {{examDetails[0].school.name_bn}}</p>
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-12">
+              <p><b>Obtain Mark : </b> <strong>{{obtainMark}}</strong></p>
+              <p><b>Topic :</b> {{examDetails[0].mcq_question.topic.name_bn}}</p>
+              <p><b>Subject :</b> {{examDetails[0].mcq_question.subject.name_bn}}</p>
+              <p><b>Exam Date :</b> {{ examDetails[0].created_at | date : 'h:s a MMM d, y' }}</p>
+            </div>
+          </div><!-- end row -->
+          <div class="card">
+            <div class="card-block">
+              <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12" *ngFor="let data of examDetails; let i=index">
+                  <div class="question-single">
+                    <h4 class="question-heading">{{i+1}}. {{data.mcq_question.question_bn}}
+                      [{{data.mcq_question.answer_hint?data.mcq_question.answer_hint:'উত্তর'}} ] </h4>
+
+                    <label *ngIf="data.mcq_question.option1!='null'" class="option-label">
+                      <!-- option 1 -->
+                      <i class="feather icon-square"></i>
+                      <span class="option-text"
+                        [ngClass]="{'option-text font-weight-bold': data.answer_option === 'option1' }">{{data.mcq_question.option1}}
+                      </span>
+                      <ng-container *ngIf="data.answer_option == 'option1'">
+                        <i class="fa fa-user-check ms-2"
+                          [ngClass]="{'text-danger': data.mcq_question.correct_option != 'option1', 'text-success': data.mcq_question.correct_option == 'option1'}"></i>
+
+                      </ng-container>
+                    </label>
+                    <!-- check-square -->
+
+                    <label *ngIf="data.mcq_question.option2!='null'" class="option-label">
+                      <i class="feather icon-square"></i>
+
+                      <span class="option-text"[ngClass]="{'option-text font-weight-bold': data.answer_option === 'option2' }">{{data.mcq_question.option2}}</span>
+                      <ng-container *ngIf="data.answer_option == 'option2'">
+                        <i class="fa fa-user-check ms-2" [ngClass]="{'text-danger': data.mcq_question.correct_option != 'option2', 'text-success': data.mcq_question.correct_option == 'option2'}"></i>
+                      </ng-container>
+                    </label>
+
+                    <label *ngIf="data.mcq_question.option3!='null'" class="option-label">
+                      <i class="feather icon-square"></i>
+
+                      <span class="option-text"[ngClass]="{'option-text font-weight-bold': data.answer_option === 'option3' }">{{data.mcq_question.option3}}</span>
+                      <ng-container *ngIf="data.answer_option == 'option3'">
+                        <i class="fa fa-user-check ms-2" [ngClass]="{'text-danger': data.mcq_question.correct_option != 'option3', 'text-success': data.mcq_question.correct_option == 'option3'}"></i>
+                      </ng-container>
+                    </label>
+
+                    <label *ngIf="data.mcq_question.option4!='null'" class="option-label">
+                      <i class="feather icon-square"></i>
+
+                      <span class="option-text" [ngClass]="{'option-text font-weight-bold': data.answer_option === 'option4' }">{{data.mcq_question.option4}}</span>
+                      <ng-container *ngIf="data.answer_option == 'option4'">
+                        <i class="fa fa-user-check ms-2" [ngClass]="{'text-danger': data.mcq_question.correct_option != 'option4', 'text-success': data.mcq_question.correct_option == 'option4'}"></i>
+                      </ng-container>
+                    </label>
+
+                    <label *ngIf="data.mcq_question.option5!='null'" class="option-label">
+                      <i class="feather icon-square "></i>
+
+
+                      <span class="option-text"
+                        [ngClass]="{'option-text font-weight-bold': data.answer_option === 'option5' }">{{data.mcq_question.option5}}</span>
+                      <ng-container *ngIf="data.answer_option == 'option5'">
+                        <i class="fa fa-user-check ms-2" [ngClass]="{'text-danger': data.mcq_question.correct_option != 'option5', 'text-success': data.mcq_question.correct_option == 'option5'}"></i>
+                      </ng-container>
+                    </label>
+
+                    <label *ngIf="data.mcq_question.option6!='null'" class="option-label">
+                      <i class="feather icon-square"></i>
+                      <span class="option-text"
+                        [ngClass]="{'option-text font-weight-bold': data.answer_option === 'option6' }">{{data.mcq_question.option6}}</span>
+                      <ng-container *ngIf="data.answer_option == 'option6'">
+                        <i class="fa fa-user-check ms-2" [ngClass]="{'text-danger': data.mcq_question.correct_option != 'option6', 'text-success': data.mcq_question.correct_option == 'option6'}"></i>
+                      </ng-container>
+                    </label>
+
+                  </div>
+
+                </div><!-- end col -->
+
+              </div><!-- end row -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-outline-danger me-2" (click)="modalHideProfile()"> <i class="feather icon-x"></i>
+          Close</button>
+      </div>
+
+    </div>
+  </ng-template>
+
+</block-ui>

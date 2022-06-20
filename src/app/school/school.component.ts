@@ -307,16 +307,16 @@ export class SchoolComponent implements OnInit {
 
     this.blockUI.start('Uploading...');
     let formData = new FormData();
-    formData.append('user_id', this.editProfileForm.value.id)
+    formData.append('id', this.editProfileForm.value.id)
     if (this.imageFile) formData.append('photo', this.imageFile)
 
-    this._service.post('user-upload-profile-image', formData).subscribe(
+    this._service.post('school-photo-change', formData).subscribe(
       res => {
         this.blockUI.stop();
         //this.authService.updateImage(res.data);
-        this.toastr.success(res.message, 'Success!', { timeOut: 3000 });
+        this.toastr.success(res.messages, 'Success!', { timeOut: 3000 });
         this.submitted = false;
-
+        this.getList();
       },
       err => {
         this.blockUI.stop();

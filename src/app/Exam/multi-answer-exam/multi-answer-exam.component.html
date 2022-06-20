@@ -1,0 +1,134 @@
+<block-ui>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <h5>Multiple Answer Exam List </h5>
+          <!-- <button class="btn btn-primary btn-mini mr-1" (click)="openModal(templateQuestion)" title="Add Mcq Question">
+            <i class="fa fa-plus"></i> Mcq Question</button> -->
+          <!-- <button class="btn btn-secondary  btn-sm float-end" [routerLink]="[ '/user-entry' ]"><i
+              class="feather icon-plus "></i> Create Customer</button> -->
+        </div>
+        <div class="card-block ">
+          <div class="row ">
+
+            <div class="col-lg-12">
+              <div class="table-responsive">
+                <table class="table table-hover table-border table-striped">
+                  <thead>
+                    <tr>
+                      <td>Sl</td>
+                      <td>Student</td>
+                      <td>Topic</td>
+                      <td>Subjct</td>
+                      <td>Class</td>
+                      <td>Teacher</td>
+                      <td>School</td>
+                      <td>Exam Date</td>
+                      <td>Action</td>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr *ngFor="let examData of examlist; let i=index" id="{{i}}">
+                      <!-- <td><img class="media-object img-circle card-list-img image-size" src="assets/images/avatar-5.png" alt="Generic placeholder image"></td> -->
+                      <td>{{ i+1 }}</td>
+                      <td>{{examData.student.name_bn }}</td>
+                      <td>
+                        {{ examData.multi_result_question.topic?examData.multi_result_question.topic.name_bn:'N/A' }}
+                      </td>
+                      <td>
+                        {{ examData.multi_result_question.subject?examData.multi_result_question.subject.name_bn:'N/A' }}
+                      </td>
+                      <td> {{ examData.multi_result_question.rel_class?examData.multi_result_question.rel_class.name_bn:'N/A' }}</td>
+                      <td> {{ examData.teacher?examData.teacher.name_bn:'N/A' }}</td>
+                      <td> {{ examData.school?examData.school.name_bn:'N/A' }}</td>
+
+                      <td>
+                        {{ examData.created_at | date : 'h:s a MMM d, y' }}
+                      </td>
+
+                      <td>
+                        <button class="btn btn-warning btn-mini mr-1"
+                          (click)="openExamDetailsModal(templateExamShow,examData)" title="Show Details"> <i
+                            class="fa fa-eyes"></i> Details</button>
+                        <!-- <button class="btn btn-danger btn-mini mr-1" (click)="submitDeleteForm(examData)"
+                          title="Delete Topic Info"> <i class="fa fa-times"></i> Delete</button> -->
+                      </td>
+
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer ">
+
+        </div>
+        <!-- end of card-footer -->
+      </div>
+    </div>
+  </div>
+
+  <ng-template #templateExamShow>
+    <div class="modal-header ">
+      <h4 class="modal-title float-start " [innerHtml]="modalTitle"></h4>
+      <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHideProfile()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="row">
+            <div class="col-md-6 col-lg-6 col-sm-12">
+              <p><b>Student :</b>{{examDetails.student.name_bn}} </p>
+              <p><b>Class :</b>{{examDetails.multi_result_question.rel_class.name_bn}} </p>
+              <p><b>Teacher :</b>{{examDetails.teacher.name_bn}} </p>
+              <p><b>School :</b>{{examDetails.school.name_bn}} </p>
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-12">
+              <p><b>Obtain Mark : </b> <strong>{{examDetails.obtain_mark}} / {{examDetails.total_mark}}</strong></p>
+              <p><b>Topic :</b> {{examDetails.multi_result_question.topic.name_bn}} </p>
+              <p><b>Subject :</b> {{examDetails.multi_result_question.topic.name_bn}}</p>
+              <p><b>Exam Date :</b> {{ examDetails.created_at | date : 'h:s a MMM d, y' }} </p>
+            </div>
+          </div><!-- end row -->
+          <div class="card">
+            <div class="card-block">
+              <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="question-single">
+                    <label class="option-label">
+                      উত্তর:
+
+                      <span *ngFor="let answeredOption of answeredOptions; let i=index">
+                        <span class="btn btn-primary btn-sm ">{{answeredOption}} </span> {{ i == (answeredOptions - 1) ? ',':'' }}
+                      </span>
+                     
+                    </label>
+                  </div>
+
+                </div><!-- end col -->
+
+              </div><!-- end row -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-outline-danger me-2" (click)="modalHideProfile()"> <i class="feather icon-x"></i>
+          Close</button>
+      </div>
+
+    </div>
+  </ng-template>
+
+</block-ui>

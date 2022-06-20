@@ -95,6 +95,7 @@ const routes: Routes = [
         loadChildren: () => import('./mcq-question/mcq-question.module').then(module => module.McqQuestionModule),
         canActivate: [AuthGuard]
       },
+    
       {
         path: 'multi-answer-questions',
         loadChildren: () => import('./multi-ans/multi-ans.module').then(module => module.MultiAnsQuestModule),
@@ -105,6 +106,31 @@ const routes: Routes = [
         loadChildren: () => import('./interactive-question/interactive-question.module').then(module => module.InteractiveQuestionModule),
         canActivate: [AuthGuard]
       },
+
+      //  ------------------------ Exam Report ---------------
+      // Exam Report ---------------
+      {
+        path: 'mcq-exam',
+        loadChildren: () => import('./Exam/mcq-exam/mcq-exam.module').then(module => module.McqExamModule),
+        canActivate: [AuthGuard]
+      },
+
+      // Multi Result Exam Report -----------
+      {
+        path: 'multi-answer-exam',
+        loadChildren: () => import('./Exam/multi-answer-exam/multi-answer-exam.module').then(module => module.MultiAnswerExamModule),
+        canActivate: [AuthGuard]
+      },
+
+      // Inter Active Exam Report -----------
+      {
+        path: 'interactive-exam-list',
+        loadChildren: () => import('./Exam/interactive-exam/interactive-exam.module').then(module => module.InteractiveExamModule),
+        canActivate: [AuthGuard]
+      },
+
+
+
       // {
       //   path: 'pending-post-list',
       //   loadChildren: () => import('./pending-post-list/pending-post-list.module').then(module => module.PendingPostListModule),

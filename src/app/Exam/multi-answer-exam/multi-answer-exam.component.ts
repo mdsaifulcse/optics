@@ -6,19 +6,19 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { Lightbox } from "ngx-lightbox";
 import { ToastrService } from "ngx-toastr";
 import { environment } from "src/environments/environment";
-import { Page } from "../_models/page";
-import { AuthenticationService } from "../_services/authentication.service";
-import { CommonService } from "../_services/common.service";
+import { Page } from "../../_models/page";
+import { AuthenticationService } from "../../_services/authentication.service";
+import { CommonService } from "../../_services/common.service";
 import { MustMatch } from "src/app/_helpers/must-match.validator";
-import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
+import { ConfirmService } from '../../_helpers/confirm-dialog/confirm.service';
 
 
 @Component({
-  selector: "app-multi-ans",
-  templateUrl: "./multi-ans.component.html",
-  styleUrls: ["./multi-ans.component.scss"],
+  selector: "app-multi-answer-exam",
+  templateUrl: "./multi-answer-exam.component.html",
+  styleUrls: ["./multi-answer-exam.component.scss"],
 })
-export class MultiAnsQuestComponent implements OnInit {
+export class MultiAnswerExamComponent implements OnInit {
   currentUser: any;
   baseUrl = environment.baseUrl;
   filterForm: FormGroup;
@@ -26,7 +26,7 @@ export class MultiAnsQuestComponent implements OnInit {
   createEditForm: FormGroup;
   userPasswrodChangeForm: FormGroup;
   @BlockUI() blockUI: NgBlockUI;
-  modalTitle = "Create new Multi Ans Question";
+  modalTitle = "Create new Mcq Question";
   btnSaveText = "Save";
   submitted = false;
   modalConfig: any = { class: "gray modal-lg", backdrop: "static"};
@@ -45,18 +45,20 @@ export class MultiAnsQuestComponent implements OnInit {
   selectedStatus: any;
   config: any;
   amount: number = 0;
+  obtainMark: number = 0;
   isInitalBalanceGiven: boolean = true;
 
   images: Array<any> = [];
   provideExamSheet = [{ status: 1, name: "Yes" }, { status: 0, name: "No" }]
   status = [{ status: 'Active', name: "Active" }, { status: "Inactive", name: "Inactive" }]
 
-  multiAnsQuestions=[];
+  examlist=[];
+  examDetails;
+  answeredOptions;
   topics=[];
   sequence:number;
   classes=[];
   subjects=[];
-  answerOptions=[];
   isProvideExamSheet:number;
 
 
@@ -85,36 +87,18 @@ export class MultiAnsQuestComponent implements OnInit {
       class_id: [null, [Validators.required]],
       subject_id: [null, [Validators.required]],
       topic_id: [null, [Validators.required]],
-      question_bn: [null],
-      question_en: [null],
-      details_bn: [null],
-      details_en: [null],
-      answer_options:  [null, [Validators.required]],
-      sequence:  [null, [Validators.required]],
-      is_provide_exam_sheet: [null,[Validators.required]],
-      status: ['Active',[Validators.required]]
+      answer_hint: [null]
     });
 
     this.questionShowForm = this.formBuilder.group({
       id: [null],
       class_id: [null, [Validators.required]],
       subject_id: [null, [Validators.required]],
-      topic_id: [null, [Validators.required]],
-      question_bn: [null],
-      question_en: [null],
-      details_bn: [null],
-      details_en: [null],
-      answer_options:  [null, [Validators.required]],
-      sequence:  [null, [Validators.required]],
-      is_provide_exam_sheet: [null,[Validators.required]],
-      status: ['Active',[Validators.required]]
+      topic_id: [null, [Validators.required]]
     });
 
     this.isProvideExamSheet=0
     this.getList();
-    this.getClasses();
-    this.getMultiAnsQuestionMaxSequence();
-    
   }
 
   get f() {
@@ -124,9 +108,10 @@ export class MultiAnsQuestComponent implements OnInit {
 
   getList() {
     this.loadingIndicator = true;
-    this._service.get("multi-answer-questions").subscribe(
+    this._service.get("multi-result-exam-list").subscribe(
       (res) => {
-        this.multiAnsQuestions= res.result;
+        this.examlist= res.result;
+        console.log(this.examlist)
       },
       (err) => {
         this.toastr.warning(err.message || err, "Warning!", {
@@ -140,15 +125,7 @@ export class MultiAnsQuestComponent implements OnInit {
     );
   }
 
-  getMultiAnsQuestionMaxSequence() {
-    this.loadingIndicator = true;
-    this._service.get("multi-answer-question-max-sequence").subscribe(
-      (res) => {
-        this.sequence = res.result.sequence;
-      },
-      (err) => {}
-    );
-  }
+
   getClasses() {
     this.loadingIndicator = true;
     this._service.get("class-list").subscribe(
@@ -161,6 +138,10 @@ export class MultiAnsQuestComponent implements OnInit {
 
   onIsProvideSheetChange(item) {
     this.isProvideExamSheet=item.status
+    if(item.status==1){
+      this.createEditForm.controls['question_bn'].setValue('');
+      this.createEditForm.controls['question_en'].setValue('');
+    }
   }
 
   onClassChange(item) {
@@ -186,13 +167,11 @@ export class MultiAnsQuestComponent implements OnInit {
     this.topics=[]
     this.createEditForm.controls['topic_id'].setValue(null);
   }
-  getTopicBySubject(topicId) {
+  getTopicBySubject(subjectId) {
     this.loadingIndicator = true;
-    this._service.get("topicBySubjectId/"+topicId).subscribe(
+    this._service.get("topicBySubjectId/"+subjectId).subscribe(
       (res) => {
         this.topics = res.result;
-        console.log(res)
-        console.log(topicId)
       },
       (err) => {}
     );
@@ -201,167 +180,158 @@ export class MultiAnsQuestComponent implements OnInit {
 
 
   openModal(template: TemplateRef<any>) {
-    this.createEditForm.reset();
-    this.imageUrl=null;
-    this.modalTitle='Create new Multi Ans Question';
+    this.modalTitle='Create new MCQ Question';
     this.btnSaveText='Save';
-    this.answerOptions=[]
-    this.createEditForm.controls['status'].setValue('Active');
-    this.createEditForm.controls['sequence'].setValue(this.sequence);
     this.modalRef = this.modalService.show(template, this.modalLgConfig);
   }
 
 
-  openUpdateModal(template: TemplateRef<any>, data) {
-    this.createEditForm.reset();
-    this.modalTitle='Update Multi Ans Question Details';
-    this.btnSaveText='Update';
-
-    if(data.class_id){
-      this.getSubjectByClass(data.class_id)
-    }
-    if(data.subject_id){
-      this.getTopicBySubject(data.subject_id)
-    }
-    
-
-    this.createEditForm.controls['class_id'].setValue(data.class_id);
-    this.createEditForm.controls['subject_id'].setValue(data.subject_id);
-    this.createEditForm.controls['topic_id'].setValue(data.topic_id);
-    this.createEditForm.controls['is_provide_exam_sheet'].setValue(data.is_provide_exam_sheet);
-    this.createEditForm.controls['question_bn'].setValue(data.question_bn);
-    this.createEditForm.controls['question_en'].setValue(data.question_en);
-    this.createEditForm.controls['details_bn'].setValue(data.details_bn);
-    this.createEditForm.controls['details_en'].setValue(data.details_en);
-
-    this.createEditForm.controls['answer_options'].setValue(JSON.parse(data.answer_options));
-    this.createEditForm.controls['sequence'].setValue(data.sequence);
-   
-    this.createEditForm.controls['status'].setValue(data.status);
-    this.createEditForm.controls['id'].setValue(data.id);
-    if (data.question_image1) this.imageUrl = this.baseUrl +'/'+ data.question_image1;
-    this.modalRef = this.modalService.show(template, this.modalLgConfig);
-  }
-
-  openQuestionShowModal(template: TemplateRef<any>, data) {
+  openExamDetailsModal(template: TemplateRef<any>, examdata) {
     this.questionShowForm.reset();
-    this.modalTitle='Mcq Question Details';
-    this.btnSaveText='Mcq Question';
-
-    if(data.class_id){
-      this.getSubjectByClass(data.class_id)
-    }
-    if(data.subject_id){
-      this.getTopicBySubject(data.subject_id)
-    }
-   
-    this.modalTitle='Show MCQ Question Details';
+    this.modalTitle='Show Exam Details';
+    this.btnSaveText='Print';
+    this.modalTitle='Show Exam Details';
     this.btnSaveText='';
-    this.questionShowForm.controls['class_id'].setValue(data.class_id);
-    this.questionShowForm.controls['class_id'].disable();
-    this.questionShowForm.controls['subject_id'].setValue(data.subject_id);
-    this.questionShowForm.controls['subject_id'].disable();
-    this.questionShowForm.controls['topic_id'].setValue(data.topic_id);
-    this.questionShowForm.controls['topic_id'].disable();
-    this.questionShowForm.controls['is_provide_exam_sheet'].setValue(data.is_provide_exam_sheet);
-    this.questionShowForm.controls['is_provide_exam_sheet'].disable();
-    this.questionShowForm.controls['question_bn'].setValue(data.question_bn);
-    this.questionShowForm.controls['question_bn'].disable();
-    this.questionShowForm.controls['question_en'].setValue(data.question_en);
-    this.questionShowForm.controls['question_en'].disable();
-    this.questionShowForm.controls['details_bn'].setValue(data.details_bn);
-    this.questionShowForm.controls['details_bn'].disable();
-    this.questionShowForm.controls['details_en'].setValue(data.details_en);
-    this.questionShowForm.controls['details_en'].disable();
-    this.questionShowForm.controls['answer_options'].setValue(JSON.parse(data.answer_options));
-    this.questionShowForm.controls['answer_options'].disable();
-    this.questionShowForm.controls['sequence'].setValue(data.sequence);
-    this.questionShowForm.controls['sequence'].disable();
-    this.questionShowForm.controls['status'].setValue(data.status);
-    this.questionShowForm.controls['status'].disable();
-    this.questionShowForm.controls['id'].setValue(data.id);
-    if (data.question_image1) this.imageUrl = this.baseUrl +'/'+ data.question_image1;
+    this.getMultiResultExamDetailsByExamId(examdata.exam_id)
+    if (examdata.question_image1) this.imageUrl = this.baseUrl +'/'+ examdata.question_image1;
     this.modalRef = this.modalService.show(template, this.modalLgConfig);
   }
+
+
+  getMultiResultExamDetailsByExamId(examId) {
+    this.loadingIndicator = true;
+    this._service.get("multi-result-exam-details/"+examId).subscribe(
+      (res) => {
+        this.obtainMark=0;
+        this.examDetails = res.result;
+        this.answeredOptions=JSON.parse(this.examDetails.answered_options);
+        //this.answeredOptions= this.answeredOptions.join();
+      },
+      (err) => {}
+    );
+  }
+
 
   onFormSubmit() {
     this.submitted = true;
     if (this.createEditForm.invalid) {
       return;
     }
+    
+    if(!this.createEditForm.value.correct_option){
+      return this.toastr.error('Correct option is reqired', 'Error!', { timeOut: 2000 });
+     }else{
+      
+       const optionName=this.createEditForm.value.correct_option;
 
-    if(!this.createEditForm.value.id){ // create new Question ----------------
+      if(optionName=='option1' && this.createEditForm.value.option1==null){
+        return this.toastr.error(optionName+' can not be null ', 'Error!', { timeOut: 2000 });
+      }else if(optionName=='option2' && this.createEditForm.value.option2==null){
+        return this.toastr.error(optionName+' can not be null ', 'Error!', { timeOut: 2000 });
+      }else if(optionName=='option3' && this.createEditForm.value.option3==null){
+        return this.toastr.error(optionName+' can not be null ', 'Error!', { timeOut: 2000 });
+      }else if(optionName=='option4' && this.createEditForm.value.option4==null){
+        return this.toastr.error(optionName+' can not be null ', 'Error!', { timeOut: 2000 });
+      }else if(optionName=='option5' && this.createEditForm.value.option5==null){
+        return this.toastr.error(optionName+' can not be null ', 'Error!', { timeOut: 2000 });
+      }else if(optionName=='option6' && this.createEditForm.value.option6==null){
+        return this.toastr.error(optionName+' can not be null ', 'Error!', { timeOut: 2000 });
+      }
+       console.log(this.createEditForm.value)
+
+      // if(!this.createEditForm.value+'.'+optionName){
+      //   return this.toastr.error(optionName+' can not be null ', 'Error!', { timeOut: 2000 });
+      //  }
+     }
+    
+
+    if(!this.createEditForm.value.id){ // create new MCQ Question ----------------
       let formData = new FormData();
 
-      this.answerOptions=[]
-    this.createEditForm.value.answer_options.forEach(element=>{
-      this.answerOptions.push(element.label)
-    })
-    this.createEditForm.controls['answer_options'].setValue(this.answerOptions);
+      formData.append('class_id', this.createEditForm.value.class_id)
+      formData.append('subject_id', this.createEditForm.value.subject_id)
+      formData.append('topic_id', this.createEditForm.value.topic_id)
+      formData.append('is_provide_exam_sheet', this.createEditForm.value.is_provide_exam_sheet)
+      formData.append('answer_hint', this.createEditForm.value.answer_hint)
+      formData.append('question_bn', this.createEditForm.value.question_bn)
+      formData.append('question_en', this.createEditForm.value.question_en)
+      formData.append('details_bn', this.createEditForm.value.details_bn)
+      formData.append('details_en', this.createEditForm.value.details_en)
 
-      formData.append('class_id', this.createEditForm.value.class_id);
-      formData.append('subject_id', this.createEditForm.value.subject_id);
-      formData.append('topic_id', this.createEditForm.value.topic_id);
-      formData.append('is_provide_exam_sheet', this.createEditForm.value.is_provide_exam_sheet);
-      formData.append('question_bn', this.createEditForm.value.question_bn);
-      formData.append('question_en', this.createEditForm.value.question_en);
-      formData.append('details_bn', this.createEditForm.value.details_bn);
-      formData.append('details_en', this.createEditForm.value.details_en);
-      formData.append('answer_options', JSON.stringify(this.createEditForm.value.answer_options));
-      formData.append('sequence', this.createEditForm.value.sequence);
-      formData.append('status', this.createEditForm.value.status);
+      formData.append('option1', this.createEditForm.value.option1)
+      formData.append('option1_mark', this.createEditForm.value.option1_mark)
 
-      if (this.imageFile) formData.append('question_image1', this.imageFile);
+      formData.append('option2', this.createEditForm.value.option2)
+      formData.append('option2_mark', this.createEditForm.value.option2_mark)
 
+      formData.append('option3', this.createEditForm.value.option3)
+      formData.append('option3_mark', this.createEditForm.value.option3_mark)
+
+      formData.append('option4', this.createEditForm.value.option4)
+      formData.append('option4_mark', this.createEditForm.value.option4_mark)
+
+      formData.append('option5', this.createEditForm.value.option5)
+      formData.append('option5_mark', this.createEditForm.value.option5_mark)
+
+      formData.append('option6', this.createEditForm.value.option6)
+      formData.append('option6_mark', this.createEditForm.value.option6_mark)
+
+      formData.append('correct_option', this.createEditForm.value.correct_option)
+      formData.append('sequence', this.createEditForm.value.sequence)
+      formData.append('status', this.createEditForm.value.status)
+
+      if (this.imageFile) formData.append('question_image1', this.imageFile)
+      
       this.blockUI.start('Creating...');
-      this._service.post('multi-answer-questions', formData).subscribe(
+      this._service.post('mcq-questions', formData).subscribe(
         res => {
-          console.log(res)
           this.blockUI.stop();
           this.toastr.success(res.messages, 'Success!', { timeOut: 2000 });
           this.submitted = false;
           this.modalHide();
           this.getList();
-          this.getMultiAnsQuestionMaxSequence();
         },
         err => {
-          this.modalHide();
           this.blockUI.stop();
         }
       );
 
-    }else{ // update Question -----------------
+    }else{ // update MCQ Question -----------------
       this.blockUI.start('Updating...');
-
-      this.answerOptions=[]
-      this.createEditForm.value.answer_options.forEach((element)=>{
-        //return console.log(index)
-        if(element.label){
-          this.answerOptions.push(element.label)
-        }else{
-          this.answerOptions.push(element)
-        }
-      })
-      this.createEditForm.controls['answer_options'].setValue(this.answerOptions);
-      
 
       const obj = {
         class_id: this.createEditForm.value.class_id,
         subject_id: this.createEditForm.value.subject_id,
         topic_id: this.createEditForm.value.topic_id,
         is_provide_exam_sheet: this.createEditForm.value.is_provide_exam_sheet,
+        answer_hint: this.createEditForm.value.answer_hint,
         question_bn: this.createEditForm.value.question_bn,
         question_en: this.createEditForm.value.question_en,
         details_bn: this.createEditForm.value.details_bn,
         details_en: this.createEditForm.value.details_en,
-        answer_options: JSON.stringify(this.createEditForm.value.answer_options),
-    
+        option1: this.createEditForm.value.option1,
+        option2: this.createEditForm.value.option2,
+        option3: this.createEditForm.value.option3,
+        option4: this.createEditForm.value.option4,
+        option5: this.createEditForm.value.option5,
+        option6: this.createEditForm.value.option6,
+
+        option1_mark: this.createEditForm.value.option1_mark,
+        option2_mark: this.createEditForm.value.option2_mark,
+        option3_mark: this.createEditForm.value.option3_mark,
+        option4_mark: this.createEditForm.value.option4_mark,
+        option5_mark: this.createEditForm.value.option5_mark,
+        option6_mark: this.createEditForm.value.option6_mark,
+
+        correct_option: this.createEditForm.value.correct_option,
+        correct_option_mark: this.createEditForm.value.correct_option_mark,
+
         id: this.createEditForm.value.id,
         sequence: this.createEditForm.value.sequence,
         status: this.createEditForm.value.status,
       };
   
-      this._service.put('multi-answer-questions/'+this.createEditForm.value.id, obj).subscribe(
+      this._service.put('mcq-questions/'+this.createEditForm.value.id, obj).subscribe(
         res => {
           this.blockUI.stop();
             this.toastr.success(res.messages, 'Success!', { timeOut: 2000 });
@@ -388,7 +358,7 @@ export class MultiAnsQuestComponent implements OnInit {
             if (result) {
                 // delete Mcq Question----------------
               this.blockUI.start('Deleting...');
-              this._service.delete('multi-answer-questions/'+data.id).subscribe(
+              this._service.delete('mcq-questions/'+data.id).subscribe(
                 res => {
                   this.blockUI.stop();
                     this.toastr.success(res.messages, 'Success!', { timeOut: 2000 });
@@ -413,7 +383,7 @@ export class MultiAnsQuestComponent implements OnInit {
     formData.append('id', this.createEditForm.value.id)
     if (this.imageFile) formData.append('question_image1', this.imageFile)
 
-    this._service.post('multi-answer-question-image-change', formData).subscribe(
+    this._service.post('mcq-question-image-change', formData).subscribe(
       res => {
         this.blockUI.stop();
         this.toastr.success(res.messages, 'Success!', { timeOut: 3000 });

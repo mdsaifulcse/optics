@@ -259,6 +259,7 @@ export class StudentComponent implements OnInit {
 
   openExcelUplodModal(template: TemplateRef<any>) {
     this.studentUploForm.reset();
+    this.sampleExcelFile=this.baseUrl +'/'+ 'excel/student_file.xlsx';
     this.imageUrl=null;
     this.modalTitle='Upload Student by Excel';
     this.btnSaveText='Upload';
@@ -268,7 +269,6 @@ export class StudentComponent implements OnInit {
 
   openModal(template: TemplateRef<any>) {
     this.createEditForm.reset();
-    this.sampleExcelFile=this.baseUrl +'/'+ 'excel/student_file.xlsx';
     this.imageUrl=null;
     this.userId=null;
     this.modalTitle='Create new Student';
@@ -281,26 +281,31 @@ export class StudentComponent implements OnInit {
 
   openModalProfile(template: TemplateRef<any>, data) {
     this.createEditForm.reset();
-    this.modalTitle='Update Student Details';
+    this.modalTitle='Update Student Details'; 
     this.btnSaveText='Update Student';
 
-    console.log(data)
+    if(data.school){
+      if(data.school.division_id){
+        this.getDistrictByDivision(data.school.division_id)
+        this.createEditForm.controls['division_id'].setValue(data.school.division_id);
+      }
+  
+      if(data.school.district_id){
+        this.getSubDistrictByDistrict(data.school.district_id)
+        this.createEditForm.controls['district_id'].setValue(data.school.district_id);
+      }
+  
+      if(data.school.sub_district_id){
+        this.getSchoolBySubDistrict(data.school.sub_district_id)
+        this.createEditForm.controls['sub_district_id'].setValue(data.school.sub_district_id);
+      }
 
-    if(data.division_id){
-      this.getDistrictByDivision(data.division_id)
+      if(data.school_id){
+        this.getTeachersBySchool(data.school_id);
+      }
+
     }
 
-    if(data.district_id){
-      this.getSubDistrictByDistrict(data.district_id)
-    }
-
-    if(data.sub_district_id){
-      this.getSchoolBySubDistrict(data.sub_district_id)
-    }
-
-    this.createEditForm.controls['division_id'].setValue(data.division_id);
-    this.createEditForm.controls['district_id'].setValue(data.district_id);
-    this.createEditForm.controls['sub_district_id'].setValue(data.sub_district_id);
     this.createEditForm.controls['school_id'].setValue(data.school_id);
     this.createEditForm.controls['teacher_id'].setValue(data.teacher_id);
     this.createEditForm.controls['class_id'].setValue(data.class_id);
@@ -315,7 +320,7 @@ export class StudentComponent implements OnInit {
     this.createEditForm.controls['id'].setValue(data.id);
     this.userId=data.id;
 
-    if (data.profile) this.imageUrl = this.baseUrl +'/'+ data.profile.photo;
+    if (data.photo) this.imageUrl = this.baseUrl +'/'+ data.photo;
 
     this.modalRef = this.modalService.show(template, this.modalLgConfig);
   }
@@ -345,6 +350,7 @@ export class StudentComponent implements OnInit {
       formData.append('gender', this.createEditForm.value.gender)
       formData.append('age', this.createEditForm.value.age)
       formData.append('sequence', this.createEditForm.value.sequence)
+      formData.append('status', this.createEditForm.value.status)
 
       if (this.imageFile) formData.append('photo', this.imageFile)
       
@@ -380,6 +386,8 @@ export class StudentComponent implements OnInit {
         guardian_email: this.createEditForm.value.guardian_email,
         gender: this.createEditForm.value.gender,
         age: this.createEditForm.value.age,
+        status: this.createEditForm.value.status,
+        sequence: this.createEditForm.value.sequence,
       };
   
       this._service.put('students-by-admin/'+this.createEditForm.value.id, obj).subscribe(
@@ -456,14 +464,14 @@ export class StudentComponent implements OnInit {
     this.modalRef = this.modalService.show(template, this.modalLgConfig);
   }
 
-  submitDeleteForm(school) {
+  submitDeleteForm(student) {
     this.confirmService.confirm('Are you sure?', 'Do you want to delete the this Student ?')
     .subscribe(
         result => {
             if (result) {
-                // delete school ----------------
+                // delete student ----------------
               this.blockUI.start('Deleting...');
-              this._service.delete('students-by-admin/'+school.id).subscribe(
+              this._service.delete('students-by-admin/'+student.id).subscribe(
                 res => {
                   this.blockUI.stop();
                     this.toastr.success(res.messages, 'Success!', { timeOut: 2000 });
@@ -485,7 +493,7 @@ export class StudentComponent implements OnInit {
 
     this.blockUI.start('Uploading...');
     let formData = new FormData();
-    formData.append('user_id', this.createEditForm.value.id)
+    formData.append('id', this.createEditForm.value.id)
     if (this.imageFile) formData.append('photo', this.imageFile)
 
     this._service.post('change-student-image-by-admin', formData).subscribe(
@@ -493,10 +501,11 @@ export class StudentComponent implements OnInit {
         this.blockUI.stop();
         this.toastr.success(res.messages, 'Success!', { timeOut: 3000 });
         this.submitted = false;
+        this.getList();
       },
       err => {
-        //this.blockUI.stop();
-        this.toastr.error(err.message || err, 'Error!', { timeOut: 2000 });
+        this.blockUI.stop();
+        //this.toastr.error(err.message || err, 'Error!', { timeOut: 2000 });
       }
     );
 

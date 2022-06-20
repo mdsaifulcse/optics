@@ -252,16 +252,13 @@
                               (change)="readURL($event, pictureInput)"
                               type="file">
                           </div>
+                          <button *ngIf="imageUrl" type="button" (click)="RemovePhoto()" class="btn btn-outline-secondary btn-sm">
+                            <i class="fa fa-cancel"></i> Remove Photo
+                          </button>
                         </div>
                       </div>
                     </div>
-      
-                    <div class="col-md-3">
-                      <button *ngIf="imageUrl" type="button" (click)="RemovePhoto()" class="btn btn-outline-secondary btn-sm">
-                        <i class="fa fa-cancel"></i> Remove Photo
-                      </button>
-                    </div>
-        
+    
                   </div>
         
                   </div>

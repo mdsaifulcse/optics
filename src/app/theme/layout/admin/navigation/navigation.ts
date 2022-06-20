@@ -60,17 +60,35 @@ const NavigationItems = [
     ],
   },
   {
-    id: "exam-question",
-    title: "Exam Report",
+    id: "exam",
+    title: "Exam",
     type: "group",
     icon: "feather icon-layout",
     permission: 'member_manage',
     children: [
       {
-        id: "mcq-questions",
-        title: "Mcq Questions",
+        id: "mcq-exam",
+        title: "Mcq Exam",
         type: "item",
-        url: "/mcq-questions",
+        url: "/mcq-exam",
+        classes: "nav-item",
+        icon: "feather icon-user",
+        permission: 'member_manage'
+      },
+      {
+        id: "multi-answer-exam",
+        title: "Multi Answer Exam",
+        type: "item",
+        url: "/multi-answer-exam",
+        classes: "nav-item",
+        icon: "feather icon-user",
+        permission: 'member_manage'
+      },
+      {
+        id: "interactive-exam-list",
+        title: "Inter Active Exam",
+        type: "item",
+        url: "/interactive-exam-list",
         classes: "nav-item",
         icon: "feather icon-user",
         permission: 'member_manage'

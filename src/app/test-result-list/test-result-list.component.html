@@ -1,0 +1,490 @@
+<block-ui>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card ">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-6">
+              <h2 class="mb-0"><i class="fa fa-user-circle"></i>&nbsp;
+                Test Participations</h2>
+            </div>
+            <div class="col-6 text-right">
+              <a class="btn btn-icon btn-info btn-mini ml-1 mb-1" [placement]="'left'" ngbTooltip="Go Back"
+              target="_blank" [routerLink]="['/learner-details',learnerId]">
+                <i class="feather icon-arrow-left"></i>
+            </a>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12 ">
+              <div class="row">
+                <div class="col-6">
+                  <h3 class="mb-0"><i class="far fa-clone pr-1"></i>General Information</h3>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-6 col-12 table-responsive-md">
+                  <table class="table table-sm table-bordered">
+                    <tbody>
+                      <tr>
+                        <td rowspan="12" width="230">
+                          <img [src]="baseUrl+Learner.Picture" style="max-width: 200px;" />
+                        </td>
+                      </tr>
+  
+                      <tr>
+                        <th width="30%">Name </th>
+                        <td width="2%">:</td>
+                        <td class="text-wrap">{{Learner.Name}}</td>
+                      </tr>
+                      <tr>
+                        <th width="30%">Age </th>
+                        <td width="2%">:</td>
+                        <td>{{Learner.DateOfBirth | dateToAge}} (DOB: {{Learner.DateOfBirth | amDateFormat : 'DD-MMM-YYYY'}})</td>
+                      </tr>
+                      <tr>
+                        <th width="30%">Gender </th>
+                        <td width="2%">:</td>
+                        <td>{{Learner.Gender}}</td>
+                      </tr>
+                      <tr>
+                        <th width="30%">Father's Name </th>
+                        <td width="2%">:</td>
+                        <td>{{Learner.FatherName}}</td>
+                      </tr>
+                      <tr>
+                        <th width="30%">Mother's Name </th>
+                        <td width="2%">:</td>
+                        <td>{{Learner.MotherName}}</td>
+                      </tr>
+                      <tr>
+                        <th width="30%">Guardian's Mobile </th>
+                        <td width="2%">:</td>
+                        <td>{{Learner.GuardianMobile}}</td>
+                      </tr>
+                      <tr>
+                        <th width="30%">Village </th>
+                        <td width="2%">:</td>
+                        <td>{{Learner.Village}}</td>
+                      </tr>
+                      <tr>
+                        <th width="30%">Post Office </th>
+                        <td width="2%">:</td>
+                        <td>{{Learner.PostOffice}}</td>
+                      </tr>
+                      <tr>
+                        <th width="30%">Sub-District </th>
+                        <td width="2%">:</td>
+                        <td>{{Learner.SubDistrict}}</td>
+                      </tr>
+                      <tr>
+                        <th width="30%">District </th>
+                        <td width="2%">:</td>
+                        <td>{{Learner.District}}</td>
+                      </tr>
+                      <tr>
+                        <th width="30%">Blood Group </th>
+                        <td width="2%">:</td>
+                        <td>{{Learner.BloodGroup}}</td>
+                      </tr>
+  
+  
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-lg-6 col-12 table-responsive-md">
+                  <table class="table table-sm table-bordered">
+                    <tr>
+                      <th width="30%">Class </th>
+                      <td width="2%">:</td>
+                      <td class="text-wrap">{{Learner.ClassName}}</td>
+                    </tr>
+                    <tr>
+                      <th width="30%">Group </th>
+                      <td width="2%">:</td>
+                      <td class="text-wrap">{{Learner.Group}}</td>
+                    </tr>
+                    <tr>
+                      <th width="30%">School </th>
+                      <td width="2%">:</td>
+                      <td class="text-wrap">{{Learner.School}}</td>
+                    </tr>
+                    <tr>
+                      <th width="30%">Area</th>
+                      <td width="2%">:</td>
+                      <td class="text-wrap">{{Learner.Area}}</td>
+                    </tr>
+                    <tr>
+                      <th width="30%">Batch</th>
+                      <td width="2%">:</td>
+                      <td class="text-wrap">{{Learner.Batch}}</td>
+                    </tr>
+                    <tr>
+                      <th width="30%">TAB No </th>
+                      <td width="2%">:</td>
+                      <td>{{Learner.DeviceNo}}
+                        <span *ngIf="Learner.DeviceNo" class="badge badge-warning ml-2 cursor-pointer" [placement]="'top'"
+                          ngbTooltip="Device Info" (click)="ShowDeviceDetails(deviceTemplate)">
+                          <i class="fa fa-info"></i>
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th width="30%">TAB Mobile </th>
+                      <td width="2%">:</td>
+                      <td>{{Learner.MobileNo}}</td>
+                    </tr>
+  
+                    <tr>
+                      <th width="30%">App Registration Date </th>
+                      <td width="2%">:</td>
+                      <td>{{Learner.CreatedOn | amFromUtc | amLocal | amDateFormat: 'DD MMM, YYYY hh:mm A'}}</td>
+                    </tr>
+                    <tr>
+                      <th width="30%">Last Synced Date</th>
+                      <td width="2%">:</td>
+                      <td>{{Learner.LastSyncedDate?(Learner.LastSyncedDate | amFromUtc | amLocal | amDateFormat: 'DD MMM,
+                        YYYY hh:mm A') : "-" }}</td>
+                    </tr>
+                    <tr>
+                      <th width="30%">Spent Time on Video</th>
+                      <td width="2%">:</td>
+                      <td>{{Learner.VideoSpentDuration}}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+      </div>
+      <div class="card ">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-6">
+              <h2 class="mb-0"><i class="fa fa-file"></i>&nbsp;
+                Test Information</h2>
+            </div>
+            <div class="col-6 text-right">
+
+            </div>
+          </div>
+
+
+        </div>
+        <div class="card-body">
+          <div class="row">
+
+            <div class="col-12 ">
+
+              <div class="row">
+
+                <div class="col-lg-12 col-12 table-responsive-md">
+                  <table class="table table-sm table-bordered">
+                    <tr>
+                      <th width="10%">Subject Name </th>
+                      <td width="2%">:</td>
+                      <td>{{subject}}</td>
+                      <th width="10%">Test Name</th>
+                      <td width="2%">:</td>
+                      <td>{{test}}</td>
+                    </tr>
+
+
+
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+      <div class="card card-border-default">
+        <div class="card-header">
+          <h5 class="card-title"><i class="fa fa-info-circle"></i>&nbsp; Participations</h5>
+
+        </div>
+
+        <div class="card-body">
+
+          <div class="row">
+            <div class="col-12 ">
+
+              <ngx-datatable class="material table-bordered" [rows]="rows" #dataTable
+                [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force" [headerHeight]="40"
+                [footerHeight]="50" rowHeight="auto" [externalPaging]="true" [count]="page.totalElements"
+                [offset]="page.pageNumber" [limit]="page.size" (page)="setPage($event)" [scrollbarH]="true">
+
+
+                <ngx-datatable-column [maxWidth]="60" name="Sl" prop="Id" [draggable]="false" [sortable]="false">
+                  <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    <span> {{ (page.pageNumber * page.size) + rowIndex + 1 }} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+
+                <!-- <ngx-datatable-column name="Test Name" [minWidth]="150" [draggable]="false" [sortable]="false">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                
+                    <span class="text-wrap" title="{{ row }}"> {{row['SmallTestName_bn']}} -- {{row['LevelName_en']}}
+                    </span>
+                  </ng-template>
+                </ngx-datatable-column> -->
+
+                <ngx-datatable-column name="Participation On " prop="CreatedOn" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value }}"> {{ value | amFromUtc | amLocal | amDateFormat: 'DD MMM, YYYY hh:mm A'}}
+                    </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Total Questions" prop="TotalQuestion" [draggable]="false"
+                  [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value }}"> {{ value }} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Correct Answer" prop="CorrectAnswerCount" [draggable]="false"
+                  [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value }}"> {{ value }} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Wrong Answer" prop="WrongAnswerCount" [draggable]="false"
+                  [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value }}"> {{ value }} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Not Answered " prop="NotAnsweredCount" [draggable]="false"
+                  [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value }}"> {{ value }} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Score " prop="Percentage" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span title="{{ value }}"><strong>{{ value | floor }}%</strong></span>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Grade " prop="Grade" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span class="badge badge-danger" title="Fail" *ngIf="value==='F'"> {{ value }} </span>
+                    <span class="badge badge-success" title="Pass" *ngIf="value!=='F'"> {{ value }} </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+
+                <ngx-datatable-column [width]="100" name="Action" [draggable]="false" [sortable]="false">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <button class="btn mr-2 btn-info btn-mini" (click)="getDetailsView(row,templateView)"><i
+                        class="fa fa-list"></i>&nbsp; View Result</button>
+
+                  </ng-template>
+                </ngx-datatable-column>
+
+              </ngx-datatable>
+
+            </div>
+
+
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #templateView>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left "><strong>Test Result Detail | {{test}}</strong> </h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideView()">
+        <i class="fa fa-times"></i>
+      </button>
+
+    </div>
+    <div class="modal-body ">
+      <div class="row ">
+        <div class="col-12 text-center">
+          <div *ngIf="marks>=80">
+            <img src="assets/images/medal.png" class="wid-30">
+            <span class="font-weight-bold"> Congratulations ! You have passed the test with {{marks | floor}}%
+              marks.</span>
+          </div>
+          <div *ngIf="marks<30">
+            <img src="assets/images/fail.png" class="wid-30">
+            <span class="font-weight-bold"> Failed ! Please try again.</span>
+          </div>
+          <div *ngIf="marks<80 && marks>=30">
+            <img src="assets/images/checked.png" class="wid-30">
+            <span class="font-weight-bold"> Passed ! You achieved {{marks | floor}}% marks.Try again to
+              improve.</span>
+          </div>
+
+        </div>
+      </div>
+      <hr>
+      <div class="row ">
+        <div class="col-sm-12">
+          <div class="row" *ngFor="let item of qsn; let i=index">
+            <div class="col-sm-12 col-xs-12">
+              <i class="fa fa-exclamation-triangle f-20 mr-2 " style="color: #f1c40f" *ngIf="!item.Answered "></i>
+
+              <i class="fa fa-check f-20 mr-2" style="color: green;" *ngIf="item.Answered && item.Correct"></i>
+              <i class="fa fa-times f-20 mr-2" style="color: red;" *ngIf="item.Answered && !item.Correct"></i>
+              <b>{{i+1}}. {{item.Question}} </b>
+              
+              <span class="badge badge-warning" *ngIf="!item.Answered ">Not Answered</span>
+
+
+            </div>
+            <hr>
+            <div class="col-12">
+              <div class="row">
+                <div class="col-lg-6" *ngFor="let option of item.Options; let i=index">
+
+                  <!-- <i class="fa fa-check-square" style="color: green;"
+                    *ngIf="item.Options[0].Selected && item.Correct"> a.</i>
+                  <i class="fa fa-window-close" style="color: red;"
+                    *ngIf="item.Options[0].Selected && !item.Correct"> a.</i>
+                  <i class="fa fa-square" *ngIf="!item.Options[0].Selected "> a.</i> -->
+
+                  <label class="ml-2" [ngClass]="{'text-success': option.Text === item.CorrectAns }" for="option0{{i}}">
+                    {{optionLabels[i]}}. {{option.Text}}
+
+                    <span *ngIf="option.Text === item.Answered" class="badge badge-secondary "><i
+                        class="fa fa-user"></i></span>
+                  </label>
+                </div>
+              </div>
+              <br>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+
+
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-outline-danger mr-2" (click)="modalHideView()"> <i class="fa fa-times"></i>
+          Close</button>
+
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #deviceTemplate>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left"><i class="fa fa-tablet  pr-1"></i>Device Information</h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <div class="row">
+        <div class="col-12 ">
+
+          <div class="row">
+            <div class="col-lg-12 col-12 table-responsive-md">
+              <table class="table table-sm table-bordered mb-0">
+                <tbody>
+
+                  <tr>
+                    <th width="30%">TAB No </th>
+                    <td width="2%">:</td>
+                    <td class="text-wrap">{{DeviceDetail.DeviceNo}}</td>
+                  </tr>
+                  <tr>
+                    <th width="30%">Code </th>
+                    <td width="2%">:</td>
+                    <td class="text-wrap">{{DeviceDetail.Code}}</td>
+                  </tr>
+                  <tr>
+                    <th width="30%">Material Number </th>
+                    <td width="2%">:</td>
+                    <td class="text-wrap">{{DeviceDetail.MaterialNumber}}</td>
+                  </tr>
+                  <tr>
+                    <th width="30%">Material Description </th>
+                    <td width="2%">:</td>
+                    <td class="text-wrap">{{DeviceDetail.MaterialDescription}}</td>
+                  </tr>
+
+                  <tr>
+                    <th width="30%">IMEI</th>
+                    <td width="2%">:</td>
+                    <td class="text-wrap">{{DeviceDetail.IMEI}}</td>
+                  </tr>
+
+                  <tr>
+                    <th width="30%">Mobile</th>
+                    <td width="2%">:</td>
+                    <td class="text-wrap">{{DeviceDetail.MobileNo}}</td>
+                  </tr>
+
+                  <!-- <tr>
+                      <th width="30%">Area</th>
+                      <td width="2%">:</td>
+                      <td class="text-wrap">{{DeviceDetail.Area}}</td>
+                    </tr>
+
+                    <tr>
+                      <th width="30%">School</th>
+                      <td width="2%">:</td>
+                      <td class="text-wrap">{{DeviceDetail.School}}</td>
+                    </tr> -->
+
+                  <!-- <tr>
+                      <th width="30%">Entry On</th>
+                      <td width="2%">:</td>
+                      <td>{{DeviceDetail.EntryOn | amFromUtc | amLocal | amDateFormat: 'DD MMM, YYYY hh:mm A'}}</td>
+                    </tr>
+                     -->
+
+
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer ">
+      <button class="btn btn-danger btn-sm " (click)="modalHide()"> <i class="feather icon-x"></i>
+        Close</button>
+
+    </div>
+  </ng-template>
+</block-ui>
