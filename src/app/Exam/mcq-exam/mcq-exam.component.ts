@@ -45,6 +45,7 @@ export class McqExamComponent implements OnInit {
   selectedStatus: any;
   config: any;
   amount: number = 0;
+  totalMark: number = 0;
   obtainMark: number = 0;
   isInitalBalanceGiven: boolean = true;
 
@@ -200,8 +201,26 @@ export class McqExamComponent implements OnInit {
     this.loadingIndicator = true;
     this._service.get("mcq-exam-details/"+mcqExamId).subscribe(
       (res) => {
+        this.totalMark=0;
         this.obtainMark=0;
         this.examDetails = res.result;
+        
+        this.examDetails.forEach(item => {
+          if(item.mcq_question.correct_option=='option1'){
+            this.totalMark = this.totalMark + Number(item.mcq_question.option1_mark);
+          }else if(item.mcq_question.correct_option=='option2'){
+            this.totalMark = this.totalMark + Number(item.mcq_question.option2_mark);
+          }else if(item.mcq_question.correct_option=='option3'){
+            this.totalMark = this.totalMark + Number(item.mcq_question.option3_mark);
+          }else if(item.mcq_question.correct_option=='option4'){
+            this.totalMark = this.totalMark + Number(item.mcq_question.option4_mark);
+          }else if(item.mcq_question.correct_option=='option5'){
+            this.totalMark = this.totalMark + Number(item.mcq_question.option5_mark);
+          }else if(item.mcq_question.correct_option=='option6'){
+            this.totalMark = this.totalMark + Number(item.mcq_question.option6_mark);
+          }
+        });
+
         this.examDetails.forEach(item => {
         this.obtainMark = this.obtainMark + Number(item.answer_option_mark);
         });
@@ -210,144 +229,6 @@ export class McqExamComponent implements OnInit {
     );
   }
 
-
-  onFormSubmit() {
-    this.submitted = true;
-    if (this.createEditForm.invalid) {
-      return;
-    }
-    
-    if(!this.createEditForm.value.correct_option){
-      return this.toastr.error('Correct option is reqired', 'Error!', { timeOut: 2000 });
-     }else{
-      
-       const optionName=this.createEditForm.value.correct_option;
-
-      if(optionName=='option1' && this.createEditForm.value.option1==null){
-        return this.toastr.error(optionName+' can not be null ', 'Error!', { timeOut: 2000 });
-      }else if(optionName=='option2' && this.createEditForm.value.option2==null){
-        return this.toastr.error(optionName+' can not be null ', 'Error!', { timeOut: 2000 });
-      }else if(optionName=='option3' && this.createEditForm.value.option3==null){
-        return this.toastr.error(optionName+' can not be null ', 'Error!', { timeOut: 2000 });
-      }else if(optionName=='option4' && this.createEditForm.value.option4==null){
-        return this.toastr.error(optionName+' can not be null ', 'Error!', { timeOut: 2000 });
-      }else if(optionName=='option5' && this.createEditForm.value.option5==null){
-        return this.toastr.error(optionName+' can not be null ', 'Error!', { timeOut: 2000 });
-      }else if(optionName=='option6' && this.createEditForm.value.option6==null){
-        return this.toastr.error(optionName+' can not be null ', 'Error!', { timeOut: 2000 });
-      }
-       console.log(this.createEditForm.value)
-
-      // if(!this.createEditForm.value+'.'+optionName){
-      //   return this.toastr.error(optionName+' can not be null ', 'Error!', { timeOut: 2000 });
-      //  }
-     }
-    
-
-    if(!this.createEditForm.value.id){ // create new MCQ Question ----------------
-      let formData = new FormData();
-
-      formData.append('class_id', this.createEditForm.value.class_id)
-      formData.append('subject_id', this.createEditForm.value.subject_id)
-      formData.append('topic_id', this.createEditForm.value.topic_id)
-      formData.append('is_provide_exam_sheet', this.createEditForm.value.is_provide_exam_sheet)
-      formData.append('answer_hint', this.createEditForm.value.answer_hint)
-      formData.append('question_bn', this.createEditForm.value.question_bn)
-      formData.append('question_en', this.createEditForm.value.question_en)
-      formData.append('details_bn', this.createEditForm.value.details_bn)
-      formData.append('details_en', this.createEditForm.value.details_en)
-
-      formData.append('option1', this.createEditForm.value.option1)
-      formData.append('option1_mark', this.createEditForm.value.option1_mark)
-
-      formData.append('option2', this.createEditForm.value.option2)
-      formData.append('option2_mark', this.createEditForm.value.option2_mark)
-
-      formData.append('option3', this.createEditForm.value.option3)
-      formData.append('option3_mark', this.createEditForm.value.option3_mark)
-
-      formData.append('option4', this.createEditForm.value.option4)
-      formData.append('option4_mark', this.createEditForm.value.option4_mark)
-
-      formData.append('option5', this.createEditForm.value.option5)
-      formData.append('option5_mark', this.createEditForm.value.option5_mark)
-
-      formData.append('option6', this.createEditForm.value.option6)
-      formData.append('option6_mark', this.createEditForm.value.option6_mark)
-
-      formData.append('correct_option', this.createEditForm.value.correct_option)
-      formData.append('sequence', this.createEditForm.value.sequence)
-      formData.append('status', this.createEditForm.value.status)
-
-      if (this.imageFile) formData.append('question_image1', this.imageFile)
-      
-      this.blockUI.start('Creating...');
-      this._service.post('mcq-questions', formData).subscribe(
-        res => {
-          this.blockUI.stop();
-          this.toastr.success(res.messages, 'Success!', { timeOut: 2000 });
-          this.submitted = false;
-          this.modalHide();
-          this.getList();
-        },
-        err => {
-          this.blockUI.stop();
-        }
-      );
-
-    }else{ // update MCQ Question -----------------
-      this.blockUI.start('Updating...');
-
-      const obj = {
-        class_id: this.createEditForm.value.class_id,
-        subject_id: this.createEditForm.value.subject_id,
-        topic_id: this.createEditForm.value.topic_id,
-        is_provide_exam_sheet: this.createEditForm.value.is_provide_exam_sheet,
-        answer_hint: this.createEditForm.value.answer_hint,
-        question_bn: this.createEditForm.value.question_bn,
-        question_en: this.createEditForm.value.question_en,
-        details_bn: this.createEditForm.value.details_bn,
-        details_en: this.createEditForm.value.details_en,
-        option1: this.createEditForm.value.option1,
-        option2: this.createEditForm.value.option2,
-        option3: this.createEditForm.value.option3,
-        option4: this.createEditForm.value.option4,
-        option5: this.createEditForm.value.option5,
-        option6: this.createEditForm.value.option6,
-
-        option1_mark: this.createEditForm.value.option1_mark,
-        option2_mark: this.createEditForm.value.option2_mark,
-        option3_mark: this.createEditForm.value.option3_mark,
-        option4_mark: this.createEditForm.value.option4_mark,
-        option5_mark: this.createEditForm.value.option5_mark,
-        option6_mark: this.createEditForm.value.option6_mark,
-
-        correct_option: this.createEditForm.value.correct_option,
-        correct_option_mark: this.createEditForm.value.correct_option_mark,
-
-        id: this.createEditForm.value.id,
-        sequence: this.createEditForm.value.sequence,
-        status: this.createEditForm.value.status,
-      };
-  
-      this._service.put('mcq-questions/'+this.createEditForm.value.id, obj).subscribe(
-        res => {
-          this.blockUI.stop();
-            this.toastr.success(res.messages, 'Success!', { timeOut: 2000 });
-            this.submitted = false;
-            this.modalHide();
-            this.getList();
-        },
-        err => {
-          this.blockUI.stop();
-          //this.toastr.error(err.message || err, 'Error!', { timeOut: 2000 });
-        }
-      );
-
-    }
-  }
-
- 
 
   submitDeleteForm(data) {
 

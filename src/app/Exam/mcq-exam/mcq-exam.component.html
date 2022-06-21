@@ -86,16 +86,16 @@
         <div class="col-lg-12">
           <div class="row">
             <div class="col-md-6 col-lg-6 col-sm-12">
-              <p><b>Student :</b> {{examDetails[0].student.name_bn}}</p>
-              <p><b>Class :</b> {{examDetails[0].mcq_question.rel_class.name_bn}}</p>
-              <p><b>Teacher :</b> {{examDetails[0].teacher.name_bn}}</p>
-              <p><b>School :</b> {{examDetails[0].school.name_bn}}</p>
+              <p><b>Student:</b> {{examDetails[0].student.name_bn}}</p>
+              <p><b>Class:</b> {{examDetails[0].mcq_question.rel_class.name_bn}}</p>
+              <p><b>Teacher:</b> {{examDetails[0].teacher.name_bn}}</p>
+              <p><b>School:</b> {{examDetails[0].school.name_bn}}</p>
             </div>
             <div class="col-md-6 col-lg-6 col-sm-12">
-              <p><b>Obtain Mark : </b> <strong>{{obtainMark}}</strong></p>
-              <p><b>Topic :</b> {{examDetails[0].mcq_question.topic.name_bn}}</p>
-              <p><b>Subject :</b> {{examDetails[0].mcq_question.subject.name_bn}}</p>
-              <p><b>Exam Date :</b> {{ examDetails[0].created_at | date : 'h:s a MMM d, y' }}</p>
+              <p><b>Obtain Mark: </b> <strong>{{obtainMark}} / {{totalMark}}</strong></p>
+              <h4><b>Topic:</b> {{examDetails[0].mcq_question.topic.name_bn}}</h4>
+              <p><b>Subject:</b> {{examDetails[0].mcq_question.subject.name_bn}}</p>
+              <p><b>Exam Date:</b> {{ examDetails[0].created_at | date : 'h:s a MMM d, y' }}</p>
             </div>
           </div><!-- end row -->
           <div class="card">
@@ -115,7 +115,6 @@
                       <ng-container *ngIf="data.answer_option == 'option1'">
                         <i class="fa fa-user-check ms-2"
                           [ngClass]="{'text-danger': data.mcq_question.correct_option != 'option1', 'text-success': data.mcq_question.correct_option == 'option1'}"></i>
-
                       </ng-container>
                     </label>
                     <!-- check-square -->

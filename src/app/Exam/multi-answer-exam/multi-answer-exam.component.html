@@ -86,16 +86,16 @@
         <div class="col-lg-12">
           <div class="row">
             <div class="col-md-6 col-lg-6 col-sm-12">
-              <p><b>Student :</b>{{examDetails.student.name_bn}} </p>
-              <p><b>Class :</b>{{examDetails.multi_result_question.rel_class.name_bn}} </p>
-              <p><b>Teacher :</b>{{examDetails.teacher.name_bn}} </p>
-              <p><b>School :</b>{{examDetails.school.name_bn}} </p>
+              <p><b>Student: </b>{{examDetails.student.name_bn}} </p>
+              <p><b>Class: </b>{{examDetails.multi_result_question.rel_class.name_bn}} </p>
+              <p><b>Teacher: </b>{{examDetails.teacher.name_bn}} </p>
+              <p><b>School: </b>{{examDetails.school.name_bn}} </p>
             </div>
             <div class="col-md-6 col-lg-6 col-sm-12">
-              <p><b>Obtain Mark : </b> <strong>{{examDetails.obtain_mark}} / {{examDetails.total_mark}}</strong></p>
-              <p><b>Topic :</b> {{examDetails.multi_result_question.topic.name_bn}} </p>
-              <p><b>Subject :</b> {{examDetails.multi_result_question.topic.name_bn}}</p>
-              <p><b>Exam Date :</b> {{ examDetails.created_at | date : 'h:s a MMM d, y' }} </p>
+              <p><b>Obtain Mark: </b> <strong>{{examDetails.obtain_mark}} / {{examDetails.total_mark}}</strong></p>
+              <h4><b>Topic: </b> {{examDetails.multi_result_question.topic.name_bn}} </h4>
+              <p><b>Subject: </b> {{examDetails.multi_result_question.topic.name_bn}}</p>
+              <p><b>Exam Date: </b> {{ examDetails.created_at | date : 'h:s a MMM d, y' }} </p>
             </div>
           </div><!-- end row -->
           <div class="card">
