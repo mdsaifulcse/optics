@@ -92,18 +92,19 @@
               <p><b>School:</b> {{examDetails.school.name_bn}}</p>
             </div>
             <div class="col-md-6 col-lg-6 col-sm-12">
-              <p><b>Obtain Mark: </b> <strong>{{examDetails.obtain_mark}} / {{examDetails.number_of_ques}}</strong></p>
+              <p><b>Obtain Mark: </b> <strong>{{examDetails.obtain_mark}} / {{examDetails.total_mark}}</strong></p>
               <h4><b>Topic:</b> {{examDetails.inter_active_question.topic.name_bn}}</h4>
               <p><b>Subject:</b> {{examDetails.inter_active_question.subject.name_bn}}</p>
               <p><b>Exam Date:</b> {{ examDetails.created_at | date : 'h:s a MMM d, y' }}</p>
+              
             </div>
           </div><!-- end row -->
           <div class="card">
             <div class="card-block">
               <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12">
+                  <span class="single-answer-mark"><b>Single Correct Anser Mark: </b> <strong>{{examDetails.total_mark/examDetails.number_of_ques}}</strong></span>
                   <div class="question-single">
-
                     <ng-container *ngIf="examDetails.collect_ans === 'WrongAns';else CorrectAns">
                       <h3>1. {{examDetails.inter_active_question.number_of_ques_label}} : {{examDetails.number_of_ques}}</h3>
                       <h3>2. {{examDetails.inter_active_question.number_of_wrong_ans_label}} : {{examDetails.number_of_wrong_ans}}</h3>

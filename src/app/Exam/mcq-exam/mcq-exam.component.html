@@ -103,14 +103,17 @@
               <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12" *ngFor="let data of examDetails; let i=index">
                   <div class="question-single">
-                    <h4 class="question-heading">{{i+1}}. {{data.mcq_question.question_bn}}
-                      [{{data.mcq_question.answer_hint?data.mcq_question.answer_hint:'উত্তর'}} ] </h4>
+                    <h4 class="question-heading" *ngIf="data.mcq_question.question_bn" >{{i+1}}. {{data.mcq_question.question_bn}}
+                      <span>
+                        [{{data.mcq_question.answer_hint?data.mcq_question.answer_hint:'উত্তর'}} ]
+                      </span>
+                    </h4>
 
                     <label *ngIf="data.mcq_question.option1!='null'" class="option-label">
                       <!-- option 1 -->
-                      <i class="feather icon-square"></i>
-                      <span class="option-text"
-                        [ngClass]="{'option-text font-weight-bold': data.answer_option === 'option1' }">{{data.mcq_question.option1}}
+                      <i class="feather icon-square option-text"></i>
+                      <span class=""
+                        [ngClass]="{'font-weight-bold': data.answer_option === 'option1' }">{{data.mcq_question.option1}}
                       </span>
                       <ng-container *ngIf="data.answer_option == 'option1'">
                         <i class="fa fa-user-check ms-2"
@@ -120,47 +123,44 @@
                     <!-- check-square -->
 
                     <label *ngIf="data.mcq_question.option2!='null'" class="option-label">
-                      <i class="feather icon-square"></i>
-
-                      <span class="option-text"[ngClass]="{'option-text font-weight-bold': data.answer_option === 'option2' }">{{data.mcq_question.option2}}</span>
+                      <i class="feather icon-square option-text"></i>
+                      <span class="" [ngClass]="{'font-weight-bold': data.answer_option === 'option2' }">{{data.mcq_question.option2}}</span>
                       <ng-container *ngIf="data.answer_option == 'option2'">
                         <i class="fa fa-user-check ms-2" [ngClass]="{'text-danger': data.mcq_question.correct_option != 'option2', 'text-success': data.mcq_question.correct_option == 'option2'}"></i>
                       </ng-container>
                     </label>
 
                     <label *ngIf="data.mcq_question.option3!='null'" class="option-label">
-                      <i class="feather icon-square"></i>
+                      <i class="feather icon-square option-text"></i>
 
-                      <span class="option-text"[ngClass]="{'option-text font-weight-bold': data.answer_option === 'option3' }">{{data.mcq_question.option3}}</span>
+                      <span class=""[ngClass]="{' font-weight-bold': data.answer_option === 'option3' }">{{data.mcq_question.option3}}</span>
                       <ng-container *ngIf="data.answer_option == 'option3'">
                         <i class="fa fa-user-check ms-2" [ngClass]="{'text-danger': data.mcq_question.correct_option != 'option3', 'text-success': data.mcq_question.correct_option == 'option3'}"></i>
                       </ng-container>
                     </label>
 
                     <label *ngIf="data.mcq_question.option4!='null'" class="option-label">
-                      <i class="feather icon-square"></i>
+                      <i class="feather icon-square option-text"></i>
 
-                      <span class="option-text" [ngClass]="{'option-text font-weight-bold': data.answer_option === 'option4' }">{{data.mcq_question.option4}}</span>
+                      <span class="" [ngClass]="{' font-weight-bold': data.answer_option === 'option4' }">{{data.mcq_question.option4}}</span>
                       <ng-container *ngIf="data.answer_option == 'option4'">
                         <i class="fa fa-user-check ms-2" [ngClass]="{'text-danger': data.mcq_question.correct_option != 'option4', 'text-success': data.mcq_question.correct_option == 'option4'}"></i>
                       </ng-container>
                     </label>
 
                     <label *ngIf="data.mcq_question.option5!='null'" class="option-label">
-                      <i class="feather icon-square "></i>
-
-
-                      <span class="option-text"
-                        [ngClass]="{'option-text font-weight-bold': data.answer_option === 'option5' }">{{data.mcq_question.option5}}</span>
+                      <i class="feather icon-square option-text "></i>
+                      <span class=""
+                        [ngClass]="{'font-weight-bold': data.answer_option === 'option5' }">{{data.mcq_question.option5}}</span>
                       <ng-container *ngIf="data.answer_option == 'option5'">
                         <i class="fa fa-user-check ms-2" [ngClass]="{'text-danger': data.mcq_question.correct_option != 'option5', 'text-success': data.mcq_question.correct_option == 'option5'}"></i>
                       </ng-container>
                     </label>
 
                     <label *ngIf="data.mcq_question.option6!='null'" class="option-label">
-                      <i class="feather icon-square"></i>
-                      <span class="option-text"
-                        [ngClass]="{'option-text font-weight-bold': data.answer_option === 'option6' }">{{data.mcq_question.option6}}</span>
+                      <i class="feather icon-square option-text"></i>
+                      <span class=""
+                        [ngClass]="{'font-weight-bold': data.answer_option === 'option6' }">{{data.mcq_question.option6}}</span>
                       <ng-container *ngIf="data.answer_option == 'option6'">
                         <i class="fa fa-user-check ms-2" [ngClass]="{'text-danger': data.mcq_question.correct_option != 'option6', 'text-success': data.mcq_question.correct_option == 'option6'}"></i>
                       </ng-container>
