@@ -18,10 +18,12 @@ export class ErrorInterceptor implements HttpInterceptor {
             if(err.status === 400) {
                 errorMsg=err.error.message_bag
                // this.toastr.error(err.error.message_bag, 'Error!', { timeOut: 3000 });
-               } else if (err.status === 404) {
+               } else if (err.status === 404) 
+               {
                 errorMsg=err.error.messages
                 }
-                else if (err.status === 409) {
+                else if (err.status === 409) 
+                {
                     errorMsg=err.error.messages
                 }
             // if (err.status === 401) {

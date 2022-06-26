@@ -1,0 +1,81 @@
+<block-ui>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <h5>Students Details </h5>
+          <a class="btn btn-primary btn-sm mr-1" routerLink="/students"><i class="fas fa-angles-left"></i> Back</a>
+        </div>
+        <div class="card-block ">
+          <div class="row justify-content-center">
+
+            <div class="col-lg-6">
+              <div class="table-responsive std-detail">
+                <table class="table table-hover tabel-border">
+                  <tbody>
+                    <tr>
+                      <td class="title-lebel">Name:</td>
+                      <td> {{student.name_bn}} ({{student.name_en}})</td>
+                    </tr>
+                    <tr>
+                      <td class="title-lebel">Photo:</td>
+                      <td> 
+                        <ng-container *ngIf="student.photo!==null;else second">
+                          <img src="{{baseUrl +'/'+ student.photo}}" width="50">
+                        </ng-container>
+
+                        <ng-template #second>
+                            <ng-container>N/A</ng-container>
+                        </ng-template>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="title-lebel">Class:</td>
+                      <td> {{student.rel_class?student.rel_class.name_bn:'N/A'}} ({{student.rel_class?student.rel_class.name_en:'N/A'}})</td>
+                    </tr>
+                    <tr>
+                      <td class="title-lebel">Age:</td>
+                      <td> {{student.age}}</td>
+                    </tr>
+                    <tr>
+                      <td class="title-lebel">Gender:</td>
+                      <td> {{student.gender}}</td>
+                    </tr>
+                    <tr>
+                      <td class="title-lebel">Guardian Mobile:</td>
+                      <td> {{student.guardian_mobile?student.guardian_mobile:'N/A'}}</td>
+                    </tr>
+                    <tr>
+                      <td class="title-lebel">Guardian Email:</td>
+                      <td> {{student.guardian_email?student.guardian_email:'N/A'}}</td>
+                    </tr>
+                    
+                    <tr>
+                      <td class="title-lebel">Teacher:</td>
+                      <td> {{student.teacher?student.teacher.name_bn:'N/A'}}</td>
+                    </tr>
+                    <tr>
+                      <td class="title-lebel">School:</td>
+                      <td> {{student.school?student.school.name_bn:'N/A'}}</td>
+                    </tr> 
+                    <tr>
+                      <td class="title-lebel">Upazila:</td>
+                      <td> {{student.school.sub_district?student.school.sub_district.sub_district_bn:'N/A'}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer ">
+
+        </div>
+        <!-- end of card-footer -->
+      </div>
+    </div>
+  </div>
+
+</block-ui>

@@ -1,0 +1,73 @@
+<block-ui>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <h5>Teacher Details </h5>
+          <a class="btn btn-primary btn-sm mr-1" routerLink="/students"><i class="fas fa-angles-left"></i> Back</a>
+        </div>
+        <div class="card-block ">
+          <div class="row justify-content-center">
+
+            <div class="col-lg-6">
+              <div class="table-responsive std-detail">
+                <table class="table table-hover tabel-border">
+                  <tbody>
+                    <tr>
+                      <td class="title-lebel">Name:</td>
+                      <td> {{teacher.name_bn}} ({{teacher.name_en}})</td>
+                    </tr>
+                    <tr>
+                      <td class="title-lebel">Photo:</td>
+                      <td> 
+                        <ng-container *ngIf="teacher.profile.photo!==null;else second">
+                          <img src="{{baseUrl +'/'+ teacher.profile.photo}}" width="50">
+                        </ng-container>
+
+                        <ng-template #second>
+                            <ng-container>N/A</ng-container>
+                        </ng-template>
+                      </td>
+                    </tr>
+                 
+                    <tr>
+                      <td class="title-lebel"> Mobile:</td>
+                      <td> {{teacher.mobile_number?teacher.mobile_number:'N/A'}}</td>
+                    </tr>
+                    <tr>
+                      <td class="title-lebel"> Email:</td>
+                      <td> {{teacher.email?teacher.email:'N/A'}}</td>
+                    </tr>
+                    <tr>
+                      <td class="title-lebel">School:</td>
+                      <td> {{teacher.school?teacher.school.name_bn:'N/A'}}</td>
+                    </tr> 
+                    <tr>
+                      <td class="title-lebel">Upazila:</td>
+                      <td> {{teacher.sub_district.sub_district_bn?teacher.sub_district.sub_district_bn:'N/A'}}</td>
+                    </tr>
+                    <tr>
+                      <td class="title-lebel">District:</td>
+                      <td> {{teacher.district.district_bn?teacher.district.district_bn:'N/A'}}</td>
+                    </tr>
+                    <tr>
+                      <td class="title-lebel">District:</td>
+                      <td> {{teacher.division.division_bn?teacher.division.division_bn:'N/A'}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer ">
+
+        </div>
+        <!-- end of card-footer -->
+      </div>
+    </div>
+  </div>
+
+</block-ui>

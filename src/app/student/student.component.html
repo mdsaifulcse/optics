@@ -56,7 +56,8 @@
 
                       <td>
                         <button class="btn btn-warning btn-mini mr-1" (click)="openModalProfile(templateStudent,student)" title="Update Profile">  <i class="fa fa-edit"></i> Edit</button> |
-                        <button class="btn btn-warning btn-mini mr-1" (click)="openModalProfile(templateStudent,student)" title="Update Profile">  <i class="fa fa-edit"></i> Show</button> |
+                        <a routerLink="/student-details/{{student.id}}" class="btn btn-warning btn-mini mr-1"  title="Show Student Details"> <i class="fa fa-eye"></i> Details</a> |
+                        <!-- <button class="btn btn-warning btn-mini mr-1" (click)="openModalProfile(templateStudent,student)" title="Update Profile">  <i class="fa fa-edit"></i> Show</button> | -->
                         <button class="btn btn-danger btn-mini mr-1" (click)="submitDeleteForm(student)" title="Delete Class Info">  <i class="fa fa-times"></i> Delete</button>
                       </td>
                       
@@ -105,9 +106,9 @@
                             <h5 class="card-title">Choose Excel file</h5>
                           </div>
 
-                          <div class="card-body bg-white" (click)="pictureInput.click()">
-                            <input class="btn-img-upload"  #pictureInput accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                              (change)="readExcelFileUrl($event,pictureInput)"
+                          <div class="card-body bg-white">
+                            <input class="btn-img-upload"  #fileInput accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                              (change)="readExcelFileUrl($event,fileInput)"
                               type="file" >
                           </div>
                         </div>

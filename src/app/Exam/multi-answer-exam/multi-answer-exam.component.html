@@ -86,9 +86,9 @@
         <div class="col-lg-12">
           <div class="row">
             <div class="col-md-6 col-lg-6 col-sm-12">
-              <p><b>Student: </b>{{examDetails.student.name_bn}} </p>
+              <p><b>Student:</b><a routerLink="/student-details/{{examDetails.student.id}}" title="Show Student Details" target="_blank"> {{examDetails.student.name_bn}}</a></p>
               <p><b>Class: </b>{{examDetails.multi_result_question.rel_class.name_bn}} </p>
-              <p><b>Teacher: </b>{{examDetails.teacher.name_bn}} </p>
+              <p><b>Teacher:</b><a routerLink="/teacher-details/{{examDetails.teacher.id}}" title="Show teacher Details" target="_blank"> {{examDetails.teacher.name_bn}}</a></p>
               <p><b>School: </b>{{examDetails.school.name_bn}} </p>
             </div>
             <div class="col-md-6 col-lg-6 col-sm-12">

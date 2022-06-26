@@ -37,7 +37,7 @@ const NavigationItems = [
         id: "dashboard",
         title: "Dashboard",
         type: "item",
-        url: "/subjects",
+        url: "/",
         classes: "nav-item",
         icon: "feather icon-activity",
       }
@@ -68,7 +68,7 @@ const NavigationItems = [
     children: [
       {
         id: "mcq-exam",
-        title: "Mcq Exam",
+        title: "MCQ Exam",
         type: "item",
         url: "/mcq-exam",
         classes: "nav-item",
@@ -86,7 +86,7 @@ const NavigationItems = [
       },
       {
         id: "interactive-exam-list",
-        title: "Inter Active Exam",
+        title: "Interactive Exam",
         type: "item",
         url: "/interactive-exam-list",
         classes: "nav-item",
@@ -104,7 +104,7 @@ const NavigationItems = [
     children: [
       {
         id: "mcq-questions",
-        title: "Mcq Questions",
+        title: "MCQ Questions",
         type: "item",
         url: "/mcq-questions",
         classes: "nav-item",
@@ -247,7 +247,7 @@ const NavigationItems = [
       },
       {
         id: "class-wise-subject",
-        title: "Class Wise subject Assing",
+        title: "Class Wise Subject Assign",
         type: "item",
         url: "/class-wise-subject",
         classes: "nav-item",

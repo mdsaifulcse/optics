@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from './../../_services/authentication.service';
+import {SiteSetting} from '../../_helpers/site-setting';
 
 @Component({
   selector: 'app-auth-signin',
@@ -12,6 +13,7 @@ import { AuthenticationService } from './../../_services/authentication.service'
 })
 export class AuthSigninComponent implements OnInit {
 
+  siteName: string;
   LoginForm: FormGroup;
   submitted = false;
   show: boolean = false;
@@ -37,6 +39,7 @@ export class AuthSigninComponent implements OnInit {
       password: ['', [Validators.required]],
     });
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.siteName=SiteSetting.siteName;
   }
 
   get f() {

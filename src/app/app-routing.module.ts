@@ -42,8 +42,20 @@ const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
+        path: 'teacher-details/:teacherId',
+        loadChildren: () => import('./teacher-details/teacher-details.module').then(module => module.TeacherDetailsModule),
+        canActivate: [AuthGuard]
+      },
+
+      {
         path: 'students',
         loadChildren: () => import('./student/student.module').then(module => module.StudentModule),
+        canActivate: [AuthGuard]
+      },
+
+      {
+        path: 'student-details/:studentId',
+        loadChildren: () => import('./student-details/student-details.module').then(module => module.StudentDetailsModule),
         canActivate: [AuthGuard]
       },
      

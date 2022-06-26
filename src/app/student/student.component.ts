@@ -431,7 +431,7 @@ export class StudentComponent implements OnInit {
         },
         err => {
           this.blockUI.stop();
-          return this.toastr.error(err.errors, 'Error!', { timeOut: 10000 });
+          //return this.toastr.error(err.errors, 'Error!', { timeOut: 10000 });
           
         }
       );
