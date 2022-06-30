@@ -40,6 +40,7 @@ export class StudentDetailsComponent implements OnInit {
   userId=null;
   studentId;
   student;
+  is_student_loaded=false;
 
   sequence:number;
   loadingIndicator = false;
@@ -101,45 +102,12 @@ export class StudentDetailsComponent implements OnInit {
     this._service.get("students-by-admin/"+this.studentId).subscribe(
       (res) => {
         this.student = res.result;
-        console.log(this.student)
+        this.is_student_loaded=true
       },
       (err) => {}
     );
   }
 
-
-
-  openExcelUplodModal(template: TemplateRef<any>) {
-    this.studentUploForm.reset();
-    this.sampleExcelFile=this.baseUrl +'/'+ 'excel/student_file.xlsx';
-    this.imageUrl=null;
-    this.modalTitle='Upload Student by Excel';
-    this.btnSaveText='Upload';
-    this.userId=null;
-    this.modalRef = this.modalService.show(template, this.modalLgConfig);
-  }
-
-  openModal(template: TemplateRef<any>) {
-    this.createEditForm.reset();
-    this.imageUrl=null;
-    this.userId=null;
-    this.modalTitle='Create new Student';
-    this.btnSaveText='Save';
-    this.createEditForm.controls['sequence'].setValue(this.sequence);
-    this.createEditForm.controls['status'].setValue('Active');
-    this.modalRef = this.modalService.show(template, this.modalLgConfig);
-  }
-
-
-  openModalProfile(template: TemplateRef<any>, data) {
-    this.createEditForm.reset();
-    this.modalTitle='Update Student Details'; 
-    this.btnSaveText='Update Student';
-
-    if (data.photo) this.imageUrl = this.baseUrl +'/'+ data.photo;
-
-    this.modalRef = this.modalService.show(template, this.modalLgConfig);
-  }
 
 
   readExcelFileUrl(event: any, input) {

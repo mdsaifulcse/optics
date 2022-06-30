@@ -1,5 +1,5 @@
-.card-header .btnnn{
-    float: right !important;
+.card-header .btn{
+    //float: left !important;
 }
 .card.pic-upload {
     max-width: 230px;
@@ -30,4 +30,8 @@
     max-width: 230px;
     max-height: 230px;
     width: 100%;
+}
+.subject-class{
+    border-left: 1px solid #848487;
+    margin-bottom: 10px;
 }

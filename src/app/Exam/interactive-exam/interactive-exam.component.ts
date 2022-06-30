@@ -54,6 +54,7 @@ export class InteractiveExamComponent implements OnInit {
 
   exams=[];
   examDetails;
+  is_examDetails_load=false;
   topics=[];
   sequence:number;
   classes=[];
@@ -202,8 +203,7 @@ export class InteractiveExamComponent implements OnInit {
       (res) => {
         this.obtainMark=0;
         this.examDetails = res.result;
-
-        console.log(this.examDetails)
+        this.is_examDetails_load=true;
 
         // this.examDetails.forEach(item => {
         // this.obtainMark = this.obtainMark + Number(item.answer_option_mark);

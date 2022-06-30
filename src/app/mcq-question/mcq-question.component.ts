@@ -214,13 +214,14 @@ export class McqQuestionComponent implements OnInit {
   }
   // -------------------- on subject change ---------
   onSubjectChange(item) {
-    this.getTopicBySubject(item.id)
+    this.getTopicByClassAndSubject(item.id)
     this.topics=[]
     this.createEditForm.controls['topic_id'].setValue(null);
   }
-  getTopicBySubject(subjectId) {
+  getTopicByClassAndSubject(subjectId) {
     this.loadingIndicator = true;
-    this._service.get("topicBySubjectId/"+subjectId).subscribe(
+    let classId=this.createEditForm.value.class_id
+    this._service.get("topicByClassAdnSubjectId/"+classId+"/"+subjectId).subscribe(
       (res) => {
         this.topics = res.result;
       },
@@ -258,7 +259,7 @@ export class McqQuestionComponent implements OnInit {
       this.getSubjectByClass(data.class_id)
     }
     if(data.subject_id){
-      this.getTopicBySubject(data.subject_id)
+      this.getTopicByClassAndSubject(data.subject_id)
     }
 
     this.createEditForm.controls['class_id'].setValue(data.class_id);
@@ -303,7 +304,7 @@ export class McqQuestionComponent implements OnInit {
       this.getSubjectByClass(data.class_id)
     }
     if(data.subject_id){
-      this.getTopicBySubject(data.subject_id)
+      this.getTopicByClassAndSubject(data.subject_id)
     }
    
     this.modalTitle='Show MCQ Question Details';

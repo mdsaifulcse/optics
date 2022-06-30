@@ -182,17 +182,16 @@ export class MultiAnsQuestComponent implements OnInit {
   }
   // -------------------- on subject change ---------
   onSubjectChange(item) {
-    this.getTopicBySubject(item.id)
+    this.getTopicByClassAndSubject(item.id)
     this.topics=[]
     this.createEditForm.controls['topic_id'].setValue(null);
   }
-  getTopicBySubject(topicId) {
+  getTopicByClassAndSubject(subjectId) {
     this.loadingIndicator = true;
-    this._service.get("topicBySubjectId/"+topicId).subscribe(
+    let classId=this.createEditForm.value.class_id
+    this._service.get("topicByClassAdnSubjectId/"+classId+"/"+subjectId).subscribe(
       (res) => {
         this.topics = res.result;
-        console.log(res)
-        console.log(topicId)
       },
       (err) => {}
     );
@@ -221,7 +220,7 @@ export class MultiAnsQuestComponent implements OnInit {
       this.getSubjectByClass(data.class_id)
     }
     if(data.subject_id){
-      this.getTopicBySubject(data.subject_id)
+      this.getTopicByClassAndSubject(data.subject_id)
     }
     
 
@@ -252,7 +251,7 @@ export class MultiAnsQuestComponent implements OnInit {
       this.getSubjectByClass(data.class_id)
     }
     if(data.subject_id){
-      this.getTopicBySubject(data.subject_id)
+      this.getTopicByClassAndSubject(data.subject_id)
     }
    
     this.modalTitle='Show MCQ Question Details';

@@ -54,6 +54,7 @@ export class MultiAnswerExamComponent implements OnInit {
 
   examlist=[];
   examDetails;
+  is_examDetails_load=false
   answeredOptions;
   topics=[];
   sequence:number;
@@ -205,6 +206,7 @@ export class MultiAnswerExamComponent implements OnInit {
         this.obtainMark=0;
         this.examDetails = res.result;
         this.answeredOptions=JSON.parse(this.examDetails.answered_options);
+        this.is_examDetails_load=true
         //this.answeredOptions= this.answeredOptions.join();
       },
       (err) => {}

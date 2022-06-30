@@ -40,6 +40,7 @@ export class TeacherDetailsComponent implements OnInit {
   userId=null;
   teacherId;
   teacher;
+  is_teacher_loaded = false;
 
   sequence:number;
   loadingIndicator = false;
@@ -98,6 +99,7 @@ export class TeacherDetailsComponent implements OnInit {
       (res) => {
         this.teacher = res.result;
         console.log(this.teacher)
+        this.is_teacher_loaded = true;
       },
       (err) => {}
     );

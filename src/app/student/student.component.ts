@@ -11,6 +11,7 @@ import { AuthenticationService } from "../_services/authentication.service";
 import { CommonService } from "../_services/common.service";
 import { MustMatch } from "src/app/_helpers/must-match.validator";
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
+import * as XLSX from 'xlsx'
 
 
 @Component({
@@ -75,7 +76,7 @@ export class StudentComponent implements OnInit {
   ) {
     this.authService.currentUserDetails.subscribe(value=>this.currentUser = value);
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 20;
   }
 
   ngOnInit() {
@@ -114,6 +115,8 @@ export class StudentComponent implements OnInit {
     
   }
 
+
+
   get f() {
     return this.createEditForm.controls;
   }
@@ -124,18 +127,30 @@ export class StudentComponent implements OnInit {
     this.page.pageNumber = pageInfo.offset;
     this.getList();
   }
+
+
   getList() {
     this.loadingIndicator = true;
+
+    const obj = {
+      size: this.page.size,
+      pageNumber: this.page.pageNumber,
+    };
   
-    this._service.get("students-by-admin").subscribe(
+    this._service.get("students-by-admin",obj).subscribe(
       (res) => {
-        console.log(res)
-      
         if (res.status=='FAIL') {
           this.toastr.warning(res.messages, "Warning!", { timeOut: 2000 });
           return;
         }
-        this.students = res.result;
+        this.students = res.result.records;
+        this.page.totalElements = res.result.total;
+        this.page.totalPages = Math.ceil(
+            this.page.totalElements / this.page.size
+        );
+        setTimeout(() => {
+            this.loadingIndicator = false;
+        }, 1000);
       
       },
       (err) => {
@@ -166,6 +181,7 @@ export class StudentComponent implements OnInit {
     this._service.get("student-max-sequence-by-admin").subscribe(
       (res) => {
         this.sequence = res.result.sequence;
+        console.log(this.sequence)
       },
       (err) => {}
     );
@@ -326,7 +342,38 @@ export class StudentComponent implements OnInit {
   }
 
 
- 
+  public export() {
+    this.blockUI.start('Generating data...');
+    this._service.get('export-excel-students').subscribe(res => {
+        if (res.result.length > 0) {
+            let readyToExport = []
+            res.result.forEach(element => {
+                readyToExport.push({
+                    Name_Bengali: element.name_bn,
+                    Name_English: element.name_en,
+                    Class_Name: element.rel_class.name_en,
+                    School: element.school.name_bn,
+                    Teacher: element.teacher.name_bn,
+                    Status: element.status,
+                    created_at: element.created_at,
+                })
+            });
+
+            const student = XLSX.utils.book_new(); // create a new student file
+            const workSheet = XLSX.utils.json_to_sheet(readyToExport);
+
+            XLSX.utils.book_append_sheet(student, workSheet, 'Student List'); // add the worksheet to the book
+            XLSX.writeFile(student, 'Student List.xlsx'); // initiate a file download in browser
+
+        }
+        this.blockUI.stop();
+
+    }, err => {
+        this.blockUI.stop();
+        this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+    }
+    );
+}
 
 
   onFormSubmit() {

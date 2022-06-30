@@ -55,6 +55,7 @@ export class McqExamComponent implements OnInit {
 
   mcqExams=[];
   examDetails=[];
+  is_examDetail_load=false;
   topics=[];
   sequence:number;
   classes=[];
@@ -111,6 +112,7 @@ export class McqExamComponent implements OnInit {
     this._service.get("mcq-exam-list").subscribe(
       (res) => {
         this.mcqExams= res.result;
+        console.log(this.mcqExams)
       },
       (err) => {
         this.toastr.warning(err.message || err, "Warning!", {
@@ -224,6 +226,7 @@ export class McqExamComponent implements OnInit {
         this.examDetails.forEach(item => {
         this.obtainMark = this.obtainMark + Number(item.answer_option_mark);
         });
+        this.is_examDetail_load=true
       },
       (err) => {}
     );

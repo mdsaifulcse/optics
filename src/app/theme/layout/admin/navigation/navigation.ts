@@ -47,7 +47,7 @@ const NavigationItems = [
     id: "configuration",
     title: "Configuration",
     type: "collapse",
-    permission: 'master_setting_manage',
+  //  permission: 'master_setting_manage',
     children: [
       {
         id: "system-configuration",
@@ -55,16 +55,34 @@ const NavigationItems = [
         type: "item",
         classes: "nav-item",
         url: "/configuration",      
-        permission: 'master_setting_manage'
+      //  permission: 'master_setting_manage'
       }
     ],
   },
   {
-    id: "exam",
-    title: "Exam",
+    id: "exam-report",
+    title: "Exam Report",
     type: "group",
     icon: "feather icon-layout",
-    permission: 'member_manage',
+   // permission: 'member_manage',
+    children: [
+      {
+        id: "student-based-report",
+        title: "Student Based Report",
+        type: "item",
+        url: "/student-based-report",
+        classes: "nav-item",
+        icon: "feather icon-user",
+      //  permission: 'member_manage'
+      },
+    ]
+  },
+  {
+    id: "exam",
+    title: "Exam List",
+    type: "group",
+    icon: "feather icon-layout",
+  //  permission: 'member_manage',
     children: [
       {
         id: "mcq-exam",
@@ -73,7 +91,7 @@ const NavigationItems = [
         url: "/mcq-exam",
         classes: "nav-item",
         icon: "feather icon-user",
-        permission: 'member_manage'
+      //  permission: 'member_manage'
       },
       {
         id: "multi-answer-exam",
@@ -82,7 +100,7 @@ const NavigationItems = [
         url: "/multi-answer-exam",
         classes: "nav-item",
         icon: "feather icon-user",
-        permission: 'member_manage'
+       // permission: 'member_manage'
       },
       {
         id: "interactive-exam-list",
@@ -91,7 +109,7 @@ const NavigationItems = [
         url: "/interactive-exam-list",
         classes: "nav-item",
         icon: "feather icon-user",
-        permission: 'member_manage'
+      //  permission: 'member_manage'
       },
     ]
   },
@@ -100,7 +118,7 @@ const NavigationItems = [
     title: "Question",
     type: "group",
     icon: "feather icon-layout",
-    permission: 'member_manage',
+  //  permission: 'member_manage',
     children: [
       {
         id: "mcq-questions",
@@ -109,7 +127,7 @@ const NavigationItems = [
         url: "/mcq-questions",
         classes: "nav-item",
         icon: "feather icon-user",
-        permission: 'member_manage'
+      //  permission: 'member_manage'
       },
       {
         id: "mcq-interactive-questions",
@@ -118,7 +136,7 @@ const NavigationItems = [
         url: "/interactive-questions",
         classes: "nav-item",
         icon: "feather icon-user",
-        permission: 'member_manage'
+       // permission: 'member_manage'
       },
       {
         id: "multi-answer-questions",
@@ -127,7 +145,7 @@ const NavigationItems = [
         url: "/multi-answer-questions",
         classes: "nav-item",
         icon: "feather icon-user",
-        permission: 'member_manage'
+     //   permission: 'member_manage'
       },
       {
         id: "topic",
@@ -136,7 +154,7 @@ const NavigationItems = [
         url: "/topics",
         classes: "nav-item",
         icon: "feather icon-user",
-        permission: 'member_manage'
+      //  permission: 'member_manage'
       }
     ],
   },
@@ -146,7 +164,7 @@ const NavigationItems = [
     title: "School Management",
     type: "group",
     icon: "feather icon-layout",
-    permission: 'member_manage',
+  //  permission: 'member_manage',
     children: [
       {
         id: "school",
@@ -155,7 +173,7 @@ const NavigationItems = [
         url: "/schools",
         classes: "nav-item",
         icon: "feather icon-user",
-        permission: 'member_manage'
+      //  permission: 'member_manage'
       }
     ],
   },

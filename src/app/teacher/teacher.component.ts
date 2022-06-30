@@ -72,7 +72,7 @@ export class TeacherComponent implements OnInit {
   ) {
     this.authService.currentUserDetails.subscribe(value=>this.currentUser = value);
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 20;
   }
 
   ngOnInit() {
@@ -133,16 +133,24 @@ export class TeacherComponent implements OnInit {
   }
   getList() {
     this.loadingIndicator = true;
-  
-    this._service.get("teachers").subscribe(
+    const obj = {
+      size: this.page.size,
+      pageNumber: this.page.pageNumber,
+    };
+    this._service.get("teachers",obj).subscribe(
       (res) => {
-        console.log(res)
-      
         if (res.status=='FAIL') {
           this.toastr.warning(res.messages, "Warning!", { timeOut: 2000 });
           return;
         }
-        this.teachers = res.result;
+        this.teachers = res.result.records;
+        this.page.totalElements = res.result.total;
+        this.page.totalPages = Math.ceil(
+            this.page.totalElements / this.page.size
+        );
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000); 
       
       },
       (err) => {
@@ -400,11 +408,16 @@ export class TeacherComponent implements OnInit {
         name_en: this.createEditForm.value.name_en.trim(),
         email: this.createEditForm.value.email.trim(),
         mobile_number: this.createEditForm.value.mobile_number.trim(),
+        status: this.createEditForm.value.status,
       };
+      console.log(this.createEditForm.value)
   
       this._service.put('teachers/'+this.createEditForm.value.id, obj).subscribe(
         res => {
           this.blockUI.stop();
+        
+          console.log(res)
+
             this.toastr.success(res.messages, 'Success!', { timeOut: 2000 });
             //this.authService.updateProfile(res.result);
             this.submitted = false;

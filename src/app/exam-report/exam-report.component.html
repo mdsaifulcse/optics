@@ -1,0 +1,224 @@
+<block-ui>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <!-- <h5>students List </h5> -->
+           <button class="btn btn-primary btn-sm mr-1" (click)="openModal(templateStudent)">  <i class="fa fa-search"></i> Student Based Report</button>
+       
+        </div>
+        <div class="card-block ">
+          <div class="row justify-content-center">
+
+            <div class="col-lg-6" *ngIf="isExamReportLoaded">
+              <div class="row">
+                <div class="col-md-6 col-lg-6 col-sm-12">
+                  <h4><b>Student:</b> {{student.name_bn}}({{student.name_en}}) <br/>
+                    <b>School:</b> {{student.school.name_bn}}({{student.school.name_en}})
+                  </h4>
+                </div>
+
+                <div class="col-md-6 col-lg-6 col-sm-12 subject-class">
+                  <h4><b>Subject:</b> {{subject.name_bn}}({{subject.name_en}})</h4>
+                  <h4><b>Class:</b> {{student.rel_class.name_bn}}({{student.rel_class.name_en}})</h4>
+                </div>
+              </div>
+              <div class="table-responsive border border-primary" *ngIf="examReports.length>0">
+                <table class="table table-hover table-border table-striped">
+                  <thead>
+                    <tr>
+                      <th>Sl</th>
+                      <th>Subtask</th>
+                      <th>Result</th>
+                    </tr>
+                  </thead>
+                    
+                  <tbody>
+                    <tr *ngFor="let examReport of examReports; let i=index">
+                      <!-- <td><img class="media-object img-circle card-list-img image-size" src="assets/images/avatar-5.png" alt="Generic placeholder image"></td> -->
+                      <td>{{ i+1  }}</td>
+                      <td>{{ examReport.name_bn}}</td>
+                      <td>
+
+                        <ng-container *ngIf="examReport.exam_report;else elseBolc">
+                          ({{examReport.exam_report.obtained_mark}}/{{examReport.exam_report.total_mark}}) {{examReport.exam_report.obtained_mark*100/examReport.exam_report.total_mark}}%
+                        </ng-container>
+                        <ng-template #elseBolc>
+                            <span class="text-danger">N/A</span>
+                        </ng-template>
+                        <ng-template #other>Other</ng-template>
+
+                      </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer ">
+
+        </div>
+        <!-- end of card-footer -->
+      </div>
+    </div>
+  </div>
+
+  <ng-template #templateStudent>
+    <div class="modal-header ">
+      <h4 class="modal-title float-start " [innerHtml]="modalTitle"></h4>
+      <button class="btn btn-danger btn-sm close float-end " aria-label="Close " (click)="modalHideProfile()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <div class="row" >
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-block">
+              
+              <form [formGroup]="createEditForm" autocomplete="off">
+
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-12">
+                    <div class="row">
+
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="required">Division : </label>
+                          <ng-select formControlName="division_id" [clearable]="false" (change)="onDivisionChange($event)" [clearOnBackspace]="false"
+                           [items]="divisions" [multiple]=false bindLabel="division_bn" bindValue="id" placeholder="Select division">
+                          </ng-select>
+                         
+                          <div *ngIf="submitted && f.division_id.errors" class="error-text">
+                            <span *ngIf="f.division_id.errors.required" class="text-danger"> Division is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="required">District : </label>
+                          <ng-select formControlName="district_id" [clearable]="false" (change)="onDistrictChange($event)" [clearOnBackspace]="false"
+                           [items]="districts" [multiple]=false bindLabel="district_bn" bindValue="id" placeholder="Select district">
+                          </ng-select>
+                         
+                          <div *ngIf="submitted && f.district_id.errors" class="error-text">
+                            <span *ngIf="f.district_id.errors.required" class="text-danger"> District is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="required">Upazila : </label>
+                          <ng-select formControlName="sub_district_id" (change)="onSubDistrictChange($event)" [clearable]="false" [clearOnBackspace]="false" 
+                          [items]="subDistricts" [multiple]=false bindLabel="sub_district_bn" bindValue="id" placeholder="Select sub district">
+                          </ng-select>
+                         
+                          <div *ngIf="submitted && f.sub_district_id.errors" class="error-text">
+                            <span *ngIf="f.sub_district_id.errors.required" class="text-danger">Upazila is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="required">School : </label> 
+                          <ng-select formControlName="school_id" [clearable]="false" (change)="onSchoolChange($event)" [clearOnBackspace]="false" 
+                          [items]="schools" [multiple]=false 
+                          bindLabel="name_bn" bindValue="id" placeholder="Select school">
+                          </ng-select>
+                         
+                          <div *ngIf="submitted && f.school_id.errors" class="error-text">
+                            <span *ngIf="f.school_id.errors.required" class="text-danger">school is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="required">Teacher : </label>
+                          <ng-select formControlName="teacher_id" [clearable]="false" [clearOnBackspace]="false" [items]="teachers" [multiple]=false 
+                          bindLabel="name_bn" bindValue="id" placeholder="Select Teacher">
+                          </ng-select>
+                         
+                          <div *ngIf="submitted && f.teacher_id.errors" class="error-text">
+                            <span *ngIf="f.teacher_id.errors.required" class="text-danger">Teacher is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="required">Class : </label>
+                          <ng-select formControlName="class_id" [clearable]="false" (change)="onClassChange($event)" [clearOnBackspace]="false" [items]="classes" [multiple]=false 
+                          bindLabel="name_bn" bindValue="id" placeholder="Select Class">
+                          </ng-select>
+                         
+                          <div *ngIf="submitted && f.class_id.errors" class="error-text">
+                            <span *ngIf="f.class_id.errors.required" class="text-danger">Class is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="required">Student : </label>
+                          <ng-select formControlName="student_id" [clearable]="false" [clearOnBackspace]="false" 
+                          [items]="students" [multiple]=false 
+                          bindLabel="name_bn" bindValue="id" placeholder="Select Student">
+                          </ng-select>
+                         
+                          <div *ngIf="submitted && f.class_id.errors" class="error-text">
+                            <span *ngIf="f.class_id.errors.required" class="text-danger">Class is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="space mb-3">
+                          <label class="required">Subject : </label>
+                          <ng-select formControlName="subject_id" [clearable]="false" [clearOnBackspace]="false" 
+                          [items]="subjects" [multiple]=false 
+                          bindLabel="name_bn" bindValue="id" placeholder="Select Subject">
+                          </ng-select>
+                         
+                          <div *ngIf="submitted && f.class_id.errors" class="error-text">
+                            <span *ngIf="f.class_id.errors.required" class="text-danger">Class is required</span>
+                          </div>
+                        </div>
+                      </div>
+
+                  </div>
+        
+                  </div> <!--end col-12-->
+        
+                  <div class="col-12">
+                    <button type="button" (click)="onFormSubmit()" class="btn btn-secondary btn-testz">
+                      <i class="fa fa-search"></i> {{btnSaveText}}
+                    </button>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-outline-danger me-2" (click)="modalHideProfile()"> <i class="feather icon-x"></i>
+          Close</button>
+      </div>
+
+    </div>
+  </ng-template>
+
+
+</block-ui>

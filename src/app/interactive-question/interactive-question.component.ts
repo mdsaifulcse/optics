@@ -213,13 +213,15 @@ export class InteractiveQuestionComponent implements OnInit {
   }
   // -------------------- on subject change ---------
   onSubjectChange(item) {
-    this.getTopicBySubject(item.id)
+    this.getTopicByClassAndSubject(item.id)
     this.topics=[]
     this.createEditForm.controls['topic_id'].setValue(null);
   }
-  getTopicBySubject(topicId) {
+
+  getTopicByClassAndSubject(subjectId) {
     this.loadingIndicator = true;
-    this._service.get("topicBySubjectId/"+topicId).subscribe(
+    let classId=this.createEditForm.value.class_id
+    this._service.get("topicByClassAdnSubjectId/"+classId+"/"+subjectId).subscribe(
       (res) => {
         this.topics = res.result;
       },
@@ -263,7 +265,7 @@ export class InteractiveQuestionComponent implements OnInit {
       this.getSubjectByClass(data.class_id)
     }
     if(data.subject_id){
-      this.getTopicBySubject(data.subject_id)
+      this.getTopicByClassAndSubject(data.subject_id)
     }
 
     this.createEditForm.controls['class_id'].setValue(data.class_id);
@@ -280,6 +282,7 @@ export class InteractiveQuestionComponent implements OnInit {
     this.createEditForm.controls['number_of_ques'].setValue(data.number_of_ques);
     this.createEditForm.controls['number_of_ques_label'].setValue(data.number_of_ques_label);
     this.createEditForm.controls['number_of_wrong_ans_label'].setValue(data.number_of_wrong_ans_label);
+    this.createEditForm.controls['exam_duration'].setValue(data.exam_duration);
 
     if(this.createEditForm.value.collect_ans=='Both'){
       this.createEditForm.controls['has_number_box'].setValue(1);
@@ -305,7 +308,7 @@ export class InteractiveQuestionComponent implements OnInit {
       this.getSubjectByClass(data.class_id)
     }
     if(data.subject_id){
-      this.getTopicBySubject(data.subject_id)
+      this.getTopicByClassAndSubject(data.subject_id)
     }
 
     this.questionShowForm.controls['class_id'].setValue(data.class_id);
@@ -346,6 +349,9 @@ export class InteractiveQuestionComponent implements OnInit {
 
     this.questionShowForm.controls['number_of_wrong_ans_label'].setValue(data.number_of_wrong_ans_label);
     this.questionShowForm.controls['number_of_wrong_ans_label'].disable();
+
+    this.questionShowForm.controls['exam_duration'].setValue(data.exam_duration);
+    this.questionShowForm.controls['exam_duration'].disable();
 
     this.questionShowForm.controls['sequence'].setValue(data.sequence);
     this.questionShowForm.controls['sequence'].disable()

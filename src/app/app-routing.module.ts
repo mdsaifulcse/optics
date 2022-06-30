@@ -120,7 +120,13 @@ const routes: Routes = [
       },
 
       //  ------------------------ Exam Report ---------------
-      // Exam Report ---------------
+      {
+        path: 'student-based-report',
+        loadChildren: () => import('./exam-report/exam-report.module').then(module => module.ExamReportModule),
+        canActivate: [AuthGuard]
+      },
+
+      // --------------------------Exam List ---------------
       {
         path: 'mcq-exam',
         loadChildren: () => import('./Exam/mcq-exam/mcq-exam.module').then(module => module.McqExamModule),

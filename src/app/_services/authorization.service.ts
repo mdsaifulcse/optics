@@ -13,11 +13,11 @@ export class AuthorizationService {
         if (!permissions) return true;
         const permissionss = permissions.split(',');
 
-        if (this.authenticationService.currentUserDetails.value && this.authenticationService.currentUserDetails.value.permissions.find(permission => {
-            return permissions.indexOf(permission) !== -1;
-        })) {
-            return true;
-        }
+        // if (this.authenticationService.currentUserDetails.value && this.authenticationService.currentUserDetails.value.permissions.find(permission => {
+        //     return permissions.indexOf(permission) !== -1;
+        // })) {
+        //     return true;
+        // }
         return false;
     }
 

@@ -31,6 +31,7 @@ import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ToastrModule } from 'ngx-toastr';
 import { ConfirmComponent } from './_helpers/confirm-dialog/confirm.component';
 import { ConfirmService } from './_helpers/confirm-dialog/confirm.service';
+import { PrintStudentReportService } from './_services/student-base-report.service';
 import { AuthorizationService } from './_services/authorization.service';
 import { AuthorizeDirective } from './_services/authorize.directive';
 import { HighchartsChartModule } from 'highcharts-angular';
@@ -73,6 +74,7 @@ import { HighchartsChartModule } from 'highcharts-angular';
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         { provide: LocationStrategy, useClass: PathLocationStrategy },
         ConfirmService,
+        PrintStudentReportService,
         AuthorizationService
     ],
     bootstrap: [AppComponent]

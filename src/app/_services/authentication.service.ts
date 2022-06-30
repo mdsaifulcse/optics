@@ -39,6 +39,7 @@ export class AuthenticationService {
             mobile_number: data.user.mobile_number,
             school_id: data.user.school_id,
             access_token: data.access_token,
+            permissions: '',
             //profile_image: data.data.profile_image ? data.data.profile_image : null,
             created: data.user.created_at,
             c_expires: new Date(data.user.created_at * 1000),

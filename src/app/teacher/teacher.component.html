@@ -13,46 +13,68 @@
           <div class="row ">
 
             <div class="col-lg-12">
-              <div class="table-responsive">
-                <table class="table table-hover table-border table-striped">
-                  <thead>
-                    <tr>
-                      <td>Sl</td>
-                      <td>Name Bangali</td>
-                      <td>Name English</td>
-                      <td>Email</td>
-                      <td>Mobile</td>
-                      <td>Status</td>
-                      <td>Action</td>
-                    </tr>
-                  </thead>
-                    
-                  <tbody>
-                    <tr *ngFor="let teacher of teachers; let i=index">
-                      <!-- <td><img class="media-object img-circle card-list-img image-size" src="assets/images/avatar-5.png" alt="Generic placeholder image"></td> -->
-                      <td>{{ i+1  }}</td>
-                      <td>{{ teacher.name_bn  }}</td>
-                      <td>{{ teacher.name_en  }}</td>
-                      <td>{{ teacher.email }}</td>
-                      <td>{{ teacher.mobile_number }}</td>
 
-                      <td>
-                        <ng-container *ngIf="teacher.status === 1;else Inactive">Active</ng-container>
-                        <ng-template #Inactive>
-                            <ng-container *ngIf="teacher.status === 2;else teacher">Inactive</ng-container>
-                        </ng-template>
-                        <ng-template #teacher>Teacher</ng-template>
-                      </td>
-                      <td>
-                        <button class="btn btn-warning btn-mini mr-1" (click)="openModalProfile(templateTeacher,teacher)" title="Update Profile">  <i class="fa fa-edit"></i> Edit</button> | 
-                        <a routerLink="/teacher-details/{{teacher.id}}" class="btn btn-warning btn-mini mr-1"  title="Show Teacher Details"> <i class="fa fa-eye"></i> Details</a> |
-                        <button class="btn btn-warning btn-mini mr-1" (click)="openModalPasswordChange(templatePasswordChange,teacher)" title="Password Change">  <i class="fa fa-key"></i> Passwrod</button>
-                      </td>
-                      
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
+              <ngx-datatable class="material table-bordered mb-3" [rows]="teachers" [loadingIndicator]="loadingIndicator"
+              [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+              rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+              (page)="setPage($event)" [scrollbarH]="true">
+              
+
+              <ngx-datatable-column width="20" name="SL" [draggable]="false" [sortable]="false">
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                  <span class="fw-bold">
+                    {{ page.pageNumber * page.size + rowIndex + 1 }}
+                  </span>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column width="100" name="Name Bengali" prop="name_bn" [draggable]="false"
+                [sortable]="true">
+                <ng-template let-value="value" ngx-datatable-cell-template>
+                  <span title="{{ value }}"> {{value}} </span>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column width="100" name="Name English" prop="name_en" [draggable]="false"
+                [sortable]="false">
+                <ng-template let-value="value" ngx-datatable-cell-template>
+                  <span title="{{ value }}"> {{value}} </span>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column width="100" name="Email" [draggable]="false"
+              [sortable]="false">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <span title="{{row.email}}"> {{row.email}} </span>
+              </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column width="100" name="Mobile" [draggable]="false"
+              [sortable]="false">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <span title="{{row.mobile_number}}"> {{row.mobile_number}} </span>
+              </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column width="60" name="Status" prop="status" [draggable]="false"
+              [sortable]="false">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+
+              <ng-container *ngIf="value === 1;else second"><span class="text-success">Active</span> </ng-container>
+              <ng-template #second><span class="text-danger">Inactive</span></ng-template>
+              </ng-template>
+            </ngx-datatable-column>
+
+             
+              <ngx-datatable-column width="180" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <button class="btn btn-warning btn-mini mr-1" (click)="openModalProfile(templateTeacher,row)" title="Update Profile">  <i class="fa fa-edit"></i> Edit</button> | 
+                        <a routerLink="/teacher-details/{{row.id}}" class="btn btn-warning btn-mini mr-1"  title="Show Teacher Details"> <i class="fa fa-eye"></i> Details</a> |
+                        <button class="btn btn-warning btn-mini mr-1" (click)="openModalPasswordChange(templatePasswordChange,row)" title="Password Change">  <i class="fa fa-key"></i> Passwrod</button>
+                </ng-template>
+              </ngx-datatable-column>
+
+            </ngx-datatable>
               
             </div>
 

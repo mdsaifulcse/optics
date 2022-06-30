@@ -4,8 +4,11 @@
       <div class="card card-border-default">
         <div class="card-header">
           <h5>students List </h5>
-           <button class="btn btn-primary btn-sm mr-1" (click)="openModal(templateStudent)">  <i class="fa fa-plus"></i> Student</button>
-           <button class="btn btn-success btn-sm mr-1" (click)="openExcelUplodModal(templateStudentExcelUpload)">  <i class="fa fa-upload"></i>Excel Upload</button>
+           <span class="btnnn">
+            <button class="btn btn-primary btn-mini mr-1" (click)="openModal(templateStudent)">  <i class="fa fa-plus"></i> Student</button> | 
+           <button class="btn btn-info btn-mini mr-1" (click)="export()">  <i class="fa fa-download"></i> Excel</button> | 
+           <button class="btn btn-success btn-mini mr-1" (click)="openExcelUplodModal(templateStudentExcelUpload)">  <i class="fa fa-upload"></i>Excel Upload</button> 
+           </span>
           <!-- <button class="btn btn-secondary  btn-sm float-end" [routerLink]="[ '/user-entry' ]"><i
               class="feather icon-plus "></i> Create Customer</button> -->
         </div>
@@ -13,58 +16,82 @@
           <div class="row ">
 
             <div class="col-lg-12">
-              <div class="table-responsive">
-                <table class="table table-hover table-border table-striped">
-                  <thead>
-                    <tr>
-                      <td>Sl</td>
-                      <td>Name Bangali</td>
-                      <td>Name English</td>
-                      <td>Photo</td>
-                      <td>School</td>
-                      <td>Teacher</td>
-                      <td>Status</td>
-                      <td class="text-center">Action</td>
-                    </tr>
-                  </thead>
-                    
-                  <tbody>
-                    <tr *ngFor="let student of students; let i=index">
-                      <!-- <td><img class="media-object img-circle card-list-img image-size" src="assets/images/avatar-5.png" alt="Generic placeholder image"></td> -->
-                      <td>{{ i+1  }}</td>
-                      <td>{{ student.name_bn  }}</td>
-                      <td>{{ student.name_en  }}</td>
-                      <td>
-                        <ng-container *ngIf="student.photo!==null;else second">
-                          <img src="{{baseUrl +'/'+ student.photo}}" width="50">
-                        </ng-container>
 
-                        <ng-template #second>
-                            <ng-container>N/A</ng-container>
-                        </ng-template>
-                      </td>
-                      <td>{{ student.school?student.school.name_bn:'N/A'}}</td>
-                      <td>{{ student.teacher?student.teacher.name_bn:"N/A" }}</td>
+              <ngx-datatable class="material table-bordered mb-3" [rows]="students" [loadingIndicator]="loadingIndicator"
+              [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+              rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+              (page)="setPage($event)" [scrollbarH]="true">
+              
 
-                      <td>
-                        <ng-container *ngIf="student.status === 'Active';else Inactive"><span class="text-success">Active</span> </ng-container>
-                        <ng-template #Inactive>
-                            <ng-container *ngIf="student.status === 'Inactive';else other"><span class="text-danger">Inactive</span> </ng-container>
-                        </ng-template>
-                        <ng-template #other>Other</ng-template>
-                      </td>
+              <ngx-datatable-column width="20" name="SL" [draggable]="false" [sortable]="false">
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                  <span class="fw-bold">
+                    {{ page.pageNumber * page.size + rowIndex + 1 }}
+                  </span>
+                </ng-template>
+              </ngx-datatable-column>
 
-                      <td>
-                        <button class="btn btn-warning btn-mini mr-1" (click)="openModalProfile(templateStudent,student)" title="Update Profile">  <i class="fa fa-edit"></i> Edit</button> |
-                        <a routerLink="/student-details/{{student.id}}" class="btn btn-warning btn-mini mr-1"  title="Show Student Details"> <i class="fa fa-eye"></i> Details</a> |
-                        <!-- <button class="btn btn-warning btn-mini mr-1" (click)="openModalProfile(templateStudent,student)" title="Update Profile">  <i class="fa fa-edit"></i> Show</button> | -->
-                        <button class="btn btn-danger btn-mini mr-1" (click)="submitDeleteForm(student)" title="Delete Class Info">  <i class="fa fa-times"></i> Delete</button>
-                      </td>
-                      
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
+              <ngx-datatable-column width="100" name="Name Bengali" prop="name_bn" [draggable]="false"
+                [sortable]="true">
+                <ng-template let-value="value" ngx-datatable-cell-template>
+                  <span title="{{ value }}"> {{value}} </span>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column width="100" name="Name English" prop="name_en" [draggable]="false"
+                [sortable]="false">
+                <ng-template let-value="value" ngx-datatable-cell-template>
+                  <span title="{{ value }}"> {{value}} </span>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column width="100" name="Photo" prop="photo" [draggable]="false"
+                [sortable]="false">
+                <ng-template let-value="value" ngx-datatable-cell-template>
+                  <img *ngIf="value" src="{{baseUrl +'/'+ value}}" width="50">
+                  <span *ngIf="!value">N/A </span>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column width="100" name="Class" [draggable]="false"
+              [sortable]="false">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <span> {{ row.rel_class?row.rel_class.name_bn:'N/A'}} </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+              <ngx-datatable-column width="100" name="School" [draggable]="false"
+              [sortable]="false">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <span> {{ row.school?row.school.name_bn:'N/A'}} </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+              <ngx-datatable-column width="100" name="Teacher" [draggable]="false"
+              [sortable]="false">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <span> {{ row.teacher?row.teacher.name_bn:"N/A"}} </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+              <ngx-datatable-column width="60" name="Status" prop="status" [draggable]="false"
+              [sortable]="false">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                <span class="text-success">{{value}}</span> 
+              </ng-template>
+            </ngx-datatable-column>
+
+             
+              <ngx-datatable-column width="180" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <button class="btn btn-warning btn-mini mr-1" (click)="openModalProfile(templateStudent,row)" title="Update Profile">  <i class="fa fa-edit"></i> Edit</button> |
+                  <a routerLink="/student-details/{{row.id}}" class="btn btn-warning btn-mini mr-1"  title="Show Student Details"> <i class="fa fa-eye"></i> Details</a> |
+                  <!-- <button class="btn btn-warning btn-mini mr-1" (click)="openModalProfile(templateStudent,student)" title="Update Profile">  <i class="fa fa-edit"></i> Show</button> | -->
+                  <button class="btn btn-danger btn-mini mr-1" (click)="submitDeleteForm(row)" title="Click Here to Delete Class Info">  <i class="fa fa-times"></i> Delete</button>
+                </ng-template>
+              </ngx-datatable-column>
+
+            </ngx-datatable>
               
             </div>
 
