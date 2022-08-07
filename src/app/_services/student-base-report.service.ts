@@ -37,7 +37,7 @@ export class PrintStudentReportService {
       //Dimension of A4 in mm: 210 × 297
       //Dimension of A4 in pts: 595 × 842
       doc.setProperties({
-        title: "Report"
+        title: "Student Based Report"
       });
 
 
@@ -54,14 +54,15 @@ export class PrintStudentReportService {
       doc.line(10, 18, 200, 18);
       doc.setFontSize(this.fontSizes.HeadTitleFontSize);
       doc.setFont("times", "bold");
-      doc.text("Report", InitialstartX + 65, (InitialstartY += this.lineSpacing.NormalSpacing + 2), null, "center");
+      doc.text("Student Based Report", InitialstartX + 0, (InitialstartY += this.lineSpacing.NormalSpacing + 2), null, "left");
+      doc.text("Report Date:", InitialstartX + 150, startY+16 , null, "right");
       doc.line(10, 26, 200, 26);
 
 
       
       doc.setFontSize(this.fontSizes.SubTitleFontSize);
       doc.setFont("times", "bold");
-      doc.text("Student : " + res.student.name_bn, startX + 30, (startY += this.lineSpacing.NormalSpacing + 20), null, 'left');
+      doc.text("Student : " + res.student.name_en, startX + 30, (startY += this.lineSpacing.NormalSpacing + 20), null, 'left');
       
       doc.setFontSize(this.fontSizes.SubTitleFontSize);
       doc.setFont("times", "bold");
